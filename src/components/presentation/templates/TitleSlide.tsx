@@ -1,4 +1,6 @@
 import { Slide } from "@/lib/presentation";
+import Title from "../text/Title";
+import Body from "../text/Body";
 
 interface TitleSlideProps {
   slide: Slide;
@@ -10,14 +12,14 @@ const TitleSlide = ({ slide }: TitleSlideProps) => {
       {/* 左側のコンテンツエリア (60%) */}
       <div className="w-[60%] p-[8%] flex flex-col justify-center">
         {slide.content.title && (
-          <h3 className="text-[32px] md:text-[48px] font-bold mb-[4%] bg-gradient-to-r from-[#7C3AED] to-[#6366F1] bg-clip-text text-transparent">
+          <Title className="mb-[4%]">
             {slide.content.title}
-          </h3>
+          </Title>
         )}
         {slide.content.text && (
-          <p className="text-[16px] md:text-[24px] leading-relaxed text-gray-600 max-w-[80%]">
+          <Body className="max-w-[80%]">
             {slide.content.text}
-          </p>
+          </Body>
         )}
       </div>
       
