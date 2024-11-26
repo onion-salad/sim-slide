@@ -1,6 +1,7 @@
 import { Slide } from "@/lib/presentation";
 import TitleSlide from "./templates/TitleSlide";
 import ContentSlide from "./templates/ContentSlide";
+import { useEffect, useRef, useState } from "react";
 
 interface SlidePreviewProps {
   slide: Slide;
@@ -8,14 +9,29 @@ interface SlidePreviewProps {
 }
 
 const SlidePreview = ({ slide, scale = 1 }: SlidePreviewProps) => {
+  const slideRef = useRef<HTMLDivElement>(null);
+  const [slideWidth, setSlideWidth] = useState(0);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      if (slideRef.current) {
+        setSlideWidth(slideRef.current.offsetWidth);
+      }
+    };
+
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+  }, []);
+
   if (slide.template === "title") {
     return (
       <div 
+        ref={slideRef}
         className="slide-preview aspect-video bg-white overflow-hidden relative w-full"
         style={{ 
           fontSize: `${scale}px`,
-          width: '100%',
-          '--slide-width': '100%'
+          '--slide-width': `${slideWidth}px`
         } as React.CSSProperties}
       >
         {/* 背景のグラデーション効果 */}
@@ -31,11 +47,11 @@ const SlidePreview = ({ slide, scale = 1 }: SlidePreviewProps) => {
 
   return (
     <div 
+      ref={slideRef}
       className="slide-preview aspect-video bg-white w-full"
       style={{ 
         fontSize: `${scale}px`,
-        width: '100%',
-        '--slide-width': '100%'
+        '--slide-width': `${slideWidth}px`
       } as React.CSSProperties}
     >
       <ContentSlide slide={slide} />
