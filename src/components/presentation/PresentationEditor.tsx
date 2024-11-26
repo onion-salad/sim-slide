@@ -94,7 +94,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
                 key={slide.id}
                 className={`flex-none w-[85%] md:w-[70%] snap-center transition-all duration-300 ${
                   selectedSlide === slide.id 
-                    ? "shadow-[0_8px_30px_rgba(139,92,246,0.3)] scale-[1.02] bg-white rounded-lg" 
+                    ? "shadow-selected scale-[1.02] bg-white rounded-lg" 
                     : ""
                 }`}
                 onClick={() => setSelectedSlide(slide.id)}
@@ -150,7 +150,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
                           onClick={() => setSelectedSlide(slide.id)}
                           className={`cursor-pointer transition-all duration-300 ${
                             selectedSlide === slide.id 
-                              ? "shadow-[0_8px_30px_rgba(139,92,246,0.3)] scale-[1.02] bg-white rounded-lg" 
+                              ? "shadow-selected scale-[1.02] bg-white rounded-lg" 
                               : ""
                           }`}
                         >
