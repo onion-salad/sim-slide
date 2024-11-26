@@ -4,8 +4,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Image, Upload, Trash2 } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
-import { Slider } from "@/components/ui/slider";
 
 interface SlideEditorProps {
   slide: Slide;
@@ -13,8 +11,6 @@ interface SlideEditorProps {
 }
 
 const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
-  const { toast } = useToast();
-
   const handleChange = (
     field: keyof typeof slide.content,
     value: string | number | { x: number; y: number }
@@ -33,20 +29,10 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
     if (!file) return;
 
     if (file.size > 5 * 1024 * 1024) {
-      toast({
-        title: "エラー",
-        description: "画像サイズは5MB以下にしてください",
-        variant: "destructive",
-      });
       return;
     }
 
     if (!file.type.startsWith('image/')) {
-      toast({
-        title: "エラー",
-        description: "画像ファイルを選択してください",
-        variant: "destructive",
-      });
       return;
     }
 
@@ -54,10 +40,6 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
     reader.onload = (e) => {
       const imageDataUrl = e.target?.result as string;
       handleChange("image", imageDataUrl);
-      toast({
-        title: "成功",
-        description: "画像がアップロードされました",
-      });
     };
     reader.readAsDataURL(file);
   };
@@ -72,10 +54,6 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
       }
     };
     onUpdate(updatedSlide);
-    toast({
-      title: "成功",
-      description: "画像が削除されました",
-    });
   };
 
   const handleImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -110,9 +88,9 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
           rows={5}
         />
       </div>
-      <div className="relative">
+      <div className="space-y-2">
         <Label htmlFor="image">画像</Label>
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-start">
           <Input
             id="image"
             value={slide.content.image || ""}
@@ -120,13 +98,13 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
             placeholder="画像URL"
             className="flex-1"
           />
-          <div className="flex gap-2 relative z-10">
+          <div className="flex gap-2">
             <div className="relative">
               <Input
                 type="file"
                 accept="image/*"
                 onChange={handleImageUpload}
-                className="absolute inset-0 opacity-0 cursor-pointer"
+                className="absolute inset-0 opacity-0 cursor-pointer w-10 h-10"
               />
               <Button type="button" variant="outline" size="icon">
                 <Upload className="h-4 w-4" />
