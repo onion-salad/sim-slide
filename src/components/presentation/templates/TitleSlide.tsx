@@ -17,7 +17,7 @@ const TitleSlide = ({ slide }: TitleSlideProps) => {
           </Title>
         )}
         {slide.content.text && (
-          <Body className="max-w-[80%]">
+          <Body className="max-w-[95%]">
             {slide.content.text}
           </Body>
         )}
