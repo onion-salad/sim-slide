@@ -22,6 +22,9 @@ const ContentSlide = ({ slide }: ContentSlideProps) => {
           src={slide.content.image}
           alt="Slide content"
           className="w-full h-[40%] object-cover"
+          style={{
+            objectPosition: `${slide.content.imagePosition?.x || 50}% ${slide.content.imagePosition?.y || 50}%`
+          }}
         />
       )}
     </div>

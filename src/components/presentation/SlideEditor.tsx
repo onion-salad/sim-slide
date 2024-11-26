@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Image, Upload } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { Slider } from "@/components/ui/slider";
 
 interface SlideEditorProps {
   slide: Slide;
@@ -16,7 +17,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
 
   const handleChange = (
     field: keyof typeof slide.content,
-    value: string
+    value: string | number
   ) => {
     onUpdate({
       ...slide,
@@ -31,7 +32,6 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Check file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       toast({
         title: "エラー",
@@ -41,7 +41,6 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
       return;
     }
 
-    // Check file type
     if (!file.type.startsWith('image/')) {
       toast({
         title: "エラー",
@@ -107,13 +106,51 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
           </div>
         </div>
         {slide.content.image && (
-          <div className="mt-2 relative aspect-video bg-gray-100 rounded-lg overflow-hidden">
-            <img
-              src={slide.content.image}
-              alt="スライドの画像"
-              className="absolute inset-0 w-full h-full object-contain"
-            />
-          </div>
+          <>
+            <div className="mt-4">
+              <Label>画像の位置調整</Label>
+              <div className="mt-2">
+                <Label className="text-sm text-gray-500">水平位置</Label>
+                <Slider
+                  value={[slide.content.imagePosition?.x || 50]}
+                  onValueChange={(value) => {
+                    handleChange("imagePosition", {
+                      x: value[0],
+                      y: slide.content.imagePosition?.y || 50
+                    });
+                  }}
+                  max={100}
+                  step={1}
+                  className="my-2"
+                />
+              </div>
+              <div className="mt-2">
+                <Label className="text-sm text-gray-500">垂直位置</Label>
+                <Slider
+                  value={[slide.content.imagePosition?.y || 50]}
+                  onValueChange={(value) => {
+                    handleChange("imagePosition", {
+                      x: slide.content.imagePosition?.x || 50,
+                      y: value[0]
+                    });
+                  }}
+                  max={100}
+                  step={1}
+                  className="my-2"
+                />
+              </div>
+            </div>
+            <div className="mt-2 relative aspect-video bg-gray-100 rounded-lg overflow-hidden">
+              <img
+                src={slide.content.image}
+                alt="スライドの画像"
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{
+                  objectPosition: `${slide.content.imagePosition?.x || 50}% ${slide.content.imagePosition?.y || 50}%`
+                }}
+              />
+            </div>
+          </>
         )}
       </div>
     </div>

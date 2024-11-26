@@ -5,6 +5,10 @@ export interface Slide {
     title?: string;
     text?: string;
     image?: string;
+    imagePosition?: {
+      x: number;
+      y: number;
+    };
   };
 }
 
@@ -46,5 +50,7 @@ export const createEmptyPresentation = (): Presentation => ({
 export const createSlide = (template: string): Slide => ({
   id: crypto.randomUUID(),
   template,
-  content: {},
+  content: {
+    imagePosition: { x: 50, y: 50 }
+  },
 });
