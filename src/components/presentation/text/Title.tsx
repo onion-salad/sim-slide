@@ -9,7 +9,7 @@ interface TitleProps {
 const Title = ({ children, className }: TitleProps) => {
   return (
     <h1 className={cn(
-      "text-[2vw] font-bold bg-gradient-to-r from-[#7C3AED] to-[#6366F1] bg-clip-text text-transparent",
+      "text-[4vw] font-bold bg-gradient-to-r from-[#7C3AED] to-[#6366F1] bg-clip-text text-transparent",
       className
     )}>
       {children}
