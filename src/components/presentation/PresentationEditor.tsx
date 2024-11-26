@@ -66,7 +66,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header - Fixed on mobile */}
-      <div className="sticky top-0 z-10 bg-white border-b p-4 md:hidden">
+      <div className="fixed top-0 left-0 right-0 z-10 bg-white border-b p-4 md:hidden">
         <div className="flex justify-between items-center gap-2">
           <Button onClick={() => setShowTemplates(true)} size="sm">
             <Plus className="w-4 h-4 mr-2" />
@@ -83,7 +83,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row h-[calc(100vh-4rem)] md:h-screen">
+      <div className="flex flex-col md:flex-row h-[calc(100vh-4rem)] md:h-screen pt-[4.5rem] md:pt-0">
         {/* Main Content Area */}
         <div className="flex-1 p-4 overflow-hidden flex flex-col">
           {/* Horizontal Slide Preview Carousel */}

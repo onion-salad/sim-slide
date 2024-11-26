@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, TouchEvent } from "react";
 import { Slide } from "@/lib/presentation";
 import { X } from "lucide-react";
 
@@ -9,13 +9,47 @@ interface FullscreenPresentationProps {
 
 const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps) => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+
+  const handleNext = () => {
+    if (currentSlide < slides.length - 1) {
+      setCurrentSlide(currentSlide + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentSlide > 0) {
+      setCurrentSlide(currentSlide - 1);
+    }
+  };
+
+  const handleTouchStart = (e: TouchEvent) => {
+    setTouchStart(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: TouchEvent) => {
+    if (!touchStart) return;
+
+    const touchEnd = e.changedTouches[0].clientX;
+    const diff = touchStart - touchEnd;
+
+    if (Math.abs(diff) > 50) { // minimum swipe distance
+      if (diff > 0) {
+        handleNext();
+      } else {
+        handlePrev();
+      }
+    }
+
+    setTouchStart(null);
+  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight" && currentSlide < slides.length - 1) {
-        setCurrentSlide(currentSlide + 1);
-      } else if (e.key === "ArrowLeft" && currentSlide > 0) {
-        setCurrentSlide(currentSlide - 1);
+      if (e.key === "ArrowRight" || e.key === "Space") {
+        handleNext();
+      } else if (e.key === "ArrowLeft") {
+        handlePrev();
       } else if (e.key === "Escape") {
         onClose();
       }
@@ -28,7 +62,11 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
   if (!slides.length) return null;
 
   return (
-    <div className="fixed inset-0 bg-black z-50">
+    <div 
+      className="fixed inset-0 bg-black z-50"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       <button
         onClick={onClose}
         className="absolute top-4 right-4 text-white hover:text-gray-300"
