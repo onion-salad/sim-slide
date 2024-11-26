@@ -88,7 +88,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
         <div className="flex-1 p-4 overflow-hidden flex flex-col">
           {/* Horizontal Slide Preview Carousel */}
           <div className="w-full overflow-x-auto pb-4 flex gap-4 snap-x snap-mandatory pt-4">
-            <div className="pl-4" /> {/* Left padding spacer */}
+            <div className="pl-4" />
             {presentation.slides.map((slide, index) => (
               <div
                 key={slide.id}
@@ -97,14 +97,14 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
                 }`}
                 onClick={() => setSelectedSlide(slide.id)}
               >
-                <SlidePreview slide={slide} />
+                <SlidePreview slide={slide} scale={1} />
               </div>
             ))}
-            <div className="pr-4" /> {/* Right padding spacer */}
+            <div className="pr-4" />
           </div>
 
           {/* Slide Editor */}
-          <div className="flex-1 overflow-y-auto mt-4 bg-white rounded-lg p-4">
+          <div className="flex-1 overflow-y-auto mt-4 bg-white p-4">
             {selectedSlide ? (
               <SlideEditor
                 slide={presentation.slides.find((s) => s.id === selectedSlide)!}
@@ -150,7 +150,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
                             selectedSlide === slide.id ? "shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-shadow duration-300" : ""
                           }`}
                         >
-                          <SlidePreview slide={slide} />
+                          <SlidePreview slide={slide} scale={0.25} />
                         </div>
                       )}
                     </Draggable>
