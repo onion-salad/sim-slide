@@ -28,6 +28,9 @@ const TitleSlide = ({ slide }: TitleSlideProps) => {
             src={slide.content.image}
             alt="Slide content"
             className="absolute inset-0 w-full h-full object-cover"
+            style={{
+              objectPosition: `${slide.content.imagePosition?.x || 50}% ${slide.content.imagePosition?.y || 50}%`
+            }}
           />
         </div>
       )}
