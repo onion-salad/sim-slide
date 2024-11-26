@@ -92,8 +92,10 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
             {presentation.slides.map((slide, index) => (
               <div
                 key={slide.id}
-                className={`flex-none w-[85%] md:w-[70%] snap-center ${
-                  selectedSlide === slide.id ? "shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-shadow duration-300" : ""
+                className={`flex-none w-[85%] md:w-[70%] snap-center transition-all duration-300 ${
+                  selectedSlide === slide.id 
+                    ? "shadow-[0_8px_30px_rgba(139,92,246,0.3)] scale-[1.02] bg-white rounded-lg" 
+                    : ""
                 }`}
                 onClick={() => setSelectedSlide(slide.id)}
               >
@@ -146,8 +148,10 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           onClick={() => setSelectedSlide(slide.id)}
-                          className={`cursor-pointer ${
-                            selectedSlide === slide.id ? "shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-shadow duration-300" : ""
+                          className={`cursor-pointer transition-all duration-300 ${
+                            selectedSlide === slide.id 
+                              ? "shadow-[0_8px_30px_rgba(139,92,246,0.3)] scale-[1.02] bg-white rounded-lg" 
+                              : ""
                           }`}
                         >
                           <SlidePreview slide={slide} scale={0.25} />
