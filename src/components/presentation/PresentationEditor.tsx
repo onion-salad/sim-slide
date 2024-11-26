@@ -87,13 +87,13 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
         {/* Main Content Area */}
         <div className="flex-1 p-4 overflow-hidden flex flex-col">
           {/* Horizontal Slide Preview Carousel */}
-          <div className="w-full overflow-x-auto pb-4 flex gap-4 snap-x snap-mandatory">
+          <div className="w-full overflow-x-auto pb-4 flex gap-4 snap-x snap-mandatory pt-4">
             <div className="pl-4" /> {/* Left padding spacer */}
             {presentation.slides.map((slide, index) => (
               <div
                 key={slide.id}
                 className={`flex-none w-[85%] md:w-[70%] snap-center ${
-                  selectedSlide === slide.id ? "ring-2 ring-primary" : ""
+                  selectedSlide === slide.id ? "ring-2 ring-primary ring-offset-4 ring-offset-gray-100" : ""
                 }`}
                 onClick={() => setSelectedSlide(slide.id)}
               >
@@ -147,7 +147,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
                           {...provided.dragHandleProps}
                           onClick={() => setSelectedSlide(slide.id)}
                           className={`cursor-pointer ${
-                            selectedSlide === slide.id ? "ring-2 ring-primary" : ""
+                            selectedSlide === slide.id ? "ring-2 ring-primary ring-offset-2" : ""
                           }`}
                         >
                           <SlidePreview slide={slide} />
