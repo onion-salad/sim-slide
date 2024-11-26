@@ -1,6 +1,6 @@
 import { useState, useEffect, TouchEvent } from "react";
 import { Slide } from "@/lib/presentation";
-import { X } from "lucide-react";
+import { X, ArrowLeft, ArrowRight } from "lucide-react";
 import SlidePreview from "./SlidePreview";
 
 interface FullscreenPresentationProps {
@@ -76,13 +76,27 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
       </button>
       
       <div className="h-full flex items-center justify-center">
-        <div className="w-full h-full">
+        <div className="w-full h-full flex items-center justify-center">
           <SlidePreview slide={slides[currentSlide]} />
         </div>
       </div>
 
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white">
-        {currentSlide + 1} / {slides.length}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-8 text-white">
+        <button 
+          onClick={handlePrev}
+          disabled={currentSlide === 0}
+          className="p-2 hover:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <ArrowLeft className="w-6 h-6" />
+        </button>
+        <span>{currentSlide + 1} / {slides.length}</span>
+        <button 
+          onClick={handleNext}
+          disabled={currentSlide === slides.length - 1}
+          className="p-2 hover:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <ArrowRight className="w-6 h-6" />
+        </button>
       </div>
     </div>
   );
