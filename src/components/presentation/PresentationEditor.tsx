@@ -6,7 +6,7 @@ import SlidePreview from "./SlidePreview";
 import SlideEditor from "./SlideEditor";
 import TemplateGallery from "./TemplateGallery";
 import FullscreenPresentation from "./FullscreenPresentation";
-import { Download, Play } from "lucide-react";
+import { Download, Play, Plus } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
@@ -64,72 +64,113 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      <div className="w-64 bg-white p-4 border-r">
-        <Button
-          className="w-full mb-4"
-          onClick={() => setShowTemplates(true)}
-        >
-          Add Slide
-        </Button>
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <Droppable droppableId="slides">
-            {(provided) => (
+    <div className="min-h-screen bg-gray-100">
+      {/* Header - Fixed on mobile */}
+      <div className="sticky top-0 z-10 bg-white border-b p-4 md:hidden">
+        <div className="flex justify-between items-center gap-2">
+          <Button onClick={() => setShowTemplates(true)} size="sm">
+            <Plus className="w-4 h-4 mr-2" />
+            Add
+          </Button>
+          <div className="flex gap-2">
+            <Button onClick={handleDownload} size="sm" variant="outline">
+              <Download className="w-4 h-4" />
+            </Button>
+            <Button onClick={() => setIsFullscreen(true)} size="sm">
+              <Play className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col md:flex-row h-[calc(100vh-4rem)] md:h-screen">
+        {/* Main Content Area */}
+        <div className="flex-1 p-4 overflow-hidden flex flex-col">
+          {/* Horizontal Slide Preview Carousel */}
+          <div className="w-full overflow-x-auto pb-4 flex gap-4 snap-x snap-mandatory">
+            {presentation.slides.map((slide, index) => (
               <div
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                className="space-y-2"
+                key={slide.id}
+                className={`flex-none w-[80%] md:w-[60%] snap-center first:ml-4 last:mr-4 ${
+                  selectedSlide === slide.id ? "ring-2 ring-primary" : ""
+                }`}
+                onClick={() => setSelectedSlide(slide.id)}
               >
-                {presentation.slides.map((slide, index) => (
-                  <Draggable
-                    key={slide.id}
-                    draggableId={slide.id}
-                    index={index}
-                  >
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        onClick={() => setSelectedSlide(slide.id)}
-                        className={`cursor-pointer ${
-                          selectedSlide === slide.id ? "ring-2 ring-primary" : ""
-                        }`}
-                      >
-                        <SlidePreview slide={slide} />
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
+                <SlidePreview slide={slide} />
+              </div>
+            ))}
+          </div>
+
+          {/* Slide Editor */}
+          <div className="flex-1 overflow-y-auto mt-4 bg-white rounded-lg p-4">
+            {selectedSlide ? (
+              <SlideEditor
+                slide={presentation.slides.find((s) => s.id === selectedSlide)!}
+                onUpdate={handleUpdateSlide}
+              />
+            ) : (
+              <div className="flex items-center justify-center h-full text-gray-400">
+                Select a slide to edit
               </div>
             )}
-          </Droppable>
-        </DragDropContext>
-      </div>
-
-      <div className="flex-1 p-8">
-        {selectedSlide ? (
-          <SlideEditor
-            slide={presentation.slides.find((s) => s.id === selectedSlide)!}
-            onUpdate={handleUpdateSlide}
-          />
-        ) : (
-          <div className="flex items-center justify-center h-full text-gray-400">
-            Select a slide to edit
           </div>
-        )}
-      </div>
+        </div>
 
-      <div className="fixed bottom-4 right-4 space-x-2">
-        <Button onClick={handleDownload}>
-          <Download className="w-4 h-4 mr-2" />
-          Download PDF
-        </Button>
-        <Button onClick={() => setIsFullscreen(true)}>
-          <Play className="w-4 h-4 mr-2" />
-          Present
-        </Button>
+        {/* Desktop Sidebar */}
+        <div className="hidden md:block w-64 bg-white p-4 border-l">
+          <Button
+            className="w-full mb-4"
+            onClick={() => setShowTemplates(true)}
+          >
+            Add Slide
+          </Button>
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <Droppable droppableId="slides">
+              {(provided) => (
+                <div
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  className="space-y-2"
+                >
+                  {presentation.slides.map((slide, index) => (
+                    <Draggable
+                      key={slide.id}
+                      draggableId={slide.id}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          onClick={() => setSelectedSlide(slide.id)}
+                          className={`cursor-pointer ${
+                            selectedSlide === slide.id ? "ring-2 ring-primary" : ""
+                          }`}
+                        >
+                          <SlidePreview slide={slide} />
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+        </div>
+
+        {/* Desktop Action Buttons */}
+        <div className="hidden md:flex fixed bottom-4 right-4 space-x-2">
+          <Button onClick={handleDownload}>
+            <Download className="w-4 h-4 mr-2" />
+            Download PDF
+          </Button>
+          <Button onClick={() => setIsFullscreen(true)}>
+            <Play className="w-4 h-4 mr-2" />
+            Present
+          </Button>
+        </div>
       </div>
 
       {showTemplates && (
