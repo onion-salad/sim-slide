@@ -9,7 +9,7 @@ interface SubtitleProps {
 const Subtitle = ({ children, className }: SubtitleProps) => {
   return (
     <h2 className={cn(
-      "text-[24px] md:text-[36px] leading-[1.15] font-semibold text-gray-700",
+      "text-[calc(100cqw*0.036)] leading-[1.15] font-semibold text-gray-700",
       className
     )}>
       {children}
