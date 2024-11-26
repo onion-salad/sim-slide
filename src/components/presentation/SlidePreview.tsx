@@ -1,5 +1,4 @@
 import { Slide } from "@/lib/presentation";
-import { Sparkles } from "lucide-react";
 
 interface SlidePreviewProps {
   slide: Slide;
@@ -8,7 +7,7 @@ interface SlidePreviewProps {
 const SlidePreview = ({ slide }: SlidePreviewProps) => {
   if (slide.template === "title") {
     return (
-      <div className="slide-preview aspect-video bg-white rounded-[32px] shadow-sm overflow-hidden relative">
+      <div className="slide-preview aspect-video bg-white rounded-lg shadow-sm overflow-hidden relative">
         {/* 背景のグラデーション効果 */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#F8F9FF] to-white" />
         
@@ -39,10 +38,6 @@ const SlidePreview = ({ slide }: SlidePreviewProps) => {
             </div>
           )}
           
-          {/* 装飾的な要素 */}
-          <div className="absolute top-4 right-4">
-            <Sparkles className="w-5 h-5 text-violet-400/50" />
-          </div>
           <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-violet-500/20 to-indigo-500/20" />
         </div>
       </div>
