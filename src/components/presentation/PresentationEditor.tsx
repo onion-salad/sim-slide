@@ -154,7 +154,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
                               : ""
                           }`}
                         >
-                          <SlidePreview slide={slide} scale={0.25} />
+                          <SlidePreview slide={slide} scale={0.15} />
                         </div>
                       )}
                     </Draggable>
