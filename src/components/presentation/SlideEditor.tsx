@@ -63,8 +63,15 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
   };
 
   const handleImageDelete = () => {
-    handleChange("image", "");
-    handleChange("imagePosition", { x: 50, y: 50 });
+    const updatedSlide = {
+      ...slide,
+      content: {
+        ...slide.content,
+        image: "",
+        imagePosition: { x: 50, y: 50 }
+      }
+    };
+    onUpdate(updatedSlide);
     toast({
       title: "成功",
       description: "画像が削除されました",
