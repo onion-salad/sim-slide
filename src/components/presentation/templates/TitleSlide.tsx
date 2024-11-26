@@ -34,8 +34,6 @@ const TitleSlide = ({ slide }: TitleSlideProps) => {
           />
         </div>
       )}
-      
-      <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-violet-500/20 to-indigo-500/20" />
     </div>
   );
 };
