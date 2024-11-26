@@ -9,7 +9,7 @@ interface SubtitleProps {
 const Subtitle = ({ children, className }: SubtitleProps) => {
   return (
     <h2 className={cn(
-      "text-[3.6em] leading-[1.15] font-semibold text-gray-700",
+      "text-[length:calc(var(--slide-width)*0.036)] leading-[1.15] font-semibold text-gray-700",
       className
     )}>
       {children}
