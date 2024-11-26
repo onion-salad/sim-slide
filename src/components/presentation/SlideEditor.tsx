@@ -98,15 +98,15 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
             placeholder="画像URL"
             className="flex-1"
           />
-          <div className="flex gap-2 relative z-20">
-            <div className="relative w-10 h-10">
+          <div className="flex gap-2">
+            <div className="relative">
               <Input
                 type="file"
                 accept="image/*"
                 onChange={handleImageUpload}
-                className="absolute inset-0 opacity-0 cursor-pointer"
+                className="absolute inset-0 opacity-0 cursor-pointer w-10 h-10"
               />
-              <Button type="button" variant="outline" size="icon" className="absolute inset-0">
+              <Button type="button" variant="outline" size="icon">
                 <Upload className="h-4 w-4" />
               </Button>
             </div>
@@ -116,7 +116,6 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
                 variant="outline" 
                 size="icon"
                 onClick={handleImageDelete}
-                className="w-10 h-10"
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
@@ -125,7 +124,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
         </div>
         {slide.content.image && (
           <div 
-            className="relative mt-4 aspect-video bg-gray-100 rounded-lg overflow-hidden cursor-crosshair"
+            className="mt-2 relative aspect-video bg-gray-100 rounded-lg overflow-hidden cursor-crosshair"
             onClick={handleImageClick}
           >
             <img
