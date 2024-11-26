@@ -93,7 +93,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
               <div
                 key={slide.id}
                 className={`flex-none w-[85%] md:w-[70%] snap-center ${
-                  selectedSlide === slide.id ? "ring-2 ring-primary ring-offset-4 ring-offset-gray-100" : ""
+                  selectedSlide === slide.id ? "shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-shadow duration-300" : ""
                 }`}
                 onClick={() => setSelectedSlide(slide.id)}
               >
@@ -147,7 +147,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
                           {...provided.dragHandleProps}
                           onClick={() => setSelectedSlide(slide.id)}
                           className={`cursor-pointer ${
-                            selectedSlide === slide.id ? "ring-2 ring-primary ring-offset-2" : ""
+                            selectedSlide === slide.id ? "shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-shadow duration-300" : ""
                           }`}
                         >
                           <SlidePreview slide={slide} />
