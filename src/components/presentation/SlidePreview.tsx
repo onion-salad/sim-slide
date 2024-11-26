@@ -8,21 +8,42 @@ interface SlidePreviewProps {
 const SlidePreview = ({ slide }: SlidePreviewProps) => {
   if (slide.template === "title") {
     return (
-      <div className="slide-preview aspect-video bg-gradient-to-br from-primary-light to-white rounded shadow-sm p-6 text-xs relative overflow-hidden">
-        <div className="absolute top-0 right-0 p-2">
-          <Sparkles className="w-4 h-4 text-primary/50" />
-        </div>
-        <div className="h-full flex flex-col justify-center items-start text-left">
-          {slide.content.title && (
-            <h3 className="font-bold text-base mb-3 text-primary">
-              {slide.content.title}
-            </h3>
+      <div className="slide-preview aspect-video bg-white rounded-[32px] shadow-sm overflow-hidden relative">
+        {/* 背景のグラデーション効果 */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#F8F9FF] to-white" />
+        
+        {/* メインコンテンツ */}
+        <div className="relative h-full flex">
+          {/* 左側のコンテンツエリア */}
+          <div className="flex-1 p-8 flex flex-col justify-center">
+            {slide.content.title && (
+              <h3 className="font-bold text-[28px] mb-4 bg-gradient-to-r from-[#7C3AED] to-[#6366F1] bg-clip-text text-transparent">
+                {slide.content.title}
+              </h3>
+            )}
+            {slide.content.text && (
+              <p className="text-sm text-gray-600 leading-relaxed max-w-[80%]">
+                {slide.content.text}
+              </p>
+            )}
+          </div>
+          
+          {/* 右側の画像エリア */}
+          {slide.content.image && (
+            <div className="w-[45%] relative">
+              <img
+                src={slide.content.image}
+                alt="Slide content"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </div>
           )}
-          {slide.content.text && (
-            <p className="text-xs text-gray-600 leading-relaxed">
-              {slide.content.text}
-            </p>
-          )}
+          
+          {/* 装飾的な要素 */}
+          <div className="absolute top-4 right-4">
+            <Sparkles className="w-5 h-5 text-violet-400/50" />
+          </div>
+          <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-violet-500/20 to-indigo-500/20" />
         </div>
       </div>
     );
