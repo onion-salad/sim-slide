@@ -1,6 +1,7 @@
 import { useState, useEffect, TouchEvent } from "react";
 import { Slide } from "@/lib/presentation";
 import { X } from "lucide-react";
+import SlidePreview from "./SlidePreview";
 
 interface FullscreenPresentationProps {
   slides: Slide[];
@@ -75,18 +76,8 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
       </button>
       
       <div className="h-full flex items-center justify-center p-8">
-        <div className="bg-white w-full max-w-4xl aspect-video rounded-lg p-8">
-          <h2 className="text-3xl font-bold mb-4">
-            {slides[currentSlide].content.title}
-          </h2>
-          <p className="text-xl mb-4">{slides[currentSlide].content.text}</p>
-          {slides[currentSlide].content.image && (
-            <img
-              src={slides[currentSlide].content.image}
-              alt="Slide content"
-              className="max-h-[50vh] object-contain mx-auto"
-            />
-          )}
+        <div className="w-full max-w-4xl">
+          <SlidePreview slide={slides[currentSlide]} />
         </div>
       </div>
 

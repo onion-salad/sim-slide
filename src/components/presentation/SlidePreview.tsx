@@ -7,7 +7,7 @@ interface SlidePreviewProps {
 const SlidePreview = ({ slide }: SlidePreviewProps) => {
   if (slide.template === "title") {
     return (
-      <div className="slide-preview aspect-video bg-white rounded-lg shadow-sm overflow-hidden relative">
+      <div className="slide-preview aspect-video bg-white overflow-hidden relative">
         {/* 背景のグラデーション効果 */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#F8F9FF] to-white" />
         
@@ -45,8 +45,8 @@ const SlidePreview = ({ slide }: SlidePreviewProps) => {
   }
 
   return (
-    <div className="slide-preview aspect-video bg-white rounded shadow-sm p-2 text-xs">
-      <div className="h-full border border-gray-200 rounded p-2">
+    <div className="slide-preview aspect-video bg-white p-2 text-xs">
+      <div className="h-full border border-gray-200 p-2">
         {slide.content.title && (
           <h3 className="font-semibold mb-1">{slide.content.title}</h3>
         )}
@@ -57,7 +57,7 @@ const SlidePreview = ({ slide }: SlidePreviewProps) => {
           <img
             src={slide.content.image}
             alt="Slide content"
-            className="w-full h-20 object-cover rounded"
+            className="w-full h-20 object-cover"
           />
         )}
       </div>
