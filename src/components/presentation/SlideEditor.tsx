@@ -17,7 +17,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
 
   const handleChange = (
     field: keyof typeof slide.content,
-    value: string | number
+    value: string | number | { x: number; y: number }
   ) => {
     onUpdate({
       ...slide,
