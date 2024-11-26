@@ -7,17 +7,17 @@ interface SlidePreviewProps {
 
 const SlidePreview = ({ slide, scale = 1 }: SlidePreviewProps) => {
   const baseStyles = {
-    titleText: "text-[5%] md:text-[7%] font-bold mb-[4%]",
-    bodyText: "text-[3%] md:text-[4%] leading-relaxed",
+    titleText: "text-[32px] md:text-[48px] font-bold mb-[4%]",
+    bodyText: "text-[16px] md:text-[24px] leading-relaxed",
     contentPadding: "p-[8%]",
-    imageWidth: "w-[45%]",
+    imageWidth: "w-[40%]", // 40%に変更
   };
 
   if (slide.template === "title") {
     return (
       <div 
         className="slide-preview aspect-video bg-white overflow-hidden relative"
-        style={{ fontSize: `${100 * scale}px` }} // フォントサイズの基準値を設定
+        style={{ fontSize: `${scale}px` }}
       >
         {/* 背景のグラデーション効果 */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#F8F9FF] to-white" />
@@ -58,7 +58,7 @@ const SlidePreview = ({ slide, scale = 1 }: SlidePreviewProps) => {
   return (
     <div 
       className="slide-preview aspect-video bg-white"
-      style={{ fontSize: `${100 * scale}px` }}
+      style={{ fontSize: `${scale}px` }}
     >
       <div className="h-full p-[4%]">
         {slide.content.title && (
