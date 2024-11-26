@@ -62,6 +62,17 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
     reader.readAsDataURL(file);
   };
 
+  const handleImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    
+    handleChange("imagePosition", {
+      x: Math.min(Math.max(x, 0), 100),
+      y: Math.min(Math.max(y, 0), 100)
+    });
+  };
+
   return (
     <div className="space-y-4">
       <div>
@@ -106,51 +117,27 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
           </div>
         </div>
         {slide.content.image && (
-          <>
-            <div className="mt-4">
-              <Label>画像の位置調整</Label>
-              <div className="mt-2">
-                <Label className="text-sm text-gray-500">水平位置</Label>
-                <Slider
-                  value={[slide.content.imagePosition?.x || 50]}
-                  onValueChange={(value) => {
-                    handleChange("imagePosition", {
-                      x: value[0],
-                      y: slide.content.imagePosition?.y || 50
-                    });
-                  }}
-                  max={100}
-                  step={1}
-                  className="my-2"
-                />
-              </div>
-              <div className="mt-2">
-                <Label className="text-sm text-gray-500">垂直位置</Label>
-                <Slider
-                  value={[slide.content.imagePosition?.y || 50]}
-                  onValueChange={(value) => {
-                    handleChange("imagePosition", {
-                      x: slide.content.imagePosition?.x || 50,
-                      y: value[0]
-                    });
-                  }}
-                  max={100}
-                  step={1}
-                  className="my-2"
-                />
-              </div>
-            </div>
-            <div className="mt-2 relative aspect-video bg-gray-100 rounded-lg overflow-hidden">
-              <img
-                src={slide.content.image}
-                alt="スライドの画像"
-                className="absolute inset-0 w-full h-full object-cover"
-                style={{
-                  objectPosition: `${slide.content.imagePosition?.x || 50}% ${slide.content.imagePosition?.y || 50}%`
-                }}
-              />
-            </div>
-          </>
+          <div 
+            className="mt-2 relative aspect-video bg-gray-100 rounded-lg overflow-hidden cursor-crosshair"
+            onClick={handleImageClick}
+          >
+            <img
+              src={slide.content.image}
+              alt="スライドの画像"
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{
+                objectPosition: `${slide.content.imagePosition?.x || 50}% ${slide.content.imagePosition?.y || 50}%`
+              }}
+            />
+            <div 
+              className="absolute w-20 h-20 border-2 border-white rounded-full pointer-events-none"
+              style={{
+                left: `calc(${slide.content.imagePosition?.x || 50}% - 40px)`,
+                top: `calc(${slide.content.imagePosition?.y || 50}% - 40px)`,
+                boxShadow: '0 0 0 2px rgba(0,0,0,0.3)'
+              }}
+            />
+          </div>
         )}
       </div>
     </div>
