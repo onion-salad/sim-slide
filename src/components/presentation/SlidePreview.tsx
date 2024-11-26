@@ -11,7 +11,7 @@ const SlidePreview = ({ slide, scale = 1 }: SlidePreviewProps) => {
   if (slide.template === "title") {
     return (
       <div 
-        className="slide-preview aspect-video bg-white overflow-hidden relative"
+        className="slide-preview aspect-video bg-white overflow-hidden relative w-full h-full"
         style={{ fontSize: `${scale}px` }}
       >
         {/* 背景のグラデーション効果 */}
@@ -27,7 +27,7 @@ const SlidePreview = ({ slide, scale = 1 }: SlidePreviewProps) => {
 
   return (
     <div 
-      className="slide-preview aspect-video bg-white"
+      className="slide-preview aspect-video bg-white w-full h-full"
       style={{ fontSize: `${scale}px` }}
     >
       <ContentSlide slide={slide} />
