@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Image, Upload } from "lucide-react";
+import { Image, Upload, Trash2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { Slider } from "@/components/ui/slider";
 
@@ -62,6 +62,15 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
     reader.readAsDataURL(file);
   };
 
+  const handleImageDelete = () => {
+    handleChange("image", "");
+    handleChange("imagePosition", { x: 50, y: 50 });
+    toast({
+      title: "成功",
+      description: "画像が削除されました",
+    });
+  };
+
   const handleImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
@@ -104,16 +113,28 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
             placeholder="画像URL"
             className="flex-1"
           />
-          <div className="relative">
-            <Input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="absolute inset-0 opacity-0 cursor-pointer"
-            />
-            <Button type="button" variant="outline" size="icon">
-              <Upload className="h-4 w-4" />
-            </Button>
+          <div className="flex gap-2">
+            <div className="relative">
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="absolute inset-0 opacity-0 cursor-pointer"
+              />
+              <Button type="button" variant="outline" size="icon">
+                <Upload className="h-4 w-4" />
+              </Button>
+            </div>
+            {slide.content.image && (
+              <Button 
+                type="button" 
+                variant="outline" 
+                size="icon"
+                onClick={handleImageDelete}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            )}
           </div>
         </div>
         {slide.content.image && (
