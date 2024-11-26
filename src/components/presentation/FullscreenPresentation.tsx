@@ -76,7 +76,7 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
       </button>
       
       <div className="h-full flex items-center justify-center p-4">
-        <div className="w-full max-w-[90vw] aspect-video">
+        <div className="w-full aspect-video">
           <SlidePreview slide={slides[currentSlide]} />
         </div>
       </div>
