@@ -9,7 +9,7 @@ interface BodyProps {
 const Body = ({ children, className }: BodyProps) => {
   return (
     <p className={cn(
-      "text-[calc(100cqw*0.024)] leading-[1.15] text-gray-600",
+      "text-[2.4em] leading-[1.15] text-gray-600",
       className
     )}>
       {children}
