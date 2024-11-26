@@ -64,7 +64,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 overflow-x-hidden">
       {/* Header - Fixed on mobile */}
       <div className="fixed top-0 left-0 right-0 z-10 bg-white border-b p-4 md:hidden">
         <div className="flex justify-between items-center gap-2">
@@ -106,7 +106,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
           </div>
 
           {/* Slide Editor */}
-          <div className="flex-1 overflow-y-auto mt-4 bg-white p-4">
+          <div className="flex-1 overflow-y-auto mt-4 bg-white p-4 overflow-x-hidden">
             {selectedSlide ? (
               <SlideEditor
                 slide={presentation.slides.find((s) => s.id === selectedSlide)!}
