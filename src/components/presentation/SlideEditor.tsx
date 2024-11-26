@@ -110,7 +110,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
           rows={5}
         />
       </div>
-      <div>
+      <div className="relative">
         <Label htmlFor="image">画像</Label>
         <div className="flex gap-2 items-center">
           <Input
@@ -120,7 +120,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
             placeholder="画像URL"
             className="flex-1"
           />
-          <div className="flex gap-2">
+          <div className="flex gap-2 relative z-10">
             <div className="relative">
               <Input
                 type="file"
