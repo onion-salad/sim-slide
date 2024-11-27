@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Button } from "@/components/ui/button";
 import { Presentation, Slide, createSlide } from "@/lib/presentation";
@@ -9,6 +9,7 @@ import FullscreenPresentation from "./FullscreenPresentation";
 import { Download, Play, Plus } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { useSlideScroll } from "@/hooks/useSlideScroll";
 
 interface PresentationEditorProps {
   presentation: Presentation;
@@ -19,15 +20,11 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
   const [selectedSlide, setSelectedSlide] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
-  const slideRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  const { slideRefs, scrollToSlide } = useSlideScroll();
 
   const handleSlideSelect = (slideId: string) => {
     setSelectedSlide(slideId);
-    // スライドが選択されたら、そのスライドまでスクロール
-    const slideElement = slideRefs.current[slideId];
-    if (slideElement) {
-      slideElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
+    scrollToSlide(slideId);
   };
 
   const handleDragEnd = (result: any) => {
@@ -190,6 +187,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
         </div>
       </div>
 
+      {/* Templates and Fullscreen Components */}
       {showTemplates && (
         <TemplateGallery
           onSelect={handleAddSlide}
