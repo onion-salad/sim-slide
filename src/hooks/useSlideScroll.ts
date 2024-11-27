@@ -11,8 +11,13 @@ export const useSlideScroll = () => {
         const containerRect = container.getBoundingClientRect();
         const slideRect = slideElement.getBoundingClientRect();
 
-        // スライドを中央に配置するためのスクロール位置を計算
-        const targetScrollLeft = slideElement.offsetLeft - (containerRect.width - slideRect.width) / 2;
+        // スライドの位置を正確に計算
+        const containerLeft = containerRect.left;
+        const slideLeft = slideRect.left;
+        const scrollOffset = container.scrollLeft;
+        
+        // スライドを中央に配置するための位置を計算
+        const targetScrollLeft = scrollOffset + (slideLeft - containerLeft) - (containerRect.width - slideRect.width) / 2;
 
         // 現在表示されているスライドのIDを取得
         const currentSlideId = Object.entries(slideRefs.current).find(([id, el]) => {
@@ -44,10 +49,8 @@ export const useSlideScroll = () => {
         const animate = () => {
           currentStep++;
           
-          // 現在のスライドインデックスと進行度を計算
           const progress = currentStep / totalSteps;
           
-          // スライドの選択状態を更新（進行度に基づいて少し早めに更新）
           const adjustedIndex = Math.min(
             Math.floor((progress + 0.1) * (slidesToPass.length - 1)),
             slidesToPass.length - 1
@@ -63,14 +66,11 @@ export const useSlideScroll = () => {
             }
           }
 
-          // スクロール位置の計算
           const easeProgress = progress < 0.5
             ? 16 * progress * progress * progress * progress * progress
             : 1 - Math.pow(-2 * progress + 2, 5) / 2;
 
-          const currentScrollLeft = container.scrollLeft;
-          const newScrollLeft = currentScrollLeft + (targetScrollLeft - currentScrollLeft) * easeProgress;
-          container.scrollLeft = newScrollLeft;
+          container.scrollLeft = targetScrollLeft * easeProgress;
 
           if (currentStep < totalSteps) {
             requestAnimationFrame(animate);

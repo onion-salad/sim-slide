@@ -10,6 +10,7 @@ import { Download, Play, Plus } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { useSlideScroll } from "@/hooks/useSlideScroll";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface PresentationEditorProps {
   presentation: Presentation;
@@ -136,42 +137,44 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
           >
             Add Slide
           </Button>
-          <DragDropContext onDragEnd={handleDragEnd}>
-            <Droppable droppableId="slides">
-              {(provided) => (
-                <div
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  className="space-y-2"
-                >
-                  {presentation.slides.map((slide, index) => (
-                    <Draggable
-                      key={slide.id}
-                      draggableId={slide.id}
-                      index={index}
-                    >
-                      {(provided) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          onClick={() => handleSlideSelect(slide.id)}
-                          className={`cursor-pointer transition-all duration-300 ${
-                            selectedSlide === slide.id 
-                              ? "shadow-selected scale-[1.02] bg-white rounded-lg" 
-                              : ""
-                          }`}
-                        >
-                          <SlidePreview slide={slide} scale={0.15} />
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          </DragDropContext>
+          <ScrollArea className="h-[calc(100vh-8rem)]">
+            <DragDropContext onDragEnd={handleDragEnd}>
+              <Droppable droppableId="slides">
+                {(provided) => (
+                  <div
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    className="space-y-2"
+                  >
+                    {presentation.slides.map((slide, index) => (
+                      <Draggable
+                        key={slide.id}
+                        draggableId={slide.id}
+                        index={index}
+                      >
+                        {(provided) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            onClick={() => handleSlideSelect(slide.id)}
+                            className={`cursor-pointer transition-all duration-300 ${
+                              selectedSlide === slide.id 
+                                ? "shadow-selected scale-[1.02] bg-white rounded-lg" 
+                                : ""
+                            }`}
+                          >
+                            <SlidePreview slide={slide} scale={0.15} />
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
+          </ScrollArea>
         </div>
 
         {/* Desktop Action Buttons */}
