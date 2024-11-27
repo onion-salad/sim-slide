@@ -20,7 +20,7 @@ const StepsSlide = ({ slide }: StepsSlideProps) => {
       <div className="space-y-[5%] mt-[2%]">
         {slide.content.steps?.map((step, index) => (
           <div key={index} className="flex gap-4">
-            <div className="flex-none w-7 h-7 rounded-full bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center relative shadow-selected">
+            <div className="flex-none w-7 h-7 rounded-full bg-gradient-to-r from-[#7C3AED] to-[#6366F1] flex items-center justify-center relative shadow-selected">
               <span className="text-white font-bold text-sm">{numbers[index]}</span>
             </div>
             <div className="flex-1">
