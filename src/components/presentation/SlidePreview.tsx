@@ -2,6 +2,7 @@ import { Slide } from "@/lib/presentation";
 import TitleSlide from "./templates/TitleSlide";
 import ContentSlide from "./templates/ContentSlide";
 import StepsSlide from "./templates/StepsSlide";
+import ThumbnailSlide from "./templates/ThumbnailSlide";
 import { useEffect, useRef, useState } from "react";
 
 interface SlidePreviewProps {
@@ -27,6 +28,8 @@ const SlidePreview = ({ slide, scale = 1 }: SlidePreviewProps) => {
 
   const renderSlide = () => {
     switch (slide.template) {
+      case "thumbnail":
+        return <ThumbnailSlide slide={slide} />;
       case "title":
         return <TitleSlide slide={slide} />;
       case "steps":

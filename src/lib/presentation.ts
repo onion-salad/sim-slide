@@ -39,6 +39,11 @@ export const templates = [
     name: "ステップスライド",
     preview: "/placeholder.svg",
   },
+  {
+    id: "thumbnail",
+    name: "サムネイル",
+    preview: "/placeholder.svg",
+  },
 ];
 
 export const createEmptyPresentation = (): Presentation => ({
