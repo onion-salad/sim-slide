@@ -33,8 +33,8 @@ export const useSlideScroll = () => {
           : slideIds.slice(targetIndex, currentIndex + 1).reverse();
 
         // アニメーションの設定
-        const duration = 800; // アニメーション時間を短縮
-        const stepsPerSlide = 20;
+        const duration = 600; // アニメーション時間をさらに短縮
+        const stepsPerSlide = 15; // ステップ数を減らして更新頻度を上げる
         const totalSteps = stepsPerSlide * (slidesToPass.length - 1);
         const stepDuration = duration / totalSteps;
         let currentStep = 0;
@@ -46,9 +46,14 @@ export const useSlideScroll = () => {
           const progress = currentStep / totalSteps;
           const slideIndex = Math.floor(progress * (slidesToPass.length - 1));
           
-          // スライドの選択状態を更新
-          if (slideIndex >= 0 && slideIndex < slidesToPass.length) {
-            const currentSlideElement = slideRefs.current[slidesToPass[slideIndex]];
+          // スライドの選択状態を更新（進行度に基づいて少し早めに更新）
+          const adjustedIndex = Math.min(
+            Math.floor((progress + 0.1) * (slidesToPass.length - 1)),
+            slidesToPass.length - 1
+          );
+          
+          if (adjustedIndex >= 0 && adjustedIndex < slidesToPass.length) {
+            const currentSlideElement = slideRefs.current[slidesToPass[adjustedIndex]];
             if (currentSlideElement) {
               Object.values(slideRefs.current).forEach(el => {
                 if (el) el.classList.remove('shadow-selected', 'scale-[1.02]', 'bg-white', 'rounded-lg');
@@ -66,11 +71,10 @@ export const useSlideScroll = () => {
           container.scrollLeft = newScrollLeft;
 
           if (currentStep < totalSteps) {
-            requestAnimationFrame(animate); // setTimeoutを削除して直接requestAnimationFrameを呼び出し
+            requestAnimationFrame(animate);
           }
         };
 
-        // アニメーションをすぐに開始
         requestAnimationFrame(animate);
       }
     }
