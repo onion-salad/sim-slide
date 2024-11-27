@@ -1,10 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import PresentationEditor from "@/components/presentation/PresentationEditor";
 import { Presentation, createEmptyPresentation } from "@/lib/presentation";
-import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
+import { RotateCcw } from "lucide-react";
 
 const Index = () => {
-  const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const { data: presentation } = useQuery({
@@ -21,15 +21,26 @@ const Index = () => {
     },
     onSuccess: (newPresentation) => {
       queryClient.setQueryData(["presentation"], newPresentation);
-      toast({
-        title: "保存しました",
-        description: "プレゼンテーションの変更が保存されました",
-      });
     },
   });
 
+  const handleRefresh = () => {
+    queryClient.setQueryData(["presentation"], createEmptyPresentation());
+    queryClient.removeQueries();
+  };
+
   return (
     <div className="h-screen">
+      <div className="fixed top-4 right-4 z-50">
+        <Button 
+          variant="outline" 
+          size="icon"
+          onClick={handleRefresh}
+          title="スライドをリセット"
+        >
+          <RotateCcw className="h-4 w-4" />
+        </Button>
+      </div>
       <PresentationEditor
         presentation={presentation}
         onUpdate={updatePresentation}
