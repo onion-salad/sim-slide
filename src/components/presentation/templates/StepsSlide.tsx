@@ -20,8 +20,8 @@ const StepsSlide = ({ slide }: StepsSlideProps) => {
       <div className="space-y-[5%] mt-[2%]">
         {slide.content.steps?.map((step, index) => (
           <div key={index} className="flex gap-4">
-            <div className="flex-none w-7 h-7 rounded-full bg-gradient-to-r from-[#7C3AED] to-[#6366F1] flex items-center justify-center relative shadow-selected">
-              <span className="text-white font-bold text-sm">{numbers[index]}</span>
+            <div className="flex-none w-[calc(var(--slide-width)*0.014)] h-[calc(var(--slide-width)*0.014)] rounded-full bg-gradient-to-r from-[#7C3AED] to-[#6366F1] flex items-center justify-center relative shadow-selected">
+              <span className="text-white font-bold text-[calc(var(--slide-width)*0.007)]">{numbers[index]}</span>
             </div>
             <div className="flex-1">
               <h2 className={`text-[length:calc(var(--slide-width)*0.036)] leading-[1.15] font-semibold bg-gradient-to-r from-[#7C3AED] to-[#6366F1] bg-clip-text text-transparent ${!step.text ? "leading-7" : "mb-1.5"}`}>
