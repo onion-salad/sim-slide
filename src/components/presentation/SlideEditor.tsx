@@ -13,7 +13,7 @@ interface SlideEditorProps {
 const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
   const handleChange = (
     field: keyof typeof slide.content,
-    value: string | number | { x: number; y: number }
+    value: string | number | { x: number; y: number } | { subtitle: string; text: string }[]
   ) => {
     onUpdate({
       ...slide,
@@ -22,6 +22,18 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
         [field]: value,
       },
     });
+  };
+
+  const handleStepChange = (index: number, field: "subtitle" | "text", value: string) => {
+    if (!slide.content.steps) return;
+    
+    const newSteps = [...slide.content.steps];
+    newSteps[index] = {
+      ...newSteps[index],
+      [field]: value
+    };
+    
+    handleChange("steps", newSteps);
   };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,83 +90,118 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
           placeholder="スライドのタイトル"
         />
       </div>
-      <div>
-        <Label htmlFor="subtitle">サブタイトル</Label>
-        <Input
-          id="subtitle"
-          value={slide.content.subtitle || ""}
-          onChange={(e) => handleChange("subtitle", e.target.value)}
-          placeholder="スライドのサブタイトル"
-        />
-      </div>
-      <div>
-        <Label htmlFor="text">本文</Label>
-        <Textarea
-          id="text"
-          value={slide.content.text || ""}
-          onChange={(e) => handleChange("text", e.target.value)}
-          placeholder="スライドの本文"
-          rows={5}
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="image">画像</Label>
-        <div className="flex gap-2 items-start">
-          <Input
-            id="image"
-            value={slide.content.image || ""}
-            onChange={(e) => handleChange("image", e.target.value)}
-            placeholder="画像URL"
-            className="flex-1"
-          />
-          <div className="flex gap-2">
-            <div className="relative">
+
+      {slide.template === "steps" ? (
+        <div className="space-y-6">
+          {slide.content.steps?.map((step, index) => (
+            <div key={index} className="space-y-2 p-4 border rounded-lg">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#7C3AED] to-[#6366F1] flex items-center justify-center text-white text-sm">
+                  {index + 1}
+                </div>
+                <Label htmlFor={`step-${index}-subtitle`}>サブタイトル</Label>
+              </div>
               <Input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="absolute inset-0 opacity-0 cursor-pointer w-10 h-10"
+                id={`step-${index}-subtitle`}
+                value={step.subtitle}
+                onChange={(e) => handleStepChange(index, "subtitle", e.target.value)}
+                placeholder={`ステップ ${index + 1} のタイトル`}
               />
-              <Button type="button" variant="outline" size="icon">
-                <Upload className="h-4 w-4" />
-              </Button>
+              <Label htmlFor={`step-${index}-text`}>本文</Label>
+              <Textarea
+                id={`step-${index}-text`}
+                value={step.text}
+                onChange={(e) => handleStepChange(index, "text", e.target.value)}
+                placeholder={`ステップ ${index + 1} の説明`}
+                rows={3}
+              />
             </div>
-            {slide.content.image && (
-              <Button 
-                type="button" 
-                variant="outline" 
-                size="icon"
-                onClick={handleImageDelete}
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            )}
-          </div>
+          ))}
         </div>
-        {slide.content.image && (
-          <div 
-            className="mt-2 relative aspect-video bg-gray-100 rounded-lg overflow-hidden cursor-crosshair"
-            onClick={handleImageClick}
-          >
-            <img
-              src={slide.content.image}
-              alt="スライドの画像"
-              className="absolute inset-0 w-full h-full object-cover"
-              style={{
-                objectPosition: `${slide.content.imagePosition?.x || 50}% ${slide.content.imagePosition?.y || 50}%`
-              }}
-            />
-            <div 
-              className="absolute w-20 h-20 border-2 border-white rounded-full pointer-events-none"
-              style={{
-                left: `calc(${slide.content.imagePosition?.x || 50}% - 40px)`,
-                top: `calc(${slide.content.imagePosition?.y || 50}% - 40px)`,
-                boxShadow: '0 0 0 2px rgba(0,0,0,0.3)'
-              }}
+      ) : (
+        <>
+          <div>
+            <Label htmlFor="subtitle">サブタイトル</Label>
+            <Input
+              id="subtitle"
+              value={slide.content.subtitle || ""}
+              onChange={(e) => handleChange("subtitle", e.target.value)}
+              placeholder="スライドのサブタイトル"
             />
           </div>
-        )}
-      </div>
+          <div>
+            <Label htmlFor="text">本文</Label>
+            <Textarea
+              id="text"
+              value={slide.content.text || ""}
+              onChange={(e) => handleChange("text", e.target.value)}
+              placeholder="スライドの本文"
+              rows={5}
+            />
+          </div>
+        </>
+      )}
+
+      {slide.template !== "steps" && (
+        <div className="space-y-2">
+          <Label htmlFor="image">画像</Label>
+          <div className="flex gap-2 items-start">
+            <Input
+              id="image"
+              value={slide.content.image || ""}
+              onChange={(e) => handleChange("image", e.target.value)}
+              placeholder="画像URL"
+              className="flex-1"
+            />
+            <div className="flex gap-2">
+              <div className="relative">
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="absolute inset-0 opacity-0 cursor-pointer w-10 h-10"
+                />
+                <Button type="button" variant="outline" size="icon">
+                  <Upload className="h-4 w-4" />
+                </Button>
+              </div>
+              {slide.content.image && (
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  size="icon"
+                  onClick={handleImageDelete}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+          </div>
+          {slide.content.image && (
+            <div 
+              className="mt-2 relative aspect-video bg-gray-100 rounded-lg overflow-hidden cursor-crosshair"
+              onClick={handleImageClick}
+            >
+              <img
+                src={slide.content.image}
+                alt="スライドの画像"
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{
+                  objectPosition: `${slide.content.imagePosition?.x || 50}% ${slide.content.imagePosition?.y || 50}%`
+                }}
+              />
+              <div 
+                className="absolute w-20 h-20 border-2 border-white rounded-full pointer-events-none"
+                style={{
+                  left: `calc(${slide.content.imagePosition?.x || 50}% - 40px)`,
+                  top: `calc(${slide.content.imagePosition?.y || 50}% - 40px)`,
+                  boxShadow: '0 0 0 2px rgba(0,0,0,0.3)'
+                }}
+              />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

@@ -5,6 +5,10 @@ export interface Slide {
     title?: string;
     subtitle?: string;
     text?: string;
+    steps?: {
+      subtitle: string;
+      text: string;
+    }[];
     image?: string;
     imagePosition?: {
       x: number;
@@ -22,22 +26,17 @@ export interface Presentation {
 export const templates = [
   {
     id: "title",
-    name: "Title Slide",
+    name: "タイトルスライド",
     preview: "/placeholder.svg",
   },
   {
     id: "content",
-    name: "Content Slide",
+    name: "コンテンツスライド",
     preview: "/placeholder.svg",
   },
   {
-    id: "image",
-    name: "Image Slide",
-    preview: "/placeholder.svg",
-  },
-  {
-    id: "split",
-    name: "Split Content",
+    id: "steps",
+    name: "ステップスライド",
     preview: "/placeholder.svg",
   },
 ];
@@ -52,6 +51,11 @@ export const createSlide = (template: string): Slide => ({
   id: crypto.randomUUID(),
   template,
   content: {
-    imagePosition: { x: 50, y: 50 }
+    imagePosition: { x: 50, y: 50 },
+    steps: template === "steps" ? [
+      { subtitle: "ステップ 1", text: "" },
+      { subtitle: "ステップ 2", text: "" },
+      { subtitle: "ステップ 3", text: "" },
+    ] : undefined
   },
 });
