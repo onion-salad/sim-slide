@@ -69,10 +69,6 @@ const PresentationEditor = ({ presentation, onUpdate, onRefresh }: PresentationE
     <div className="min-h-screen bg-gray-100 overflow-x-hidden">
       <div className="fixed top-0 left-0 right-0 z-10 bg-white border-b p-4 md:hidden">
         <div className="flex justify-between items-center gap-2">
-          <Button onClick={() => setShowTemplates(true)} size="sm">
-            <Plus className="w-4 h-4 mr-2" />
-            Add
-          </Button>
           <div className="flex gap-2">
             <Button onClick={onRefresh} size="sm" variant="outline">
               <RotateCcw className="w-4 h-4" />
@@ -186,17 +182,16 @@ const PresentationEditor = ({ presentation, onUpdate, onRefresh }: PresentationE
           </ScrollArea>
         </div>
 
-        <div className="hidden md:flex fixed bottom-4 right-4 space-x-2">
-          <Button onClick={onRefresh} variant="outline">
-            <RotateCcw className="w-4 h-4 mr-2" />
-            リセット
-          </Button>
-          <Button onClick={() => setIsFullscreen(true)}>
-            <Play className="w-4 h-4 mr-2" />
-            Present
-          </Button>
-        </div>
       </div>
+
+      {/* Mobile Add Button */}
+      <Button
+        onClick={() => setShowTemplates(true)}
+        className="md:hidden fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-lg bg-primary hover:bg-primary/90 transition-colors"
+        size="icon"
+      >
+        <Plus className="w-6 h-6" />
+      </Button>
 
       {showTemplates && (
         <TemplateGallery
