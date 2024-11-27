@@ -16,12 +16,19 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
     field: keyof typeof slide.content,
     value: string | number | { x: number; y: number } | { subtitle: string; text: string }[]
   ) => {
+    const newContent = { ...slide.content };
+    
+    // 画像を削除する場合は、imagePositionも同時にリセット
+    if (field === "image" && value === "") {
+      delete newContent.image;
+      delete newContent.imagePosition;
+    } else {
+      newContent[field] = value;
+    }
+
     onUpdate({
       ...slide,
-      content: {
-        ...slide.content,
-        [field]: value,
-      },
+      content: newContent,
     });
   };
 
@@ -102,19 +109,11 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
         </>
       )}
 
-      {slide.template !== "steps" && (
+      {slide.template !== "steps" && slide.template !== "content" && (
         <ImageEditor
           image={slide.content.image}
           imagePosition={slide.content.imagePosition}
-          onChange={(field, value) => {
-            if (field === "image" && value === "") {
-              // 画像を削除する場合は、imagePositionも同時にリセット
-              handleChange("image", "");
-              handleChange("imagePosition", { x: 50, y: 50 });
-            } else {
-              handleChange(field, value);
-            }
-          }}
+          onChange={handleChange}
         />
       )}
     </div>
