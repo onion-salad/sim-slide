@@ -21,9 +21,9 @@ const StepsSlide = ({ slide }: StepsSlideProps) => {
       <div className="space-y-[5%] mt-[2%]">
         {slide.content.steps?.map((step, index) => (
           <div key={index} className="flex gap-4">
-            <div className="flex-none w-8 h-8 rounded-full bg-gradient-to-br from-[#7C3AED] to-[#6366F1] flex items-center justify-center relative">
-              <CircleDot className="w-4 h-4 text-white absolute opacity-50" />
-              <span className="text-white font-semibold z-10">{numbers[index]}</span>
+            <div className="flex-none w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center relative shadow-selected">
+              <CircleDot className="w-4 h-4 text-white/30 absolute" />
+              <span className="text-white font-bold text-sm z-10">{numbers[index]}</span>
             </div>
             <div className="flex-1">
               <Subtitle className="mb-2">
