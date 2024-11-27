@@ -6,11 +6,10 @@ import SlidePreview from "./SlidePreview";
 import SlideEditor from "./SlideEditor";
 import TemplateGallery from "./TemplateGallery";
 import FullscreenPresentation from "./FullscreenPresentation";
-import { Download, Play, Plus } from "lucide-react";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
+import { Play, Plus, X } from "lucide-react";
 import { useSlideScroll } from "@/hooks/useSlideScroll";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useToast } from "@/components/ui/use-toast";
 
 interface PresentationEditorProps {
   presentation: Presentation;
@@ -22,6 +21,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const { slideRefs, scrollToSlide } = useSlideScroll();
+  const { toast } = useToast();
 
   const handleSlideSelect = (slideId: string) => {
     setSelectedSlide(slideId);
@@ -56,19 +56,19 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
     onUpdate({ ...presentation, slides: updatedSlides });
   };
 
-  const handleDownload = async () => {
-    const pdf = new jsPDF();
-    const slides = document.querySelectorAll(".slide-preview");
+  const handleDeleteSlide = (slideId: string, event: React.MouseEvent) => {
+    event.stopPropagation();
+    const updatedSlides = presentation.slides.filter((s) => s.id !== slideId);
+    onUpdate({ ...presentation, slides: updatedSlides });
     
-    for (let i = 0; i < slides.length; i++) {
-      const canvas = await html2canvas(slides[i] as HTMLElement);
-      const imgData = canvas.toDataURL("image/png");
-      
-      if (i > 0) pdf.addPage();
-      pdf.addImage(imgData, "PNG", 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+    if (selectedSlide === slideId) {
+      setSelectedSlide(updatedSlides[0]?.id || null);
     }
-    
-    pdf.save("presentation.pdf");
+
+    toast({
+      title: "スライドを削除しました",
+      description: "スライドが正常に削除されました。",
+    });
   };
 
   return (
@@ -80,14 +80,9 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
             <Plus className="w-4 h-4 mr-2" />
             Add
           </Button>
-          <div className="flex gap-2">
-            <Button onClick={handleDownload} size="sm" variant="outline">
-              <Download className="w-4 h-4" />
-            </Button>
-            <Button onClick={() => setIsFullscreen(true)} size="sm">
-              <Play className="w-4 h-4" />
-            </Button>
-          </div>
+          <Button onClick={() => setIsFullscreen(true)} size="sm">
+            <Play className="w-4 h-4" />
+          </Button>
         </div>
       </div>
 
@@ -158,12 +153,20 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                             onClick={() => handleSlideSelect(slide.id)}
-                            className={`cursor-pointer transition-all duration-300 ${
+                            className={`group cursor-pointer transition-all duration-300 relative ${
                               selectedSlide === slide.id 
                                 ? "shadow-selected scale-[1.02] bg-white rounded-lg" 
                                 : ""
                             }`}
                           >
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-white shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                              onClick={(e) => handleDeleteSlide(slide.id, e)}
+                            >
+                              <X className="h-3 w-3" />
+                            </Button>
                             <SlidePreview slide={slide} scale={0.15} />
                           </div>
                         )}
@@ -177,12 +180,8 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
           </ScrollArea>
         </div>
 
-        {/* Desktop Action Buttons */}
+        {/* Desktop Action Button */}
         <div className="hidden md:flex fixed bottom-4 right-4 space-x-2">
-          <Button onClick={handleDownload}>
-            <Download className="w-4 h-4 mr-2" />
-            Download PDF
-          </Button>
           <Button onClick={() => setIsFullscreen(true)}>
             <Play className="w-4 h-4 mr-2" />
             Present
