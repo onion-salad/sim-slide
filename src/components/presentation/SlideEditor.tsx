@@ -6,15 +6,20 @@ import ImageEditor from "./editor/ImageEditor";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
 
 interface SlideEditorProps {
-  slide: Slide;
+  slide?: Slide;
   onUpdate: (slide: Slide) => void;
 }
 
 const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
-  const { toast } = useToast();
+  if (!slide) {
+    return (
+      <div className="flex items-center justify-center h-full text-gray-400">
+        スライドが選択されていません
+      </div>
+    );
+  }
 
   const handleChange = (field: string, value: any) => {
     console.log("handleChange called", field, value);
@@ -51,11 +56,6 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
   const handleAddStep = () => {
     const steps = [...(slide.content.steps || [])];
     if (steps.length >= 3) {
-      toast({
-        title: "ステップ数制限",
-        description: "ステップは最大3つまでです",
-        variant: "destructive",
-      });
       return;
     }
     steps.push({ subtitle: "", text: "" });
