@@ -6,16 +6,17 @@ import SlidePreview from "./SlidePreview";
 import SlideEditor from "./SlideEditor";
 import TemplateGallery from "./TemplateGallery";
 import FullscreenPresentation from "./FullscreenPresentation";
-import { Play, Plus, X } from "lucide-react";
+import { Play, Plus, X, RotateCcw } from "lucide-react";
 import { useSlideScroll } from "@/hooks/useSlideScroll";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface PresentationEditorProps {
   presentation: Presentation;
   onUpdate: (presentation: Presentation) => void;
+  onRefresh: () => void;
 }
 
-const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps) => {
+const PresentationEditor = ({ presentation, onUpdate, onRefresh }: PresentationEditorProps) => {
   const [selectedSlide, setSelectedSlide] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
@@ -72,9 +73,14 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
             <Plus className="w-4 h-4 mr-2" />
             Add
           </Button>
-          <Button onClick={() => setIsFullscreen(true)} size="sm">
-            <Play className="w-4 h-4" />
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={onRefresh} size="sm" variant="outline">
+              <RotateCcw className="w-4 h-4" />
+            </Button>
+            <Button onClick={() => setIsFullscreen(true)} size="sm">
+              <Play className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -181,6 +187,10 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
         </div>
 
         <div className="hidden md:flex fixed bottom-4 right-4 space-x-2">
+          <Button onClick={onRefresh} variant="outline">
+            <RotateCcw className="w-4 h-4 mr-2" />
+            リセット
+          </Button>
           <Button onClick={() => setIsFullscreen(true)}>
             <Play className="w-4 h-4 mr-2" />
             Present
