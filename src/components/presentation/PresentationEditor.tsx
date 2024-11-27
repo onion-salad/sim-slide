@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Button } from "@/components/ui/button";
 import { Presentation, Slide, createSlide } from "@/lib/presentation";
@@ -22,12 +22,12 @@ const PresentationEditor = ({ presentation, onUpdate, onRefresh }: PresentationE
   const [showTemplates, setShowTemplates] = useState(false);
   const { slideRefs, scrollToSlide } = useSlideScroll();
 
-  const handleSlideSelect = (slideId: string) => {
+  const handleSlideSelect = useCallback((slideId: string) => {
     setSelectedSlide(slideId);
     scrollToSlide(slideId);
-  };
+  }, [scrollToSlide]);
 
-  const handleDragEnd = (result: any) => {
+  const handleDragEnd = useCallback((result: any) => {
     if (!result.destination) return;
 
     const slides = Array.from(presentation.slides);
@@ -35,27 +35,33 @@ const PresentationEditor = ({ presentation, onUpdate, onRefresh }: PresentationE
     slides.splice(result.destination.index, 0, reorderedSlide);
 
     onUpdate({ ...presentation, slides });
-  };
+  }, [presentation, onUpdate]);
 
-  const handleAddSlide = (template: string) => {
+  const handleAddSlide = useCallback((template: string) => {
     const newSlide = createSlide(template);
     onUpdate({
       ...presentation,
       slides: [...presentation.slides, newSlide],
     });
     setShowTemplates(false);
-  };
+  }, [presentation, onUpdate]);
 
-  const handleUpdateSlide = (updatedSlide: Slide) => {
+  const handleUpdateSlide = useCallback((updatedSlide: Slide) => {
     const slideIndex = presentation.slides.findIndex((s) => s.id === updatedSlide.id);
     if (slideIndex === -1) return;
 
     const updatedSlides = [...presentation.slides];
     updatedSlides[slideIndex] = updatedSlide;
+    
+    // Prevent unnecessary re-renders by checking if the content actually changed
+    if (JSON.stringify(presentation.slides[slideIndex]) === JSON.stringify(updatedSlide)) {
+      return;
+    }
+    
     onUpdate({ ...presentation, slides: updatedSlides });
-  };
+  }, [presentation, onUpdate]);
 
-  const handleDeleteSlide = (slideId: string, event: React.MouseEvent) => {
+  const handleDeleteSlide = useCallback((slideId: string, event: React.MouseEvent) => {
     event.stopPropagation();
     const updatedSlides = presentation.slides.filter((s) => s.id !== slideId);
     onUpdate({ ...presentation, slides: updatedSlides });
@@ -63,7 +69,9 @@ const PresentationEditor = ({ presentation, onUpdate, onRefresh }: PresentationE
     if (selectedSlide === slideId) {
       setSelectedSlide(updatedSlides[0]?.id || null);
     }
-  };
+  }, [presentation, onUpdate, selectedSlide]);
+
+  // ... keep existing code (render JSX)
 
   return (
     <div className="min-h-screen bg-gray-100 overflow-x-hidden">
