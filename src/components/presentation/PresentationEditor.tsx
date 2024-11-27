@@ -66,7 +66,6 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
 
   return (
     <div className="min-h-screen bg-gray-100 overflow-x-hidden">
-      {/* Header - Fixed on mobile */}
       <div className="fixed top-0 left-0 right-0 z-10 bg-white border-b p-4 md:hidden">
         <div className="flex justify-between items-center gap-2">
           <Button onClick={() => setShowTemplates(true)} size="sm">
@@ -80,7 +79,6 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
       </div>
 
       <div className="flex flex-col md:flex-row h-[calc(100vh-4rem)] md:h-screen pt-[4.5rem] md:pt-0">
-        {/* Main Content Area */}
         <div className="flex-1 p-4 overflow-hidden flex flex-col">
           {/* Horizontal Slide Preview Carousel */}
           <div className="slides-container w-full overflow-x-auto pb-4 flex gap-4 snap-x snap-mandatory pt-4">
@@ -155,7 +153,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-white shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-red-50 text-red-500 hover:text-red-600"
+                              className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-red-500 shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-red-600 text-white"
                               onClick={(e) => handleDeleteSlide(slide.id, e)}
                             >
                               <X className="h-3 w-3" />
@@ -173,7 +171,6 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
           </ScrollArea>
         </div>
 
-        {/* Desktop Action Button */}
         <div className="hidden md:flex fixed bottom-4 right-4 space-x-2">
           <Button onClick={() => setIsFullscreen(true)}>
             <Play className="w-4 h-4 mr-2" />
