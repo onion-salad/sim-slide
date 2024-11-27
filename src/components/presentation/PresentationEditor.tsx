@@ -80,7 +80,6 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
 
       <div className="flex flex-col md:flex-row h-[calc(100vh-4rem)] md:h-screen pt-[4.5rem] md:pt-0">
         <div className="flex-1 p-4 overflow-hidden flex flex-col">
-          {/* Horizontal Slide Preview Carousel */}
           <div className="slides-container w-full overflow-x-auto pb-4 flex gap-4 snap-x snap-mandatory pt-4">
             <div className="pl-4" />
             {presentation.slides.map((slide, index) => (
@@ -94,13 +93,22 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
                 }`}
                 onClick={() => handleSlideSelect(slide.id)}
               >
-                <SlidePreview slide={slide} scale={1} />
+                <div className="relative">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-2 top-2 h-6 w-6 rounded-full bg-red-500 shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-red-600 text-white"
+                    onClick={(e) => handleDeleteSlide(slide.id, e)}
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                  <SlidePreview slide={slide} scale={1} />
+                </div>
               </div>
             ))}
             <div className="pr-4" />
           </div>
 
-          {/* Slide Editor */}
           <div className="flex-1 overflow-y-auto mt-4 bg-white p-4 overflow-x-hidden">
             {selectedSlide ? (
               <SlideEditor
@@ -115,7 +123,6 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
           </div>
         </div>
 
-        {/* Desktop Sidebar */}
         <div className="hidden md:block w-64 bg-white p-4 border-l">
           <Button
             className="w-full mb-4"
@@ -150,15 +157,17 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
                                 : ""
                             }`}
                           >
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-red-500 shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-red-600 text-white"
-                              onClick={(e) => handleDeleteSlide(slide.id, e)}
-                            >
-                              <X className="h-3 w-3" />
-                            </Button>
-                            <SlidePreview slide={slide} scale={0.15} />
+                            <div className="relative">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="absolute right-2 top-2 h-6 w-6 rounded-full bg-red-500 shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-red-600 text-white"
+                                onClick={(e) => handleDeleteSlide(slide.id, e)}
+                              >
+                                <X className="h-3 w-3" />
+                              </Button>
+                              <SlidePreview slide={slide} scale={0.15} />
+                            </div>
                           </div>
                         )}
                       </Draggable>
@@ -179,7 +188,6 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
         </div>
       </div>
 
-      {/* Templates and Fullscreen Components */}
       {showTemplates && (
         <TemplateGallery
           onSelect={handleAddSlide}
