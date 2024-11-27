@@ -31,6 +31,7 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
   };
 
   const handleImageDelete = () => {
+    console.log("Delete button clicked"); // デバッグ用ログ
     onChange("image", "");
     onChange("imagePosition", { x: 50, y: 50 });
   };
