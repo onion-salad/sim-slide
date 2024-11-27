@@ -10,14 +10,16 @@ export const useSlideScroll = () => {
       if (container) {
         const containerRect = container.getBoundingClientRect();
         const slideRect = slideElement.getBoundingClientRect();
-        const currentScrollLeft = container.scrollLeft;
+
+        // スクロール位置を計算する際に、コンテナの現在のスクロール位置を考慮
         const targetScrollLeft = container.scrollLeft + (slideRect.left - containerRect.left - (containerRect.width - slideRect.width) / 2);
 
         // 現在表示されているスライドのIDを取得
         const currentSlideId = Object.entries(slideRefs.current).find(([id, el]) => {
           if (!el) return false;
           const elRect = el.getBoundingClientRect();
-          return elRect.left >= containerRect.left && elRect.left <= containerRect.right;
+          const centerX = containerRect.left + containerRect.width / 2;
+          return elRect.left <= centerX && elRect.right >= centerX;
         })?.[0];
 
         if (!currentSlideId) return;
@@ -33,8 +35,8 @@ export const useSlideScroll = () => {
           : slideIds.slice(targetIndex, currentIndex + 1).reverse();
 
         // アニメーションの設定
-        const duration = 600; // アニメーション時間をさらに短縮
-        const stepsPerSlide = 15; // ステップ数を減らして更新頻度を上げる
+        const duration = 600;
+        const stepsPerSlide = 15;
         const totalSteps = stepsPerSlide * (slidesToPass.length - 1);
         const stepDuration = duration / totalSteps;
         let currentStep = 0;
@@ -44,7 +46,6 @@ export const useSlideScroll = () => {
           
           // 現在のスライドインデックスと進行度を計算
           const progress = currentStep / totalSteps;
-          const slideIndex = Math.floor(progress * (slidesToPass.length - 1));
           
           // スライドの選択状態を更新（進行度に基づいて少し早めに更新）
           const adjustedIndex = Math.min(
@@ -67,6 +68,7 @@ export const useSlideScroll = () => {
             ? 16 * progress * progress * progress * progress * progress
             : 1 - Math.pow(-2 * progress + 2, 5) / 2;
 
+          const currentScrollLeft = container.scrollLeft;
           const newScrollLeft = currentScrollLeft + (targetScrollLeft - currentScrollLeft) * easeProgress;
           container.scrollLeft = newScrollLeft;
 
