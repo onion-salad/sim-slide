@@ -1,54 +1,64 @@
 import { Slide } from "@/lib/presentation";
+import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Image, Upload, Trash2 } from "lucide-react";
 import ImageEditor from "./editor/ImageEditor";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import { Plus, Trash } from "lucide-react";
 
 interface SlideEditorProps {
   slide: Slide;
   onUpdate: (slide: Slide) => void;
 }
 
-type ContentValue = 
-  | string 
-  | { subtitle: string; text: string; }[] 
-  | { x: number; y: number; }
-  | undefined;
-
 const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
-  const handleChange = (
-    field: keyof typeof slide.content,
-    value: ContentValue
-  ) => {
-    const newContent = { ...slide.content };
-    
-    // 画像を削除する場合は、imagePositionも同時にリセット
-    if (field === "image" && value === "") {
-      delete newContent.image;
-      delete newContent.imagePosition;
-    } else {
-      newContent[field] = value as any;
-    }
-
+  const handleChange = (field: string, value: any) => {
     onUpdate({
       ...slide,
-      content: newContent,
+      content: {
+        ...slide.content,
+        [field]: value,
+      },
     });
   };
 
-  const handleStepChange = (index: number, field: "subtitle" | "text", value: string) => {
-    if (!slide.content.steps) return;
-    
-    const newSteps = [...slide.content.steps];
-    newSteps[index] = {
-      ...newSteps[index],
-      [field]: value
+  const handleStepChange = (index: number, field: string, value: string) => {
+    const steps = [...(slide.content.steps || [])];
+    steps[index] = {
+      ...steps[index],
+      [field]: value,
     };
-    
-    handleChange("steps", newSteps);
+    handleChange("steps", steps);
   };
+
+  const handleAddStep = () => {
+    const steps = [...(slide.content.steps || [])];
+    steps.push({ subtitle: "", text: "" });
+    handleChange("steps", steps);
+  };
+
+  const handleRemoveStep = (index: number) => {
+    const steps = [...(slide.content.steps || [])];
+    steps.splice(index, 1);
+    handleChange("steps", steps);
+  };
+
+  // サムネイルテンプレートの場合はタイトルフィールドのみを表示
+  if (slide.template === "thumbnail") {
+    return (
+      <div className="space-y-4">
+        <div>
+          <Label htmlFor="title">タイトル</Label>
+          <Input
+            id="title"
+            value={slide.content.title || ""}
+            onChange={(e) => handleChange("title", e.target.value)}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -58,68 +68,87 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
           id="title"
           value={slide.content.title || ""}
           onChange={(e) => handleChange("title", e.target.value)}
-          placeholder="スライドのタイトル"
         />
       </div>
 
-      {slide.template === "steps" ? (
-        <div className="space-y-6">
-          {slide.content.steps?.map((step, index) => (
-            <div key={index} className="space-y-2 p-4 border rounded-lg">
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#7C3AED] to-[#6366F1] flex items-center justify-center text-white text-sm">
-                  {index + 1}
-                </div>
-                <Label htmlFor={`step-${index}-subtitle`}>サブタイトル</Label>
-              </div>
-              <Input
-                id={`step-${index}-subtitle`}
-                value={step.subtitle}
-                onChange={(e) => handleStepChange(index, "subtitle", e.target.value)}
-                placeholder={`ステップ ${index + 1} のタイトル`}
-              />
-              <Label htmlFor={`step-${index}-text`}>本文</Label>
-              <Textarea
-                id={`step-${index}-text`}
-                value={step.text}
-                onChange={(e) => handleStepChange(index, "text", e.target.value)}
-                placeholder={`ステップ ${index + 1} の説明`}
-                rows={3}
-              />
-            </div>
-          ))}
+      {slide.template !== "title" && (
+        <div>
+          <Label htmlFor="subtitle">サブタイトル</Label>
+          <Input
+            id="subtitle"
+            value={slide.content.subtitle || ""}
+            onChange={(e) => handleChange("subtitle", e.target.value)}
+          />
         </div>
-      ) : (
-        <>
-          {slide.template !== "title" && (
-            <div>
-              <Label htmlFor="subtitle">サブタイトル</Label>
-              <Input
-                id="subtitle"
-                value={slide.content.subtitle || ""}
-                onChange={(e) => handleChange("subtitle", e.target.value)}
-                placeholder="スライドのサブタイトル"
-              />
-            </div>
-          )}
-          <div>
-            <Label htmlFor="text">本文</Label>
-            <Textarea
-              id="text"
-              value={slide.content.text || ""}
-              onChange={(e) => handleChange("text", e.target.value)}
-              placeholder="スライドの本文"
-              rows={5}
-            />
-          </div>
-        </>
       )}
 
-      {slide.template !== "steps" && slide.template !== "content" && (
+      {slide.template === "content" && (
+        <div>
+          <Label htmlFor="text">テキスト</Label>
+          <Textarea
+            id="text"
+            value={slide.content.text || ""}
+            onChange={(e) => handleChange("text", e.target.value)}
+          />
+        </div>
+      )}
+
+      {slide.template === "steps" && (
+        <Accordion type="single" collapsible className="w-full">
+          {(slide.content.steps || []).map((step, index) => (
+            <AccordionItem key={index} value={`step-${index}`}>
+              <div className="flex items-center">
+                <AccordionTrigger className="flex-1">
+                  {step.subtitle || `ステップ ${index + 1}`}
+                </AccordionTrigger>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleRemoveStep(index)}
+                >
+                  <Trash className="w-4 h-4" />
+                </Button>
+              </div>
+              <AccordionContent className="space-y-4">
+                <div>
+                  <Label>サブタイトル</Label>
+                  <Input
+                    value={step.subtitle}
+                    onChange={(e) =>
+                      handleStepChange(index, "subtitle", e.target.value)
+                    }
+                  />
+                </div>
+                <div>
+                  <Label>テキスト</Label>
+                  <Textarea
+                    value={step.text}
+                    onChange={(e) =>
+                      handleStepChange(index, "text", e.target.value)
+                    }
+                  />
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      )}
+
+      {slide.template === "steps" && (
+        <Button onClick={handleAddStep} variant="outline" className="w-full">
+          <Plus className="w-4 h-4 mr-2" />
+          ステップを追加
+        </Button>
+      )}
+
+      {slide.template !== "thumbnail" && (
         <ImageEditor
           image={slide.content.image}
           imagePosition={slide.content.imagePosition}
-          onChange={handleChange}
+          onUpdate={(image, imagePosition) => {
+            handleChange("image", image);
+            handleChange("imagePosition", imagePosition);
+          }}
         />
       )}
     </div>
