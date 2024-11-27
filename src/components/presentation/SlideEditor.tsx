@@ -11,10 +11,16 @@ interface SlideEditorProps {
   onUpdate: (slide: Slide) => void;
 }
 
+type ContentValue = 
+  | string 
+  | { subtitle: string; text: string; }[] 
+  | { x: number; y: number; }
+  | undefined;
+
 const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
   const handleChange = (
     field: keyof typeof slide.content,
-    value: string | number | { x: number; y: number } | { subtitle: string; text: string }[]
+    value: ContentValue
   ) => {
     const newContent = { ...slide.content };
     
@@ -23,7 +29,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
       delete newContent.image;
       delete newContent.imagePosition;
     } else {
-      newContent[field] = value;
+      newContent[field] = value as any;
     }
 
     onUpdate({
