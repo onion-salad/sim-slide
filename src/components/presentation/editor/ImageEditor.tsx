@@ -2,6 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Upload, Trash2 } from "lucide-react";
+import { useRef } from "react";
 
 interface ImageEditorProps {
   image?: string;
@@ -10,6 +11,8 @@ interface ImageEditorProps {
 }
 
 const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log("handleImageUpload called");
     const file = event.target.files?.[0];
@@ -28,6 +31,11 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
       console.log("FileReader onload called");
       const imageDataUrl = e.target?.result as string;
       onChange(imageDataUrl, imagePosition);
+      
+      // Reset file input to allow reselecting the same file
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     };
     reader.readAsDataURL(file);
   };
@@ -36,6 +44,10 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
     console.log("handleImageDelete called");
     if (image) {
       onChange("", undefined);
+      // Reset file input after deletion
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 
@@ -70,6 +82,7 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
         <div className="flex gap-2">
           <div className="relative">
             <Input
+              ref={fileInputRef}
               type="file"
               accept="image/*"
               onChange={handleImageUpload}
