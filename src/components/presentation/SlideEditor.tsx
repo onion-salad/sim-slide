@@ -37,10 +37,10 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
 
   const handleAddStep = () => {
     const steps = [...(slide.content.steps || [])];
-    if (steps.length >= 2) {
+    if (steps.length >= 3) {
       toast({
         title: "ステップ数制限",
-        description: "ステップは最大2つまでです",
+        description: "ステップは最大3つまでです",
         variant: "destructive",
       });
       return;
@@ -94,7 +94,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
         <ImageEditor
           image={slide.content.image}
           imagePosition={slide.content.imagePosition}
-          onUpdate={(image, imagePosition) => {
+          onChange={(image, imagePosition) => {
             handleChange("image", image);
             handleChange("imagePosition", imagePosition);
           }}
@@ -189,7 +189,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
           onClick={handleAddStep} 
           variant="outline" 
           className="w-full"
-          disabled={slide.content.steps?.length >= 2}
+          disabled={slide.content.steps?.length >= 3}
         >
           <Plus className="w-4 h-4 mr-2" />
           ステップを追加
