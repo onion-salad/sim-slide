@@ -11,6 +11,7 @@ interface ImageEditorProps {
 
 const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("handleImageUpload called");
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -24,6 +25,7 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
 
     const reader = new FileReader();
     reader.onload = (e) => {
+      console.log("FileReader onload called");
       const imageDataUrl = e.target?.result as string;
       onChange(imageDataUrl, imagePosition);
     };
@@ -31,12 +33,14 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
   };
 
   const handleImageDelete = () => {
+    console.log("handleImageDelete called");
     if (image) {
       onChange("", undefined);
     }
   };
 
   const handleImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    console.log("handleImageClick called");
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
@@ -47,6 +51,11 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
     });
   };
 
+  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("handleUrlChange called", e.target.value);
+    onChange(e.target.value, imagePosition);
+  };
+
   return (
     <div className="space-y-2">
       <Label htmlFor="image">画像</Label>
@@ -54,7 +63,7 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
         <Input
           id="image"
           value={image || ""}
-          onChange={(e) => onChange(e.target.value, imagePosition)}
+          onChange={handleUrlChange}
           placeholder="画像URL"
           className="flex-1"
         />

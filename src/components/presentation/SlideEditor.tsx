@@ -17,6 +17,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
   const { toast } = useToast();
 
   const handleChange = (field: string, value: any) => {
+    console.log("handleChange called", field, value);
     onUpdate({
       ...slide,
       content: {
@@ -95,6 +96,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
           image={slide.content.image}
           imagePosition={slide.content.imagePosition}
           onChange={(image, imagePosition) => {
+            console.log("ImageEditor onChange called", image, imagePosition);
             handleChange("image", image);
             handleChange("imagePosition", imagePosition);
           }}
