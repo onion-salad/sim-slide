@@ -2,7 +2,7 @@ import { Slide } from "@/lib/presentation";
 import Title from "../text/Title";
 import Subtitle from "../text/Subtitle";
 import Body from "../text/Body";
-import { One, Two, Three } from "lucide-react";
+import { CircleIcon } from "lucide-react";
 
 interface StepsSlideProps {
   slide: Slide;
@@ -10,9 +10,9 @@ interface StepsSlideProps {
 
 const StepsSlide = ({ slide }: StepsSlideProps) => {
   const numberIcons = [
-    <One className="w-full h-full text-white" />,
-    <Two className="w-full h-full text-white" />,
-    <Three className="w-full h-full text-white" />
+    <div className="w-full h-full text-white flex items-center justify-center">1</div>,
+    <div className="w-full h-full text-white flex items-center justify-center">2</div>,
+    <div className="w-full h-full text-white flex items-center justify-center">3</div>
   ];
 
   return (
