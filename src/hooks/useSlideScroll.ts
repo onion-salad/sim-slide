@@ -11,8 +11,8 @@ export const useSlideScroll = () => {
         const containerRect = container.getBoundingClientRect();
         const slideRect = slideElement.getBoundingClientRect();
 
-        // スクロール位置を計算する際に、コンテナの現在のスクロール位置を考慮
-        const targetScrollLeft = container.scrollLeft + (slideRect.left - containerRect.left - (containerRect.width - slideRect.width) / 2);
+        // スライドを中央に配置するためのスクロール位置を計算
+        const targetScrollLeft = slideElement.offsetLeft - (containerRect.width - slideRect.width) / 2;
 
         // 現在表示されているスライドのIDを取得
         const currentSlideId = Object.entries(slideRefs.current).find(([id, el]) => {
