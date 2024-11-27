@@ -4,10 +4,14 @@ export const useSlideScroll = () => {
   const slideRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
   const scrollToSlide = (targetSlideId: string) => {
+    console.log('scrollToSlide called with targetSlideId:', targetSlideId);
+    
     const slideElement = slideRefs.current[targetSlideId];
     if (slideElement) {
+      console.log('Found slide element');
       const container = document.querySelector('.slides-container');
       if (container) {
+        console.log('Found container element');
         const containerRect = container.getBoundingClientRect();
         const slideRect = slideElement.getBoundingClientRect();
 
@@ -16,8 +20,17 @@ export const useSlideScroll = () => {
         const slideLeft = slideRect.left;
         const scrollOffset = container.scrollLeft;
         
+        console.log('Position calculations:', {
+          containerLeft,
+          slideLeft,
+          scrollOffset,
+          containerWidth: containerRect.width,
+          slideWidth: slideRect.width
+        });
+        
         // スライドを中央に配置するための位置を計算
         const targetScrollLeft = scrollOffset + (slideLeft - containerLeft) - (containerRect.width - slideRect.width) / 2;
+        console.log('Target scroll position:', targetScrollLeft);
 
         // 現在表示されているスライドのIDを取得
         const currentSlideId = Object.entries(slideRefs.current).find(([id, el]) => {
@@ -27,7 +40,12 @@ export const useSlideScroll = () => {
           return elRect.left <= centerX && elRect.right >= centerX;
         })?.[0];
 
-        if (!currentSlideId) return;
+        console.log('Current slide ID:', currentSlideId);
+
+        if (!currentSlideId) {
+          console.log('No current slide found');
+          return;
+        }
 
         // 通過するスライドのIDリストを作成
         const slideIds = Object.keys(slideRefs.current);
@@ -35,9 +53,17 @@ export const useSlideScroll = () => {
         const targetIndex = slideIds.indexOf(targetSlideId);
         const isForward = targetIndex > currentIndex;
         
+        console.log('Slide indices:', {
+          currentIndex,
+          targetIndex,
+          isForward
+        });
+        
         const slidesToPass = isForward 
           ? slideIds.slice(currentIndex, targetIndex + 1)
           : slideIds.slice(targetIndex, currentIndex + 1).reverse();
+
+        console.log('Slides to pass:', slidesToPass);
 
         // アニメーションの設定
         const duration = 600;
@@ -71,14 +97,25 @@ export const useSlideScroll = () => {
             : 1 - Math.pow(-2 * progress + 2, 5) / 2;
 
           container.scrollLeft = targetScrollLeft * easeProgress;
+          console.log('Animation progress:', {
+            progress,
+            easeProgress,
+            currentScrollLeft: container.scrollLeft
+          });
 
           if (currentStep < totalSteps) {
             requestAnimationFrame(animate);
+          } else {
+            console.log('Animation complete');
           }
         };
 
         requestAnimationFrame(animate);
+      } else {
+        console.log('Container element not found');
       }
+    } else {
+      console.log('Slide element not found');
     }
   };
 
