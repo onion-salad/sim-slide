@@ -50,14 +50,17 @@ const PresentationEditor = ({ presentation, onUpdate, onRefresh }: PresentationE
     const slideIndex = presentation.slides.findIndex((s) => s.id === updatedSlide.id);
     if (slideIndex === -1) return;
 
-    const updatedSlides = [...presentation.slides];
-    updatedSlides[slideIndex] = updatedSlide;
+    // 現在のスライドと更新されたスライドの内容を比較
+    const currentSlide = presentation.slides[slideIndex];
+    const hasContentChanged = JSON.stringify(currentSlide.content) !== JSON.stringify(updatedSlide.content);
     
-    // Prevent unnecessary re-renders by checking if the content actually changed
-    if (JSON.stringify(presentation.slides[slideIndex]) === JSON.stringify(updatedSlide)) {
+    // 内容が変更されていない場合は更新をスキップ
+    if (!hasContentChanged) {
       return;
     }
     
+    const updatedSlides = [...presentation.slides];
+    updatedSlides[slideIndex] = updatedSlide;
     onUpdate({ ...presentation, slides: updatedSlides });
   }, [presentation, onUpdate]);
 
