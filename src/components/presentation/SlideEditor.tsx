@@ -106,7 +106,15 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
         <ImageEditor
           image={slide.content.image}
           imagePosition={slide.content.imagePosition}
-          onChange={(field, value) => handleChange(field, value)}
+          onChange={(field, value) => {
+            if (field === "image" && value === "") {
+              // 画像を削除する場合は、imagePositionも同時にリセット
+              handleChange("image", "");
+              handleChange("imagePosition", { x: 50, y: 50 });
+            } else {
+              handleChange(field, value);
+            }
+          }}
         />
       )}
     </div>
