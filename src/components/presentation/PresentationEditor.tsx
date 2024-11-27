@@ -9,7 +9,6 @@ import FullscreenPresentation from "./FullscreenPresentation";
 import { Play, Plus, X } from "lucide-react";
 import { useSlideScroll } from "@/hooks/useSlideScroll";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useToast } from "@/components/ui/use-toast";
 
 interface PresentationEditorProps {
   presentation: Presentation;
@@ -21,7 +20,6 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const { slideRefs, scrollToSlide } = useSlideScroll();
-  const { toast } = useToast();
 
   const handleSlideSelect = (slideId: string) => {
     setSelectedSlide(slideId);
@@ -64,11 +62,6 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
     if (selectedSlide === slideId) {
       setSelectedSlide(updatedSlides[0]?.id || null);
     }
-
-    toast({
-      title: "スライドを削除しました",
-      description: "スライドが正常に削除されました。",
-    });
   };
 
   return (
@@ -162,7 +155,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-white shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                              className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-white shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-red-50 text-red-500 hover:text-red-600"
                               onClick={(e) => handleDeleteSlide(slide.id, e)}
                             >
                               <X className="h-3 w-3" />
