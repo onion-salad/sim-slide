@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Button } from "@/components/ui/button";
 import { Presentation, Slide, createSlide } from "@/lib/presentation";
@@ -19,6 +19,16 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
   const [selectedSlide, setSelectedSlide] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
+  const slideRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+
+  const handleSlideSelect = (slideId: string) => {
+    setSelectedSlide(slideId);
+    // スライドが選択されたら、そのスライドまでスクロール
+    const slideElement = slideRefs.current[slideId];
+    if (slideElement) {
+      slideElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  };
 
   const handleDragEnd = (result: any) => {
     if (!result.destination) return;
@@ -92,12 +102,13 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
             {presentation.slides.map((slide, index) => (
               <div
                 key={slide.id}
+                ref={(el) => slideRefs.current[slide.id] = el}
                 className={`flex-none w-[85%] md:w-[70%] snap-center transition-all duration-300 ${
                   selectedSlide === slide.id 
                     ? "shadow-selected scale-[1.02] bg-white rounded-lg" 
                     : ""
                 }`}
-                onClick={() => setSelectedSlide(slide.id)}
+                onClick={() => handleSlideSelect(slide.id)}
               >
                 <SlidePreview slide={slide} scale={1} />
               </div>
@@ -147,7 +158,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                          onClick={() => setSelectedSlide(slide.id)}
+                          onClick={() => handleSlideSelect(slide.id)}
                           className={`cursor-pointer transition-all duration-300 ${
                             selectedSlide === slide.id 
                               ? "shadow-selected scale-[1.02] bg-white rounded-lg" 
