@@ -24,7 +24,7 @@ const StepsSlide = ({ slide }: StepsSlideProps) => {
               <span className="text-white font-bold text-sm">{numbers[index]}</span>
             </div>
             <div className="flex-1">
-              <Subtitle className={`${!step.text ? "leading-7" : "mb-2"}`}>
+              <Subtitle className={`${!step.text ? "leading-7" : "mb-1.5"}`}>
                 {step.subtitle}
               </Subtitle>
               {step.text && (
