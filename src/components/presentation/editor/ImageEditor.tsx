@@ -6,10 +6,10 @@ import { Upload, Trash2 } from "lucide-react";
 interface ImageEditorProps {
   image?: string;
   imagePosition?: { x: number; y: number };
-  onChange: (field: "image" | "imagePosition", value: any) => void;
+  onUpdate: (image: string, imagePosition?: { x: number; y: number }) => void;
 }
 
-const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
+const ImageEditor = ({ image, imagePosition, onUpdate }: ImageEditorProps) => {
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -25,17 +25,14 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const imageDataUrl = e.target?.result as string;
-      onChange("image", imageDataUrl);
+      onUpdate(imageDataUrl, imagePosition);
     };
     reader.readAsDataURL(file);
   };
 
   const handleImageDelete = () => {
     if (image) {
-      onChange("image", "");
-    }
-    if (imagePosition) {
-      onChange("imagePosition", undefined);
+      onUpdate("", undefined);
     }
   };
 
@@ -44,7 +41,7 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
     
-    onChange("imagePosition", {
+    onUpdate(image || "", {
       x: Math.min(Math.max(x, 0), 100),
       y: Math.min(Math.max(y, 0), 100)
     });
@@ -57,7 +54,7 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
         <Input
           id="image"
           value={image || ""}
-          onChange={(e) => onChange("image", e.target.value)}
+          onChange={(e) => onUpdate(e.target.value, imagePosition)}
           placeholder="画像URL"
           className="flex-1"
         />
