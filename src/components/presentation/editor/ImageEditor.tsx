@@ -32,8 +32,14 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
 
   const handleImageDelete = () => {
     console.log("Delete button clicked"); // デバッグ用ログ
+    console.log("Current image value:", image); // 現在の画像値
+    console.log("Current imagePosition value:", imagePosition); // 現在の位置情報
+    
     onChange("image", undefined);
+    console.log("After setting image to undefined"); // 画像削除後
+    
     onChange("imagePosition", undefined);
+    console.log("After setting imagePosition to undefined"); // 位置情報削除後
   };
 
   const handleImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
