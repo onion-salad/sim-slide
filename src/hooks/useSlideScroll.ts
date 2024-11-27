@@ -33,7 +33,7 @@ export const useSlideScroll = () => {
           : slideIds.slice(targetIndex, currentIndex + 1).reverse();
 
         // アニメーションの設定
-        const duration = 1200;
+        const duration = 800; // アニメーション時間を短縮
         const stepsPerSlide = 20;
         const totalSteps = stepsPerSlide * (slidesToPass.length - 1);
         const stepDuration = duration / totalSteps;
@@ -42,23 +42,22 @@ export const useSlideScroll = () => {
         const animate = () => {
           currentStep++;
           
-          // 現在のスライドインデックスを計算
-          const slideIndex = Math.floor(currentStep / stepsPerSlide);
-          if (slideIndex < slidesToPass.length) {
-            // スライドを選択状態に
+          // 現在のスライドインデックスと進行度を計算
+          const progress = currentStep / totalSteps;
+          const slideIndex = Math.floor(progress * (slidesToPass.length - 1));
+          
+          // スライドの選択状態を更新
+          if (slideIndex >= 0 && slideIndex < slidesToPass.length) {
             const currentSlideElement = slideRefs.current[slidesToPass[slideIndex]];
             if (currentSlideElement) {
-              // 前のスライドの選択を解除
               Object.values(slideRefs.current).forEach(el => {
                 if (el) el.classList.remove('shadow-selected', 'scale-[1.02]', 'bg-white', 'rounded-lg');
               });
-              // 現在のスライドを選択状態に
               currentSlideElement.classList.add('shadow-selected', 'scale-[1.02]', 'bg-white', 'rounded-lg');
             }
           }
 
           // スクロール位置の計算
-          const progress = currentStep / totalSteps;
           const easeProgress = progress < 0.5
             ? 16 * progress * progress * progress * progress * progress
             : 1 - Math.pow(-2 * progress + 2, 5) / 2;
@@ -67,11 +66,12 @@ export const useSlideScroll = () => {
           container.scrollLeft = newScrollLeft;
 
           if (currentStep < totalSteps) {
-            requestAnimationFrame(() => setTimeout(animate, stepDuration));
+            requestAnimationFrame(animate); // setTimeoutを削除して直接requestAnimationFrameを呼び出し
           }
         };
 
-        animate();
+        // アニメーションをすぐに開始
+        requestAnimationFrame(animate);
       }
     }
   };
