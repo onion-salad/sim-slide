@@ -23,8 +23,8 @@ const StepsSlide = ({ slide }: StepsSlideProps) => {
             <div className="flex-none w-[calc(var(--slide-width)*0.048)] h-[calc(var(--slide-width)*0.048)] rounded-full bg-gradient-to-r from-[#7C3AED] to-[#6366F1] flex items-center justify-center relative shadow-selected">
               <span className="text-white font-bold text-[calc(var(--slide-width)*0.024)]">{numbers[index]}</span>
             </div>
-            <div className="flex-1 flex items-center">
-              <div>
+            <div className="flex-1 flex">
+              <div className="-mt-1">
                 <h2 className={`text-[length:calc(var(--slide-width)*0.036)] leading-[1.15] font-semibold bg-gradient-to-r from-[#7C3AED] to-[#6366F1] bg-clip-text text-transparent ${!step.text ? "" : "mb-1.5"}`}>
                   {step.subtitle}
                 </h2>
