@@ -79,12 +79,21 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
         />
       </div>
       <div>
-        <Label htmlFor="text">内容</Label>
+        <Label htmlFor="subtitle">サブタイトル</Label>
+        <Input
+          id="subtitle"
+          value={slide.content.subtitle || ""}
+          onChange={(e) => handleChange("subtitle", e.target.value)}
+          placeholder="スライドのサブタイトル"
+        />
+      </div>
+      <div>
+        <Label htmlFor="text">本文</Label>
         <Textarea
           id="text"
           value={slide.content.text || ""}
           onChange={(e) => handleChange("text", e.target.value)}
-          placeholder="スライドの内容"
+          placeholder="スライドの本文"
           rows={5}
         />
       </div>

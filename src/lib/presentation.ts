@@ -3,6 +3,7 @@ export interface Slide {
   template: string;
   content: {
     title?: string;
+    subtitle?: string;
     text?: string;
     image?: string;
     imagePosition?: {
