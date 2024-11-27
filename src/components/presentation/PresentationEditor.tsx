@@ -94,7 +94,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
         {/* Main Content Area */}
         <div className="flex-1 p-4 overflow-hidden flex flex-col">
           {/* Horizontal Slide Preview Carousel */}
-          <div className="w-full overflow-x-auto pb-4 flex gap-4 snap-x snap-mandatory pt-4">
+          <div className="slides-container w-full overflow-x-auto pb-4 flex gap-4 snap-x snap-mandatory pt-4">
             <div className="pl-4" />
             {presentation.slides.map((slide, index) => (
               <div

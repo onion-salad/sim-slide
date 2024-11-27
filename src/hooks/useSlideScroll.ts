@@ -6,11 +6,17 @@ export const useSlideScroll = () => {
   const scrollToSlide = (slideId: string) => {
     const slideElement = slideRefs.current[slideId];
     if (slideElement) {
-      slideElement.scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-        inline: 'center'
-      });
+      const container = document.querySelector('.slides-container');
+      if (container) {
+        const containerRect = container.getBoundingClientRect();
+        const slideRect = slideElement.getBoundingClientRect();
+        const scrollLeft = slideRect.left - containerRect.left - (containerRect.width - slideRect.width) / 2;
+        
+        container.scrollTo({
+          left: container.scrollLeft + scrollLeft,
+          behavior: 'smooth'
+        });
+      }
     }
   };
 
