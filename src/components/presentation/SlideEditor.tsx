@@ -27,6 +27,18 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
     });
   };
 
+  const handleImageChange = (image: string, imagePosition?: { x: number; y: number }) => {
+    console.log("handleImageChange called", { image, imagePosition });
+    onUpdate({
+      ...slide,
+      content: {
+        ...slide.content,
+        image,
+        imagePosition: imagePosition || { x: 50, y: 50 },
+      },
+    });
+  };
+
   const handleStepChange = (index: number, field: string, value: string) => {
     const steps = [...(slide.content.steps || [])];
     steps[index] = {
@@ -95,11 +107,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
         <ImageEditor
           image={slide.content.image}
           imagePosition={slide.content.imagePosition}
-          onChange={(image, imagePosition) => {
-            console.log("ImageEditor onChange called", image, imagePosition);
-            handleChange("image", image);
-            handleChange("imagePosition", imagePosition);
-          }}
+          onChange={handleImageChange}
         />
       </div>
     );
