@@ -67,46 +67,35 @@ export const useSlideScroll = () => {
 
         // アニメーションの設定
         const duration = 600;
-        const stepsPerSlide = 15;
-        const totalSteps = stepsPerSlide * (slidesToPass.length - 1);
-        const stepDuration = duration / totalSteps;
-        let currentStep = 0;
+        const startTime = performance.now();
+        const startScrollLeft = container.scrollLeft;
+        const scrollDistance = targetScrollLeft - startScrollLeft;
 
-        const animate = () => {
-          currentStep++;
+        const animate = (currentTime: number) => {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
           
-          const progress = currentStep / totalSteps;
-          
-          const adjustedIndex = Math.min(
-            Math.floor((progress + 0.1) * (slidesToPass.length - 1)),
-            slidesToPass.length - 1
-          );
-          
-          if (adjustedIndex >= 0 && adjustedIndex < slidesToPass.length) {
-            const currentSlideElement = slideRefs.current[slidesToPass[adjustedIndex]];
-            if (currentSlideElement) {
-              Object.values(slideRefs.current).forEach(el => {
-                if (el) el.classList.remove('shadow-selected', 'scale-[1.02]', 'bg-white', 'rounded-lg');
-              });
-              currentSlideElement.classList.add('shadow-selected', 'scale-[1.02]', 'bg-white', 'rounded-lg');
-            }
-          }
-
+          // イージング関数を修正
           const easeProgress = progress < 0.5
-            ? 16 * progress * progress * progress * progress * progress
-            : 1 - Math.pow(-2 * progress + 2, 5) / 2;
+            ? 4 * progress * progress * progress
+            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
 
-          container.scrollLeft = targetScrollLeft * easeProgress;
+          const newScrollLeft = startScrollLeft + (scrollDistance * easeProgress);
+          container.scrollLeft = newScrollLeft;
+
           console.log('Animation progress:', {
             progress,
             easeProgress,
-            currentScrollLeft: container.scrollLeft
+            currentScrollLeft: container.scrollLeft,
+            newScrollLeft
           });
 
-          if (currentStep < totalSteps) {
+          if (progress < 1) {
             requestAnimationFrame(animate);
           } else {
             console.log('Animation complete');
+            // 最終位置を確実に設定
+            container.scrollLeft = targetScrollLeft;
           }
         };
 
