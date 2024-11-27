@@ -13,7 +13,7 @@ const StepsSlide = ({ slide }: StepsSlideProps) => {
   return (
     <div className="h-full p-[8%] flex flex-col">
       {slide.content.title && (
-        <Title className="mb-[6%]">
+        <Title className="mb-[4%]">
           {slide.content.title}
         </Title>
       )}
