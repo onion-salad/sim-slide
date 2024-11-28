@@ -23,7 +23,7 @@ export const useShortcuts = ({ onAddSlide, onPresent }: ShortcutHandlers) => {
         setLastSpaceKeyTime(currentTime);
       }
 
-      if (event.key === 'F2' && !event.repeat) {
+      if (event.key === 'Fn' && !event.repeat) {
         const currentTime = new Date().getTime();
         const timeDiff = currentTime - lastFnKeyTime;
         
