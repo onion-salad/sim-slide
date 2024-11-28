@@ -46,7 +46,7 @@ export const MobileHeader = ({
     <div className="fixed top-0 left-0 right-0 z-10 bg-white border-b p-4 md:hidden">
       <div className="flex justify-between items-center">
         <div className="relative">
-          <Heart className="absolute h-8 w-8 text-black opacity-20 -left-2 top-1/2 -translate-y-1/2" />
+          <Heart className="absolute h-8 w-8 text-black opacity-15 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
           <h1 className="text-[1.4rem] font-bold tracking-tight bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent relative z-10" style={{ fontFamily: "'Montserrat', sans-serif" }}>
             Sim-Slide
           </h1>
