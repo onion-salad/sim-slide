@@ -23,6 +23,20 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
   }
 
   const handleChange = useCallback((field: string, value: any) => {
+    console.log('Input event details:', {
+      field,
+      value,
+      type: typeof value,
+      composing: window.event && 'isComposing' in window.event ? (window.event as any).isComposing : 'unknown'
+    });
+
+    // IME入力中は更新をスキップ
+    const event = window.event as any;
+    if (event && event.isComposing) {
+      console.log('Skipping update during IME composition');
+      return;
+    }
+
     onUpdate({
       ...slide,
       content: {
@@ -67,147 +81,116 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
     handleChange("steps", steps);
   }, [slide.content.steps, handleChange]);
 
-  // サムネイルテンプレート
-  if (slide.template === "thumbnail") {
-    return (
-      <div className="space-y-4">
-        <div>
-          <Label htmlFor="title">タイトル</Label>
-          <Input
-            id="title"
-            value={slide.content.title || ""}
-            onChange={(e) => handleChange("title", e.target.value)}
-          />
-        </div>
-      </div>
-    );
-  }
-
-  // タイトルテンプレート
-  if (slide.template === "title") {
-    return (
-      <div className="space-y-4">
-        <div>
-          <Label htmlFor="title">タイトル</Label>
-          <Input
-            id="title"
-            value={slide.content.title || ""}
-            onChange={(e) => handleChange("title", e.target.value)}
-          />
-        </div>
-        <div>
-          <Label htmlFor="text">本文</Label>
-          <Textarea
-            id="text"
-            value={slide.content.text || ""}
-            onChange={(e) => handleChange("text", e.target.value)}
-          />
-        </div>
-        <ImageEditor
-          image={slide.content.image}
-          imagePosition={slide.content.imagePosition}
-          onChange={handleImageChange}
+  return (
+    <div className="space-y-4">
+      <div>
+        <Label htmlFor="title">タイトル</Label>
+        <Input
+          id="title"
+          value={slide.content.title || ""}
+          onChange={(e) => handleChange("title", e.target.value)}
+          onCompositionStart={() => console.log('Composition start')}
+          onCompositionEnd={() => console.log('Composition end')}
         />
       </div>
-    );
-  }
-
-  // コンテンツテンプレート
-  if (slide.template === "content") {
-    return (
-      <div className="space-y-4">
-        <div>
-          <Label htmlFor="title">タイトル</Label>
-          <Input
-            id="title"
-            value={slide.content.title || ""}
-            onChange={(e) => handleChange("title", e.target.value)}
-          />
-        </div>
+      {slide.template === "content" && (
         <div>
           <Label htmlFor="subtitle">サブタイトル</Label>
           <Input
             id="subtitle"
             value={slide.content.subtitle || ""}
             onChange={(e) => handleChange("subtitle", e.target.value)}
+            onCompositionStart={() => console.log('Composition start')}
+            onCompositionEnd={() => console.log('Composition end')}
           />
         </div>
+      )}
+      {(slide.template === "content" || slide.template === "title") && (
         <div>
           <Label htmlFor="text">本文</Label>
           <Textarea
             id="text"
             value={slide.content.text || ""}
             onChange={(e) => handleChange("text", e.target.value)}
+            onCompositionStart={() => console.log('Composition start')}
+            onCompositionEnd={() => console.log('Composition end')}
           />
         </div>
-      </div>
-    );
-  }
-
-  // ステップテンプレート
-  if (slide.template === "steps") {
-    return (
-      <div className="space-y-4">
-        <div>
-          <Label htmlFor="title">タイトル</Label>
-          <Input
-            id="title"
-            value={slide.content.title || ""}
-            onChange={(e) => handleChange("title", e.target.value)}
-          />
-        </div>
-        <Accordion type="single" collapsible className="w-full">
-          {(slide.content.steps || []).map((step, index) => (
-            <AccordionItem key={index} value={`step-${index}`}>
-              <div className="flex items-center">
-                <AccordionTrigger className="flex-1">
-                  {step.subtitle || `ステップ ${index + 1}`}
-                </AccordionTrigger>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleRemoveStep(index)}
-                >
-                  <Trash className="w-4 h-4" />
-                </Button>
-              </div>
-              <AccordionContent className="space-y-4">
-                <div>
-                  <Label>サブタイトル</Label>
-                  <Input
-                    value={step.subtitle}
-                    onChange={(e) =>
-                      handleStepChange(index, "subtitle", e.target.value)
-                    }
-                  />
+      )}
+      {slide.template === "title" && (
+        <ImageEditor
+          image={slide.content.image}
+          imagePosition={slide.content.imagePosition}
+          onChange={handleImageChange}
+        />
+      )}
+      {slide.template === "steps" && (
+        <>
+          <div>
+            <Label htmlFor="title">タイトル</Label>
+            <Input
+              id="title"
+              value={slide.content.title || ""}
+              onChange={(e) => handleChange("title", e.target.value)}
+              onCompositionStart={() => console.log('Composition start')}
+              onCompositionEnd={() => console.log('Composition end')}
+            />
+          </div>
+          <Accordion type="single" collapsible className="w-full">
+            {(slide.content.steps || []).map((step, index) => (
+              <AccordionItem key={index} value={`step-${index}`}>
+                <div className="flex items-center">
+                  <AccordionTrigger className="flex-1">
+                    {step.subtitle || `ステップ ${index + 1}`}
+                  </AccordionTrigger>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleRemoveStep(index)}
+                  >
+                    <Trash className="w-4 h-4" />
+                  </Button>
                 </div>
-                <div>
-                  <Label>テキスト</Label>
-                  <Textarea
-                    value={step.text}
-                    onChange={(e) =>
-                      handleStepChange(index, "text", e.target.value)
-                    }
-                  />
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
-        <Button 
-          onClick={handleAddStep} 
-          variant="outline" 
-          className="w-full"
-          disabled={slide.content.steps?.length >= 3}
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          ステップを追加
-        </Button>
-      </div>
-    );
-  }
-
-  return null;
+                <AccordionContent className="space-y-4">
+                  <div>
+                    <Label>サブタイトル</Label>
+                    <Input
+                      value={step.subtitle}
+                      onChange={(e) =>
+                        handleStepChange(index, "subtitle", e.target.value)
+                      }
+                      onCompositionStart={() => console.log('Composition start')}
+                      onCompositionEnd={() => console.log('Composition end')}
+                    />
+                  </div>
+                  <div>
+                    <Label>テキスト</Label>
+                    <Textarea
+                      value={step.text}
+                      onChange={(e) =>
+                        handleStepChange(index, "text", e.target.value)
+                      }
+                      onCompositionStart={() => console.log('Composition start')}
+                      onCompositionEnd={() => console.log('Composition end')}
+                    />
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+          <Button 
+            onClick={handleAddStep} 
+            variant="outline" 
+            className="w-full"
+            disabled={slide.content.steps?.length >= 3}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            ステップを追加
+          </Button>
+        </>
+      )}
+    </div>
+  );
 };
 
 export default SlideEditor;
