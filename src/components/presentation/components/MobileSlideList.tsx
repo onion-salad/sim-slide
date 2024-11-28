@@ -10,7 +10,7 @@ interface MobileSlideListProps {
   onSlideSelect: (slideId: string) => void;
   onDeleteSlide: (slideId: string, event: React.MouseEvent) => void;
   onDragEnd: (result: any) => void;
-  slideRefs: React.MutableRefObject<{ [key: string]: HTMLDivElement | null; handleDragScroll?: (dragX: number, currentSlideId: string, slides: string[]) => void }>;
+  slideRefs: React.MutableRefObject<{ [key: string]: HTMLDivElement | null }>;
 }
 
 export const MobileSlideList = ({
@@ -21,18 +21,8 @@ export const MobileSlideList = ({
   onDragEnd,
   slideRefs,
 }: MobileSlideListProps) => {
-  const handleDragUpdate = (update: any) => {
-    if (!update.destination || !selectedSlide) return;
-    
-    const dragX = update.clientX;
-    const slideIds = slides.map(slide => slide.id);
-    if (slideRefs.current.handleDragScroll) {
-      slideRefs.current.handleDragScroll(dragX, selectedSlide, slideIds);
-    }
-  };
-
   return (
-    <DragDropContext onDragEnd={onDragEnd} onDragUpdate={handleDragUpdate}>
+    <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="mobile-slides" direction="horizontal">
         {(provided) => (
           <div
