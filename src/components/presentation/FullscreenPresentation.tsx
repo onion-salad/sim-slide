@@ -12,6 +12,8 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
   const [currentSlide, setCurrentSlide] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [lastAltKeyTime, setLastAltKeyTime] = useState<number>(0);
+  const [commandPressed, setCommandPressed] = useState(false);
+  const [shiftPressed, setShiftPressed] = useState(false);
 
   const handleNext = () => {
     if (currentSlide < slides.length - 1) {
@@ -47,20 +49,45 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
   };
 
   const handleVideoClick = () => {
-    console.log('ビデオボタンがクリックされました');
-    const event = new KeyboardEvent('keydown', {
-      key: '5',
-      code: 'Digit5',
-      metaKey: true,
-      shiftKey: true,
+    console.log('ビデオボタンがクリックされました - シーケンシャルキー開始');
+    
+    // Command キーを押す
+    const commandEvent = new KeyboardEvent('keydown', {
+      key: 'Meta',
+      code: 'MetaLeft',
+      metaKey: true
     });
-    console.log('生成されたイベント:', {
-      key: event.key,
-      code: event.code,
-      metaKey: event.metaKey,
-      shiftKey: event.shiftKey
-    });
-    document.dispatchEvent(event);
+    document.dispatchEvent(commandEvent);
+    setCommandPressed(true);
+    
+    // 少し待ってから Shift キーを押す
+    setTimeout(() => {
+      const shiftEvent = new KeyboardEvent('keydown', {
+        key: 'Shift',
+        code: 'ShiftLeft',
+        metaKey: true,
+        shiftKey: true
+      });
+      document.dispatchEvent(shiftEvent);
+      setShiftPressed(true);
+      
+      // さらに少し待ってから 5 キーを押す
+      setTimeout(() => {
+        const digitEvent = new KeyboardEvent('keydown', {
+          key: '5',
+          code: 'Digit5',
+          metaKey: true,
+          shiftKey: true
+        });
+        document.dispatchEvent(digitEvent);
+        
+        // キーを離す処理
+        setTimeout(() => {
+          setCommandPressed(false);
+          setShiftPressed(false);
+        }, 500);
+      }, 200);
+    }, 200);
   };
 
   useEffect(() => {
