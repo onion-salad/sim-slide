@@ -26,7 +26,9 @@ export const MobileSlideList = ({
     
     const dragX = update.clientX;
     const slideIds = slides.map(slide => slide.id);
-    slideRefs.current.handleDragScroll?.(dragX, selectedSlide, slideIds);
+    if (slideRefs.current.handleDragScroll && typeof slideRefs.current.handleDragScroll === 'function') {
+      slideRefs.current.handleDragScroll(dragX, selectedSlide, slideIds);
+    }
   };
 
   return (
