@@ -27,16 +27,11 @@ export const MobileSlideList = ({
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   const handleDragStart = (start: any) => {
-    console.log('Drag started:', {
-      draggableId: start.draggableId,
-      sourceIndex: start.source.index
-    });
     setDraggedSlideId(start.draggableId);
     setCurrentIndex(start.source.index);
   };
 
   const handleDragEnd = (result: any) => {
-    console.log('Drag ended:', result);
     setDraggedSlideId(null);
     onDragEnd(result);
   };
@@ -44,7 +39,7 @@ export const MobileSlideList = ({
   return (
     <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <Droppable droppableId="mobile-slides" direction="horizontal">
-        {(provided) => (
+        {(provided, snapshot) => (
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
@@ -65,14 +60,8 @@ export const MobileSlideList = ({
                     {...provided.dragHandleProps}
                     className={`flex-none w-[85%] snap-center transition-all duration-300 ${
                       selectedSlide === slide.id ? "shadow-selected scale-[1.02] bg-white rounded-lg" : ""
-                    } ${snapshot.isDragging ? "opacity-50 scale-90" : ""}`}
+                    } ${snapshot.isDragging ? "opacity-50" : ""}`}
                     onClick={() => onSlideSelect(slide.id)}
-                    style={{
-                      ...provided.draggableProps.style,
-                      transform: snapshot.isDragging 
-                        ? `${provided.draggableProps.style?.transform} scale(0.9)` 
-                        : provided.draggableProps.style?.transform
-                    }}
                   >
                     <div className="relative group">
                       {selectedSlide === slide.id && (
