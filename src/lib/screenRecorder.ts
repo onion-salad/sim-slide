@@ -2,6 +2,14 @@ interface RecordingOptions {
   preferCurrentTab?: boolean;
 }
 
+// Chrome の MediaTrackConstraints に preferCurrentTab を追加する型定義
+declare global {
+  interface MediaTrackConstraints {
+    displaySurface?: string;
+    preferCurrentTab?: boolean;
+  }
+}
+
 export class ScreenRecorder {
   private mediaRecorder: MediaRecorder | null = null;
   private recordedChunks: Blob[] = [];
