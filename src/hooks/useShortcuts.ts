@@ -11,6 +11,8 @@ export const useShortcuts = ({ onAddSlide, onPresent }: ShortcutHandlers) => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      console.log('Key pressed:', event.key, 'Code:', event.code, 'Event:', event);
+      
       if (event.code === 'Space' && !event.repeat) {
         const currentTime = new Date().getTime();
         const timeDiff = currentTime - lastSpaceKeyTime;
@@ -23,7 +25,8 @@ export const useShortcuts = ({ onAddSlide, onPresent }: ShortcutHandlers) => {
         setLastSpaceKeyTime(currentTime);
       }
 
-      if (event.key === 'Fn' && !event.repeat) {
+      // Macのfnキーは'MetaLeft'として検出される可能性があります
+      if ((event.code === 'MetaLeft' || event.code === 'Meta' || event.key === 'Meta') && !event.repeat) {
         const currentTime = new Date().getTime();
         const timeDiff = currentTime - lastFnKeyTime;
         
