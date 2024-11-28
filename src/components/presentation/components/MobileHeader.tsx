@@ -102,7 +102,7 @@ export const MobileHeader = ({
           </div>
         </div>
       </div>
-      <div className="fixed bottom-4 left-4 md:hidden">
+      <div className="fixed bottom-4 left-4 md:hidden z-50">
         <Button
           onClick={onPresentClick}
           size="icon"
