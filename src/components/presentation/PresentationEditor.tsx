@@ -6,7 +6,7 @@ import SlidePreview from "./SlidePreview";
 import SlideEditor from "./SlideEditor";
 import TemplateGallery from "./TemplateGallery";
 import FullscreenPresentation from "./FullscreenPresentation";
-import { Plus } from "lucide-react";
+import { Plus, X, Play } from "lucide-react";
 import { useSlideScroll } from "@/hooks/useSlideScroll";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { EditorButtons } from "./components/EditorButtons";
