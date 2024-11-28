@@ -1,19 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Save } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SaveButtonProps {
   onSave: () => void;
+  isAnimating?: boolean;
 }
 
-export const SaveButton = ({ onSave }: SaveButtonProps) => {
-  const [isAnimating, setIsAnimating] = useState(false);
+export const SaveButton = ({ onSave, isAnimating: externalIsAnimating }: SaveButtonProps) => {
+  const [internalIsAnimating, setInternalIsAnimating] = useState(false);
+  const isAnimating = externalIsAnimating || internalIsAnimating;
+
+  useEffect(() => {
+    if (externalIsAnimating) {
+      const timer = setTimeout(() => {
+        setInternalIsAnimating(false);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [externalIsAnimating]);
 
   const handleClick = () => {
-    setIsAnimating(true);
+    setInternalIsAnimating(true);
     onSave();
-    setTimeout(() => setIsAnimating(false), 1000);
+    setTimeout(() => setInternalIsAnimating(false), 1000);
   };
 
   return (

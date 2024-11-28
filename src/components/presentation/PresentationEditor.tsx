@@ -24,6 +24,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
   const [selectedSlide, setSelectedSlide] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
+  const [isSaveAnimating, setIsSaveAnimating] = useState(false);
   const { slideRefs, scrollToSlide } = useSlideScroll();
   const { toast } = useToast();
 
@@ -36,11 +37,13 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
   };
 
   const handleSave = () => {
+    setIsSaveAnimating(true);
     try {
       savePresentation(presentation);
       toast({
         title: "保存完了",
         description: "プレゼンテーションが保存されました",
+        duration: 700,
       });
     } catch (error) {
       console.error("Failed to save presentation:", error);
@@ -48,8 +51,10 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
         title: "保存エラー",
         description: "プレゼンテーションの保存に失敗しました",
         variant: "destructive",
+        duration: 700,
       });
     }
+    setTimeout(() => setIsSaveAnimating(false), 1000);
   };
 
   useEditorShortcuts({
@@ -115,7 +120,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
             <Plus className="w-4 h-4 mr-2" />
             Add (Space×2)
           </Button>
-          <SaveButton onSave={handleSave} />
+          <SaveButton onSave={handleSave} isAnimating={isSaveAnimating} />
         </div>
       </div>
 
@@ -169,7 +174,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
               <Plus className="w-4 h-4 mr-2" />
               Add (Space×2)
             </Button>
-            <SaveButton onSave={handleSave} />
+            <SaveButton onSave={handleSave} isAnimating={isSaveAnimating} />
           </div>
           <ScrollArea className="h-[calc(100vh-10rem)] mt-4">
             <DragDropContext onDragEnd={handleDragEnd}>
