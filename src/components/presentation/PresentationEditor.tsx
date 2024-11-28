@@ -3,7 +3,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Button } from "@/components/ui/button";
 import { Presentation, Slide, createSlide } from "@/lib/presentation";
 import { savePresentation } from "@/components/presentation/utils/presentationStorage";
@@ -151,13 +150,30 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
               slideRefs={slideRefs}
             />
           ) : (
-            <DesktopSlideList
-              slides={presentation.slides}
-              selectedSlide={selectedSlide}
-              onSlideSelect={handleSlideSelect}
-              onDeleteSlide={handleDeleteSlide}
-              onDragEnd={handleDragEnd}
-            />
+            <div className="flex flex-wrap gap-4 mb-4">
+              {presentation.slides.map((slide) => (
+                <div
+                  key={slide.id}
+                  onClick={() => handleSlideSelect(slide.id)}
+                  className={cn(
+                    "group cursor-pointer transition-all duration-300 relative",
+                    selectedSlide === slide.id && "shadow-selected scale-[1.02]"
+                  )}
+                >
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-2 top-2 h-6 w-6 rounded-full bg-red-500 shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-red-600 text-white"
+                    onClick={(e) => handleDeleteSlide(slide.id, e)}
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                  <div ref={(el) => (slideRefs.current[slide.id] = el)}>
+                    <SlidePreview slide={slide} scale={0.2} />
+                  </div>
+                </div>
+              ))}
+            </div>
           )}
 
           <div className="flex-1 overflow-y-auto mt-4 bg-white p-4 overflow-x-hidden">
@@ -168,7 +184,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
               />
             ) : (
               <div className="flex items-center justify-center h-full text-gray-400">
-                Select a slide to edit
+                スライドを選択して編集
               </div>
             )}
           </div>
@@ -182,17 +198,10 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
                   "w-4 h-4 mr-2 transition-transform duration-300",
                   isAddAnimating && "animate-[spin_0.5s_ease-out]"
                 )} />
-                Add (Space×2)
+                追加 (Space×2)
               </Button>
               <SaveButton onSave={handleSave} isAnimating={isSaveAnimating} />
             </div>
-            <DesktopSlideList
-              slides={presentation.slides}
-              selectedSlide={selectedSlide}
-              onSlideSelect={handleSlideSelect}
-              onDeleteSlide={handleDeleteSlide}
-              onDragEnd={handleDragEnd}
-            />
           </div>
         )}
       </div>
