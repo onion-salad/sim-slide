@@ -54,7 +54,15 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
   };
 
   const toggleRecording = async () => {
-    if (!presentationRef.current) return;
+    if (!presentationRef.current) {
+      toast({
+        title: "録画エラー",
+        description: "録画対象の要素が見つかりませんでした",
+        variant: "destructive",
+        duration: 700,
+      });
+      return;
+    }
 
     if (!isRecording) {
       try {
@@ -69,9 +77,10 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
           duration: 700,
         });
       } catch (error) {
+        console.error("Error starting recording:", error);
         toast({
           title: "録画エラー",
-          description: "録画の開始に失敗しました",
+          description: "録画の開始に失敗しました。ブラウザの設定を確認してください。",
           variant: "destructive",
           duration: 700,
         });

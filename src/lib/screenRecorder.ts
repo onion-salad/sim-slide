@@ -17,6 +17,10 @@ export class ScreenRecorder {
 
   async startRecording(element: HTMLElement, options: RecordingOptions = {}): Promise<void> {
     try {
+      if (!element) {
+        throw new Error("Target element is required");
+      }
+
       const displayMediaOptions: DisplayMediaStreamOptions = {
         video: {
           displaySurface: options.preferCurrentTab ? "browser" : "window",
