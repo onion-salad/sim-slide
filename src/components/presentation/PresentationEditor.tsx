@@ -2,6 +2,7 @@ import { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Button } from "@/components/ui/button";
 import { Presentation, Slide, createSlide } from "@/lib/presentation";
+import { savePresentation } from "@/components/presentation/utils/presentationStorage";
 import SlidePreview from "./SlidePreview";
 import SlideEditor from "./SlideEditor";
 import TemplateGallery from "./TemplateGallery";
@@ -12,6 +13,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { EditorButtons } from "./components/EditorButtons";
 import { SaveButton } from "./components/SaveButton";
 import { useEditorShortcuts } from "@/hooks/useEditorShortcuts";
+import { useToast } from "@/components/ui/use-toast";
 
 interface PresentationEditorProps {
   presentation: Presentation;
@@ -23,6 +25,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const { slideRefs, scrollToSlide } = useSlideScroll();
+  const { toast } = useToast();
 
   const handleAddClick = () => {
     setShowTemplates(true);
@@ -33,14 +36,21 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
   };
 
   const handleSave = () => {
-    localStorage.setItem('presentation', JSON.stringify(presentation));
+    try {
+      savePresentation(presentation);
+      toast({
+        title: "保存完了",
+        description: "プレゼンテーションが保存されました",
+      });
+    } catch (error) {
+      console.error("Failed to save presentation:", error);
+      toast({
+        title: "保存エラー",
+        description: "プレゼンテーションの保存に失敗しました",
+        variant: "destructive",
+      });
+    }
   };
-
-  useEditorShortcuts({
-    onAddClick: handleAddClick,
-    onPresentClick: handlePresentClick,
-    onSaveClick: handleSave,
-  });
 
   const handleSlideSelect = (slideId: string) => {
     setSelectedSlide(slideId);
