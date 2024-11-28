@@ -29,7 +29,7 @@ export const SaveButton = ({ onSave }: SaveButtonProps) => {
         "w-4 h-4 mr-2 transition-transform duration-300",
         isAnimating && "animate-[spin_0.5s_ease-out]"
       )} />
-      保存 (Command + S)
+      保存
     </Button>
   );
 };
