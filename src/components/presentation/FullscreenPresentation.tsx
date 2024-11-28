@@ -47,16 +47,34 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
   };
 
   const handleVideoClick = () => {
+    console.log('ビデオボタンがクリックされました');
     const event = new KeyboardEvent('keydown', {
       key: '5',
+      code: 'Digit5',
       metaKey: true,
       shiftKey: true,
+    });
+    console.log('生成されたイベント:', {
+      key: event.key,
+      code: event.code,
+      metaKey: event.metaKey,
+      shiftKey: event.shiftKey
     });
     document.dispatchEvent(event);
   };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      console.log('キーが押されました:', {
+        key: e.key,
+        code: e.code,
+        metaKey: e.metaKey,
+        ctrlKey: e.ctrlKey,
+        altKey: e.altKey,
+        repeat: e.repeat,
+        timestamp: new Date().getTime()
+      });
+
       if (e.key === "ArrowRight" || e.key === "Space") {
         handleNext();
       } else if (e.key === "ArrowLeft") {
