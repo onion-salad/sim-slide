@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Button } from "@/components/ui/button";
 import { Presentation, Slide, createSlide } from "@/lib/presentation";
@@ -12,6 +12,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { EditorButtons } from "./components/EditorButtons";
 import { SaveButton } from "./components/SaveButton";
 import { AddSlideButton } from "./components/AddSlideButton";
+import { useEditorShortcuts } from "@/hooks/useEditorShortcuts";
 
 interface PresentationEditorProps {
   presentation: Presentation;
@@ -23,47 +24,14 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const { slideRefs, scrollToSlide } = useSlideScroll();
-  const [lastSpaceKeyTime, setLastSpaceKeyTime] = useState<number>(0);
-  const [lastFnKeyTime, setLastFnKeyTime] = useState<number>(0);
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      // スペースキーのダブルクリック
-      if (event.code === 'Space' && !event.repeat) {
-        const currentTime = new Date().getTime();
-        const timeDiff = currentTime - lastSpaceKeyTime;
-        
-        if (timeDiff < 500) {
-          event.preventDefault();
-          setShowTemplates(true);
-        }
-        
-        setLastSpaceKeyTime(currentTime);
-      }
-
-      // Fnキーのダブルクリック
-      if (event.key === 'Fn' && !event.repeat) {
-        const currentTime = new Date().getTime();
-        const timeDiff = currentTime - lastFnKeyTime;
-        
-        if (timeDiff < 500) {
-          event.preventDefault();
-          setIsFullscreen(true);
-        }
-        
-        setLastFnKeyTime(currentTime);
-      }
-
-      // Command + S
-      if ((event.metaKey || event.ctrlKey) && event.key === 's') {
-        event.preventDefault();
-        handleSave();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [lastSpaceKeyTime, lastFnKeyTime]);
+  useEditorShortcuts({
+    onSave: () => {
+      localStorage.setItem('presentation', JSON.stringify(presentation));
+    },
+    onPresent: () => setIsFullscreen(true),
+    onShowTemplates: () => setShowTemplates(true),
+  });
 
   const handleSlideSelect = (slideId: string) => {
     setSelectedSlide(slideId);
