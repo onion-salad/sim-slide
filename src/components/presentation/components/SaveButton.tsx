@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Save } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { isMobile } from "@/lib/utils";
 
 interface SaveButtonProps {
   onSave: () => void;
@@ -33,7 +34,8 @@ export const SaveButton = ({ onSave, isAnimating: externalIsAnimating }: SaveBut
       variant="outline"
       className={cn(
         "w-full relative overflow-hidden transition-all duration-300",
-        isAnimating && "animate-[scale-in_0.2s_ease-out]"
+        isAnimating && "animate-[scale-in_0.2s_ease-out]",
+        isAnimating && isMobile() && "animate-save-flash"
       )}
     >
       <Save className={cn(

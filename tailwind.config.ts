@@ -66,10 +66,15 @@ export default {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-100%)" },
         },
+        "save-flash": {
+          "0%, 100%": { backgroundColor: "transparent" },
+          "50%": { backgroundColor: "rgb(139 92 246)" },
+        }
       },
       animation: {
         "slide-in": "slide-in 0.3s ease-out",
         "slide-out": "slide-out 0.3s ease-out",
+        "save-flash": "save-flash 1s ease-in-out",
       },
     },
   },
