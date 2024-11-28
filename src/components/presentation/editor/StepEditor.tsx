@@ -2,7 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Plus, Trash } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import TextEditor from "./TextEditor";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 
 interface Step {
   subtitle: string;
@@ -56,18 +58,32 @@ const StepEditor = ({ steps, onChange }: StepEditorProps) => {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => handleRemoveStep(index)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleRemoveStep(index);
+                }}
               >
                 <Trash className="w-4 h-4" />
               </Button>
             </div>
             <AccordionContent className="space-y-4">
-              <TextEditor
-                subtitle={step.subtitle}
-                text={step.text}
-                onChange={(field, value) => handleStepChange(index, field, value)}
-                showSubtitle={true}
-              />
+              <div>
+                <Label htmlFor={`step-${index}-subtitle`}>サブタイトル</Label>
+                <Input
+                  id={`step-${index}-subtitle`}
+                  value={step.subtitle}
+                  onChange={(e) => handleStepChange(index, "subtitle", e.target.value)}
+                />
+              </div>
+              <div>
+                <Label htmlFor={`step-${index}-text`}>本文</Label>
+                <Textarea
+                  id={`step-${index}-text`}
+                  value={step.text}
+                  onChange={(e) => handleStepChange(index, "text", e.target.value)}
+                  className="min-h-[100px]"
+                />
+              </div>
             </AccordionContent>
           </AccordionItem>
         ))}

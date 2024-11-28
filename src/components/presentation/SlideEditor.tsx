@@ -30,6 +30,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
     });
   };
 
+  // サムネイルテンプレート: タイトルのみ
   if (slide.template === "thumbnail") {
     return (
       <TextEditor
@@ -39,6 +40,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
     );
   }
 
+  // タイトルテンプレート: タイトル + 本文 + 画像
   if (slide.template === "title") {
     return (
       <div className="space-y-4">
@@ -56,6 +58,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
     );
   }
 
+  // コンテンツテンプレート: タイトル + サブタイトル + 本文
   if (slide.template === "content") {
     return (
       <TextEditor
@@ -68,6 +71,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
     );
   }
 
+  // ステップテンプレート: タイトル + ステップ
   if (slide.template === "steps") {
     return (
       <div className="space-y-4">

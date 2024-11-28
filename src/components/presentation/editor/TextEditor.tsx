@@ -48,6 +48,7 @@ const TextEditor = ({ title, subtitle, text, onChange, showSubtitle = false }: T
             ref={textInputRef}
             value={text}
             onChange={(e) => onChange("text", e.target.value)}
+            className="min-h-[100px]"
           />
         </div>
       )}
