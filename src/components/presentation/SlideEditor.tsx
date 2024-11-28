@@ -6,7 +6,6 @@ import ImageEditor from "./editor/ImageEditor";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash } from "lucide-react";
-import { useCallback } from "react";
 
 interface SlideEditorProps {
   slide?: Slide;
@@ -22,7 +21,8 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
     );
   }
 
-  const handleChange = useCallback((field: string, value: any) => {
+  const handleChange = (field: string, value: any) => {
+    console.log("handleChange called", field, value);
     onUpdate({
       ...slide,
       content: {
@@ -30,9 +30,10 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
         [field]: value,
       },
     });
-  }, [slide, onUpdate]);
+  };
 
-  const handleImageChange = useCallback((image: string, imagePosition?: { x: number; y: number }) => {
+  const handleImageChange = (image: string, imagePosition?: { x: number; y: number }) => {
+    console.log("handleImageChange called", { image, imagePosition });
     onUpdate({
       ...slide,
       content: {
@@ -41,31 +42,31 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
         imagePosition: imagePosition || { x: 50, y: 50 },
       },
     });
-  }, [slide, onUpdate]);
+  };
 
-  const handleStepChange = useCallback((index: number, field: string, value: string) => {
+  const handleStepChange = (index: number, field: string, value: string) => {
     const steps = [...(slide.content.steps || [])];
     steps[index] = {
       ...steps[index],
       [field]: value,
     };
     handleChange("steps", steps);
-  }, [slide.content.steps, handleChange]);
+  };
 
-  const handleAddStep = useCallback(() => {
+  const handleAddStep = () => {
     const steps = [...(slide.content.steps || [])];
     if (steps.length >= 3) {
       return;
     }
     steps.push({ subtitle: "", text: "" });
     handleChange("steps", steps);
-  }, [slide.content.steps, handleChange]);
+  };
 
-  const handleRemoveStep = useCallback((index: number) => {
+  const handleRemoveStep = (index: number) => {
     const steps = [...(slide.content.steps || [])];
     steps.splice(index, 1);
     handleChange("steps", steps);
-  }, [slide.content.steps, handleChange]);
+  };
 
   // サムネイルテンプレート
   if (slide.template === "thumbnail") {
