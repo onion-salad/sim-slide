@@ -22,6 +22,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Slide } from "@/lib/presentation";
+import SlidePreview from "../SlidePreview";
 
 interface MobileHeaderProps {
   onSave: () => void;
@@ -69,11 +70,8 @@ export const MobileHeader = ({
     if (newIndex >= 0 && newIndex < newSlides.length) {
       [newSlides[index], newSlides[newIndex]] = [newSlides[newIndex], newSlides[index]];
       setReorderedSlides(newSlides);
+      onReorderSlides(newSlides.map(slide => slide.id));
     }
-  };
-
-  const handleSaveOrder = () => {
-    onReorderSlides(reorderedSlides.map(slide => slide.id));
   };
 
   return (
@@ -105,10 +103,12 @@ export const MobileHeader = ({
                   スライドの順序を変更するには、上下の矢印を使用してください。
                 </SheetDescription>
               </SheetHeader>
-              <div className="mt-4 space-y-2">
+              <div className="mt-4 space-y-4">
                 {reorderedSlides.map((slide, index) => (
                   <div key={slide.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                    <span>スライド {index + 1}</span>
+                    <div className="w-32 h-20 relative">
+                      <SlidePreview slide={slide} scale={0.5} />
+                    </div>
                     <div className="flex gap-2">
                       <Button
                         variant="ghost"
@@ -129,11 +129,6 @@ export const MobileHeader = ({
                     </div>
                   </div>
                 ))}
-              </div>
-              <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t">
-                <Button onClick={handleSaveOrder} className="w-full">
-                  並び順を保存
-                </Button>
               </div>
             </SheetContent>
           </Sheet>
