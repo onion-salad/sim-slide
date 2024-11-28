@@ -23,6 +23,8 @@ import { MobileHeader } from "./components/MobileHeader";
 import { MobileAddButton } from "./components/MobileAddButton";
 import { isMobile } from "@/lib/utils";
 import { DesktopBottomButtons } from "./components/DesktopBottomButtons";
+import { MobileSlideList } from "./components/MobileSlideList";
+import { DesktopSlideList } from "./components/DesktopSlideList";
 
 interface PresentationEditorProps {
   presentation: Presentation;
@@ -69,17 +71,6 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
       });
     }
     setTimeout(() => setIsSaveAnimating(false), 1000);
-  };
-
-  useEditorShortcuts({
-    onAddClick: handleAddClick,
-    onPresentClick: handlePresentClick,
-    onSaveClick: handleSave,
-  });
-
-  const handleSlideSelect = (slideId: string) => {
-    setSelectedSlide(slideId);
-    scrollToSlide(slideId);
   };
 
   const handleDragEnd = (result: any) => {
@@ -137,32 +128,33 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
 
       <div className="flex flex-col md:flex-row h-[calc(100vh-4rem)] md:h-screen pt-[4.5rem] md:pt-0">
         <div className="flex-1 p-4 overflow-hidden flex flex-col">
-          <div className="slides-container w-full overflow-x-auto pb-4 flex gap-4 snap-x snap-mandatory pt-4">
-            <div className="pl-4" />
-            {presentation.slides.map((slide, index) => (
-              <div
-                key={slide.id}
-                ref={(el) => slideRefs.current[slide.id] = el}
-                className={`flex-none w-[85%] md:w-[70%] snap-center transition-all duration-300 ${selectedSlide === slide.id ? "shadow-selected scale-[1.02] bg-white rounded-lg" : ""}`}
-                onClick={() => handleSlideSelect(slide.id)}
-              >
-                <div className="relative group">
-                  {isMobile() && selectedSlide === slide.id && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-red-500 shadow-md z-10 hover:bg-red-600 text-white"
-                      onClick={(e) => handleDeleteSlide(slide.id, e)}
-                    >
-                      <X className="h-3 w-3" />
-                    </Button>
-                  )}
-                  <SlidePreview slide={slide} scale={1} />
+          {isMobile() ? (
+            <MobileSlideList
+              slides={presentation.slides}
+              selectedSlide={selectedSlide}
+              onSlideSelect={handleSlideSelect}
+              onDeleteSlide={handleDeleteSlide}
+              onDragEnd={handleDragEnd}
+              slideRefs={slideRefs}
+            />
+          ) : (
+            <div className="slides-container w-full overflow-x-auto pb-4 flex gap-4 snap-x snap-mandatory pt-4">
+              <div className="pl-4" />
+              {presentation.slides.map((slide, index) => (
+                <div
+                  key={slide.id}
+                  ref={(el) => slideRefs.current[slide.id] = el}
+                  className={`flex-none w-[85%] md:w-[70%] snap-center transition-all duration-300 ${selectedSlide === slide.id ? "shadow-selected scale-[1.02] bg-white rounded-lg" : ""}`}
+                  onClick={() => handleSlideSelect(slide.id)}
+                >
+                  <div className="relative group">
+                    <SlidePreview slide={slide} scale={1} />
+                  </div>
                 </div>
-              </div>
-            ))}
-            <div className="pr-4" />
-          </div>
+              ))}
+              <div className="pr-4" />
+            </div>
+          )}
 
           <div className="flex-1 overflow-y-auto mt-4 bg-white p-4 overflow-x-hidden">
             {selectedSlide ? (
@@ -178,65 +170,27 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
           </div>
         </div>
 
-        <div className="hidden md:block w-64 bg-white p-4 border-l">
-          <div className="space-y-2">
-            <Button
-              className="w-full"
-              onClick={handleAddClick}
-            >
-              <Plus className={cn(
-                "w-4 h-4 mr-2 transition-transform duration-300",
-                isAddAnimating && "animate-[spin_0.5s_ease-out]"
-              )} />
-              Add (Space×2)
-            </Button>
-            <SaveButton onSave={handleSave} isAnimating={isSaveAnimating} />
+        {!isMobile() && (
+          <div className="hidden md:block w-64 bg-white p-4 border-l">
+            <div className="space-y-2">
+              <Button className="w-full" onClick={handleAddClick}>
+                <Plus className={cn(
+                  "w-4 h-4 mr-2 transition-transform duration-300",
+                  isAddAnimating && "animate-[spin_0.5s_ease-out]"
+                )} />
+                Add (Space×2)
+              </Button>
+              <SaveButton onSave={handleSave} isAnimating={isSaveAnimating} />
+            </div>
+            <DesktopSlideList
+              slides={presentation.slides}
+              selectedSlide={selectedSlide}
+              onSlideSelect={handleSlideSelect}
+              onDeleteSlide={handleDeleteSlide}
+              onDragEnd={handleDragEnd}
+            />
           </div>
-          <ScrollArea className="h-[calc(100vh-10rem)] mt-4">
-            <DragDropContext onDragEnd={handleDragEnd}>
-              <Droppable droppableId="slides">
-                {(provided) => (
-                  <div
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    className="space-y-2"
-                  >
-                    {presentation.slides.map((slide, index) => (
-                      <Draggable
-                        key={slide.id}
-                        draggableId={slide.id}
-                        index={index}
-                      >
-                        {(provided) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            onClick={() => handleSlideSelect(slide.id)}
-                            className={`group cursor-pointer transition-all duration-300 relative ${selectedSlide === slide.id ? "shadow-selected scale-[1.02] bg-white rounded-lg" : ""}`}
-                          >
-                            <div className="relative">
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="absolute right-2 top-2 h-6 w-6 rounded-full bg-red-500 shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-red-600 text-white"
-                                onClick={(e) => handleDeleteSlide(slide.id, e)}
-                              >
-                                <X className="h-3 w-3" />
-                              </Button>
-                              <SlidePreview slide={slide} scale={0.15} />
-                            </div>
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </DragDropContext>
-          </ScrollArea>
-        </div>
+        )}
       </div>
 
       <MobileAddButton onSelectTemplate={handleAddSlide} />
