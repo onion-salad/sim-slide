@@ -12,10 +12,12 @@ export const useAutoScrollInput = () => {
 
     const handleBlur = () => {
       console.log("Input blur event triggered");
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
+      setTimeout(() => {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      }, 100);
     };
 
     element.addEventListener("blur", handleBlur);
@@ -37,10 +39,12 @@ export const useAutoScrollTextarea = () => {
 
     const handleBlur = () => {
       console.log("Textarea blur event triggered");
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
+      setTimeout(() => {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      }, 100);
     };
 
     element.addEventListener("blur", handleBlur);
