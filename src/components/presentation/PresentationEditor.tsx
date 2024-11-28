@@ -141,15 +141,17 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
                 className={`flex-none w-[85%] md:w-[70%] snap-center transition-all duration-300 ${selectedSlide === slide.id ? "shadow-selected scale-[1.02] bg-white rounded-lg" : ""}`}
                 onClick={() => handleSlideSelect(slide.id)}
               >
-                <div className="relative">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-2 top-2 h-6 w-6 rounded-full bg-red-500 shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-red-600 text-white"
-                    onClick={(e) => handleDeleteSlide(slide.id, e)}
-                  >
-                    <X className="h-3 w-3" />
-                  </Button>
+                <div className="relative group">
+                  {isMobile() && selectedSlide === slide.id && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-2 top-2 h-6 w-6 rounded-full bg-red-500 shadow-md z-10 hover:bg-red-600 text-white"
+                      onClick={(e) => handleDeleteSlide(slide.id, e)}
+                    >
+                      <X className="h-3 w-3" />
+                    </Button>
+                  )}
                   <SlidePreview slide={slide} scale={1} />
                 </div>
               </div>
