@@ -3,9 +3,6 @@ import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { Slide } from "@/lib/presentation";
 import SlidePreview from "../SlidePreview";
-import { DragOverlay } from "./DragOverlay";
-import { useState } from "react";
-import { isMobile } from "@/lib/utils";
 
 interface MobileSlideListProps {
   slides: Slide[];
@@ -24,30 +21,16 @@ export const MobileSlideList = ({
   onDragEnd,
   slideRefs,
 }: MobileSlideListProps) => {
-  const [draggedSlideId, setDraggedSlideId] = useState<string | null>(null);
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-
-  const handleDragStart = (start: any) => {
-    if (isMobile()) {
-      setDraggedSlideId(start.draggableId);
-      setCurrentIndex(start.source.index);
-    }
-  };
-
-  const handleDragEnd = (result: any) => {
-    setDraggedSlideId(null);
-    onDragEnd(result);
-  };
-
   return (
-    <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-      <Droppable droppableId="mobile-slides" direction="vertical">
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId="mobile-slides" direction="horizontal">
         {(provided) => (
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="space-y-4 px-4"
+            className="slides-container w-full overflow-x-auto pb-4 flex gap-4 snap-x snap-mandatory pt-4"
           >
+            <div className="pl-4" />
             {slides.map((slide, index) => (
               <Draggable key={slide.id} draggableId={slide.id} index={index}>
                 {(provided) => (
@@ -60,7 +43,7 @@ export const MobileSlideList = ({
                     }}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
-                    className={`relative transition-all duration-300 ${
+                    className={`flex-none w-[85%] snap-center transition-all duration-300 ${
                       selectedSlide === slide.id ? "shadow-selected scale-[1.02] bg-white rounded-lg" : ""
                     }`}
                     onClick={() => onSlideSelect(slide.id)}
@@ -76,23 +59,17 @@ export const MobileSlideList = ({
                           <X className="h-3 w-3" />
                         </Button>
                       )}
-                      <SlidePreview slide={slide} scale={0.5} />
+                      <SlidePreview slide={slide} scale={1} />
                     </div>
                   </div>
                 )}
               </Draggable>
             ))}
+            <div className="pr-4" />
             {provided.placeholder}
           </div>
         )}
       </Droppable>
-      {draggedSlideId && isMobile() && (
-        <DragOverlay
-          slides={slides}
-          draggedSlideId={draggedSlideId}
-          currentIndex={currentIndex}
-        />
-      )}
     </DragDropContext>
   );
 };
