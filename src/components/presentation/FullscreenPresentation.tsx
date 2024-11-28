@@ -2,6 +2,7 @@ import { useState, useEffect, TouchEvent } from "react";
 import { Slide } from "@/lib/presentation";
 import { X, ArrowLeft, ArrowRight, Video } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { isMobile } from "@/lib/utils";
 import SlidePreview from "./SlidePreview";
 
 interface FullscreenPresentationProps {
@@ -100,12 +101,14 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
       onTouchEnd={handleTouchEnd}
     >
       <div className="absolute top-4 right-4 flex items-center gap-4 text-white">
-        <button
-          onClick={handleVideoClick}
-          className="hover:text-gray-300"
-        >
-          <Video className="w-6 h-6" />
-        </button>
+        {!isMobile() && (
+          <button
+            onClick={handleVideoClick}
+            className="hover:text-gray-300"
+          >
+            <Video className="w-6 h-6" />
+          </button>
+        )}
         <button
           onClick={onClose}
           className="hover:text-gray-300"
