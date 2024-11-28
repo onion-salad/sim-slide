@@ -96,7 +96,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
         <div className="flex flex-col gap-2">
           <Button onClick={handleAddClick} size="sm">
             <Plus className="w-4 h-4 mr-2" />
-            +Add (Space×2)
+            Add (Space×2)
           </Button>
           <SaveButton onSave={handleSave} />
         </div>
@@ -150,7 +150,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
               onClick={handleAddClick}
             >
               <Plus className="w-4 h-4 mr-2" />
-              +Add (Space×2)
+              Add (Space×2)
             </Button>
             <SaveButton onSave={handleSave} />
           </div>
