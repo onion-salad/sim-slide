@@ -29,9 +29,7 @@ export class ScreenRecorder {
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
-        },
-        selfBrowserSurface: "include", // 現在のブラウザウィンドウを含める
-        systemAudio: "include", // システム音声を含める
+        }
       };
 
       const stream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);
