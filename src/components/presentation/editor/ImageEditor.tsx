@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Upload, Trash2 } from "lucide-react";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 
 interface ImageEditorProps {
   image?: string;
@@ -12,6 +12,7 @@ interface ImageEditorProps {
 
 const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log("handleImageUpload called");
@@ -35,6 +36,12 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
+
+      // 画像選択後に上までスクロール
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     };
     reader.readAsDataURL(file);
   };
@@ -47,6 +54,11 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
+      // 画像削除後に上までスクロール
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     }
   };
 
@@ -65,10 +77,15 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log("handleUrlChange called", e.target.value);
     onChange(e.target.value, imagePosition);
+    // URL入力後に上までスクロール
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   };
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2" ref={containerRef}>
       <Label htmlFor="image">画像</Label>
       <div className="flex gap-2 items-start">
         <Input
