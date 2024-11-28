@@ -1,44 +1,43 @@
-import { useEffect, useRef } from 'react';
-import { isMobile } from '@/lib/utils';
+import { useRef, useEffect } from "react";
 
 export const useAutoScrollInput = () => {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const ref = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const element = inputRef.current;
-    if (!element || !isMobile()) return;
+    const element = ref.current;
+    if (!element) return;
 
     const handleBlur = () => {
       window.scrollTo({
         top: 0,
-        behavior: 'smooth'
+        behavior: "smooth",
       });
     };
 
-    element.addEventListener('blur', handleBlur);
-    return () => element.removeEventListener('blur', handleBlur);
+    element.addEventListener("blur", handleBlur);
+    return () => element.removeEventListener("blur", handleBlur);
   }, []);
 
-  return inputRef;
+  return ref;
 };
 
 export const useAutoScrollTextarea = () => {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const ref = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    const element = textareaRef.current;
-    if (!element || !isMobile()) return;
+    const element = ref.current;
+    if (!element) return;
 
     const handleBlur = () => {
       window.scrollTo({
         top: 0,
-        behavior: 'smooth'
+        behavior: "smooth",
       });
     };
 
-    element.addEventListener('blur', handleBlur);
-    return () => element.removeEventListener('blur', handleBlur);
+    element.addEventListener("blur", handleBlur);
+    return () => element.removeEventListener("blur", handleBlur);
   }, []);
 
-  return textareaRef;
+  return ref;
 };
