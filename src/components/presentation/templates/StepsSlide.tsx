@@ -19,7 +19,7 @@ const StepsSlide = ({ slide }: StepsSlideProps) => {
       )}
       <div className="space-y-[5%] mt-[2%]">
         {slide.content.steps?.map((step, index) => (
-          <div key={index} className="flex gap-4">
+          <div key={index} className="flex gap-2">
             <div className="flex-none w-[calc(var(--slide-width)*0.048)] h-[calc(var(--slide-width)*0.048)] rounded-full bg-gradient-to-r from-[#7C3AED] to-[#6366F1] flex items-center justify-center relative shadow-selected">
               <span className="text-white font-bold text-[calc(var(--slide-width)*0.024)]">{numbers[index]}</span>
             </div>
