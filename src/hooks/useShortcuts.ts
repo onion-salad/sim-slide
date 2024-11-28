@@ -11,22 +11,32 @@ export const useShortcuts = ({ onAddSlide, onPresent, onSave }: ShortcutHandlers
   const [lastAltKeyTime, setLastAltKeyTime] = useState<number>(0);
 
   useEffect(() => {
+    console.log('useShortcuts hook initialized');
+
     const handleKeyDown = (event: KeyboardEvent) => {
-      console.log('Shortcut detected:', {
+      console.log('Key pressed:', {
         key: event.key,
         code: event.code,
         metaKey: event.metaKey,
         ctrlKey: event.ctrlKey,
-        altKey: event.altKey
+        altKey: event.altKey,
+        repeat: event.repeat,
+        timestamp: new Date().getTime()
       });
 
       if (event.code === 'Space' && !event.repeat) {
         const currentTime = new Date().getTime();
         const timeDiff = currentTime - lastSpaceKeyTime;
         
+        console.log('Space key pressed:', {
+          timeDiff,
+          lastSpaceKeyTime,
+          currentTime
+        });
+        
         if (timeDiff < 500) {
           event.preventDefault();
-          console.log('Double Space detected');
+          console.log('Double Space detected - calling onAddSlide');
           onAddSlide();
         }
         
@@ -37,9 +47,15 @@ export const useShortcuts = ({ onAddSlide, onPresent, onSave }: ShortcutHandlers
         const currentTime = new Date().getTime();
         const timeDiff = currentTime - lastAltKeyTime;
         
+        console.log('Alt key pressed:', {
+          timeDiff,
+          lastAltKeyTime,
+          currentTime
+        });
+        
         if (timeDiff < 500) {
           event.preventDefault();
-          console.log('Double Alt/Option detected');
+          console.log('Double Alt/Option detected - calling onPresent');
           onPresent();
         }
         
@@ -49,12 +65,20 @@ export const useShortcuts = ({ onAddSlide, onPresent, onSave }: ShortcutHandlers
       // Command + S shortcut
       if ((event.metaKey || event.ctrlKey) && event.key === 's') {
         event.preventDefault();
-        console.log('Command + S detected');
-        onSave();
+        console.log('Command + S detected - calling onSave');
+        try {
+          onSave();
+          console.log('onSave executed successfully');
+        } catch (error) {
+          console.error('Error in onSave:', error);
+        }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      console.log('useShortcuts hook cleanup');
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, [lastSpaceKeyTime, lastAltKeyTime, onAddSlide, onPresent, onSave]);
 };
