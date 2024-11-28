@@ -38,7 +38,8 @@ const StepEditor = ({ steps, onChange }: StepEditorProps) => {
     onChange([...steps, { subtitle: "", text: "" }]);
   };
 
-  const handleRemoveStep = (index: number) => {
+  const handleRemoveStep = (index: number, e: React.MouseEvent) => {
+    e.stopPropagation();
     const updatedSteps = [...steps];
     updatedSteps.splice(index, 1);
     onChange(updatedSteps);
@@ -56,10 +57,7 @@ const StepEditor = ({ steps, onChange }: StepEditorProps) => {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleRemoveStep(index);
-                }}
+                onClick={(e) => handleRemoveStep(index, e)}
               >
                 <Trash className="w-4 h-4" />
               </Button>
