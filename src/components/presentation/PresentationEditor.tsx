@@ -6,11 +6,10 @@ import SlidePreview from "./SlidePreview";
 import SlideEditor from "./SlideEditor";
 import TemplateGallery from "./TemplateGallery";
 import FullscreenPresentation from "./FullscreenPresentation";
-import { Play, Plus, X, Save } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useSlideScroll } from "@/hooks/useSlideScroll";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useToast } from "@/components/ui/use-toast";
-import { savePresentation, loadPresentation } from "./utils/presentationStorage";
+import { EditorButtons } from "./components/EditorButtons";
 
 interface PresentationEditorProps {
   presentation: Presentation;
@@ -22,7 +21,6 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const { slideRefs, scrollToSlide } = useSlideScroll();
-  const { toast } = useToast();
 
   const handleSlideSelect = (slideId: string) => {
     setSelectedSlide(slideId);
@@ -67,12 +65,10 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
     }
   };
 
-  const handleSave = () => {
-    savePresentation(presentation);
-    toast({
-      title: "保存完了",
-      description: "プレゼンテーションが保存されました",
-    });
+  const handleRefresh = () => {
+    setSelectedSlide(null);
+    localStorage.clear();
+    onUpdate({ ...presentation, slides: [] });
   };
 
   return (
@@ -84,13 +80,11 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
             Add
           </Button>
           <div className="flex gap-2">
-            <Button onClick={handleSave} size="sm" variant="outline">
-              <Save className="w-4 h-4 mr-2" />
-              保存
-            </Button>
-            <Button onClick={() => setIsFullscreen(true)} size="sm">
-              <Play className="w-4 h-4" />
-            </Button>
+            <EditorButtons
+              presentation={presentation}
+              onRefresh={handleRefresh}
+              onPresentClick={() => setIsFullscreen(true)}
+            />
           </div>
         </div>
       </div>
@@ -148,14 +142,13 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
             >
               Add Slide
             </Button>
-            <Button
-              className="w-full"
-              onClick={handleSave}
-              variant="outline"
-            >
-              <Save className="w-4 h-4 mr-2" />
-              保存
-            </Button>
+            <div className="flex gap-2">
+              <EditorButtons
+                presentation={presentation}
+                onRefresh={handleRefresh}
+                onPresentClick={() => setIsFullscreen(true)}
+              />
+            </div>
           </div>
           <ScrollArea className="h-[calc(100vh-10rem)] mt-4">
             <DragDropContext onDragEnd={handleDragEnd}>
