@@ -25,7 +25,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
   // コンテンツスライド用
   const contentTitleInputRef = useAutoScrollInput();
   const contentSubtitleInputRef = useAutoScrollInput();
-  const contentTextInputRef = useAutoScrollTextarea();
+  const contentTextInputRef = useAutoScrollTextarea();  // ここを修正: useAutoScrollInput から useAutoScrollTextarea に変更
   
   // ステップスライド用
   const stepTitleInputRef = useAutoScrollInput();
@@ -142,7 +142,6 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
 
   // コンテンツテンプレート
   if (slide.template === "content") {
-    console.log("Rendering content template");
     return (
       <div className="space-y-4">
         <div>
@@ -161,7 +160,6 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
             ref={contentSubtitleInputRef}
             value={slide.content.subtitle || ""}
             onChange={(e) => handleChange("subtitle", e.target.value)}
-            onBlur={() => console.log("Content subtitle blur triggered")}
           />
         </div>
         <div>
@@ -171,7 +169,6 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
             ref={contentTextInputRef}
             value={slide.content.text || ""}
             onChange={(e) => handleChange("text", e.target.value)}
-            onBlur={() => console.log("Content text blur triggered")}
           />
         </div>
       </div>
