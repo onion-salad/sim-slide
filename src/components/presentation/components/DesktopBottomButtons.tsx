@@ -48,18 +48,13 @@ export const DesktopBottomButtons = ({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      <div className="relative">
-        <Button
-          onClick={onPresentClick}
-          size="icon"
-          className="bg-primary hover:bg-primary/90"
-        >
-          <Play className="h-5 w-5 text-white" />
-        </Button>
-        <span className="absolute -bottom-6 right-0 text-xs text-gray-500 whitespace-nowrap">
-          (Option×2)
-        </span>
-      </div>
+      <Button
+        onClick={onPresentClick}
+        size="icon"
+        className="bg-primary hover:bg-primary/90"
+      >
+        <Play className="h-5 w-5 text-white" />
+      </Button>
     </div>
   );
 };
