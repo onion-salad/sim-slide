@@ -1,8 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Play, Save, RefreshCw } from "lucide-react";
+import { Play, RefreshCw } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { Presentation } from "@/lib/presentation";
-import { savePresentation } from "../utils/presentationStorage";
 
 interface EditorButtonsProps {
   presentation: Presentation;
@@ -12,14 +11,6 @@ interface EditorButtonsProps {
 
 export const EditorButtons = ({ presentation, onRefresh, onPresentClick }: EditorButtonsProps) => {
   const { toast } = useToast();
-
-  const handleSave = () => {
-    savePresentation(presentation);
-    toast({
-      title: "保存完了",
-      description: "プレゼンテーションが保存されました",
-    });
-  };
 
   const handleRefresh = () => {
     onRefresh();
@@ -31,10 +22,6 @@ export const EditorButtons = ({ presentation, onRefresh, onPresentClick }: Edito
 
   return (
     <>
-      <Button onClick={handleSave} size="sm" variant="outline">
-        <Save className="w-4 h-4 mr-2" />
-        保存
-      </Button>
       <Button onClick={handleRefresh} size="sm" variant="outline">
         <RefreshCw className="w-4 h-4 mr-2" />
         リフレッシュ

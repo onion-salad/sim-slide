@@ -6,7 +6,7 @@ import SlidePreview from "./SlidePreview";
 import SlideEditor from "./SlideEditor";
 import TemplateGallery from "./TemplateGallery";
 import FullscreenPresentation from "./FullscreenPresentation";
-import { Plus, X } from "lucide-react";
+import { Plus, X, Save } from "lucide-react";
 import { useSlideScroll } from "@/hooks/useSlideScroll";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { EditorButtons } from "./components/EditorButtons";
@@ -71,13 +71,21 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
     onUpdate({ ...presentation, slides: [] });
   };
 
+  const handleSave = () => {
+    // Save presentation logic here; implementation not shown
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 overflow-x-hidden">
       <div className="fixed top-0 left-0 right-0 z-10 bg-white border-b p-4 md:hidden">
-        <div className="flex justify-between items-center gap-2">
+        <div className="flex flex-col gap-2">
           <Button onClick={() => setShowTemplates(true)} size="sm">
             <Plus className="w-4 h-4 mr-2" />
             Add
+          </Button>
+          <Button onClick={handleSave} size="sm" variant="outline">
+            <Save className="w-4 h-4 mr-2" />
+            保存
           </Button>
         </div>
       </div>
@@ -134,6 +142,14 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
               onClick={() => setShowTemplates(true)}
             >
               Add Slide
+            </Button>
+            <Button
+              className="w-full"
+              onClick={handleSave}
+              variant="outline"
+            >
+              <Save className="w-4 h-4 mr-2" />
+              保存
             </Button>
           </div>
           <ScrollArea className="h-[calc(100vh-10rem)] mt-4">
