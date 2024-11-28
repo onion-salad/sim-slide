@@ -122,6 +122,13 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
     onUpdate({ ...presentation, slides: [] });
   };
 
+  // ショートカットの設定を追加
+  useEditorShortcuts({
+    onAddClick: handleAddClick,
+    onPresentClick: handlePresentClick,
+    onSaveClick: handleSave,
+  });
+
   return (
     <div className="min-h-screen bg-gray-100 overflow-x-hidden">
       <MobileHeader
