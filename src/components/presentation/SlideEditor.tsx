@@ -19,6 +19,8 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
   const titleInputRef = useAutoScrollInput();
   const subtitleInputRef = useAutoScrollInput();
   const textInputRef = useAutoScrollTextarea();
+  const stepSubtitleInputRef = useAutoScrollInput();
+  const stepTextInputRef = useAutoScrollTextarea();
 
   const handleChange = (field: string, value: any) => {
     console.log("handleChange called", field, value);
@@ -187,7 +189,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
                 <div>
                   <Label>サブタイトル</Label>
                   <Input
-                    ref={subtitleInputRef}
+                    ref={stepSubtitleInputRef}
                     value={step.subtitle}
                     onChange={(e) =>
                       handleStepChange(index, "subtitle", e.target.value)
@@ -197,7 +199,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
                 <div>
                   <Label>テキスト</Label>
                   <Textarea
-                    ref={textInputRef}
+                    ref={stepTextInputRef}
                     value={step.text}
                     onChange={(e) =>
                       handleStepChange(index, "text", e.target.value)

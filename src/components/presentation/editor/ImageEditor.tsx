@@ -3,6 +3,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Upload, Trash2 } from "lucide-react";
 import { useRef, useEffect } from "react";
+import { useAutoScrollInput } from "@/hooks/useAutoScroll";
 
 interface ImageEditorProps {
   image?: string;
@@ -13,6 +14,7 @@ interface ImageEditorProps {
 const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const imageUrlInputRef = useAutoScrollInput();
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log("handleImageUpload called");
@@ -90,6 +92,7 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
       <div className="flex gap-2 items-start">
         <Input
           id="image"
+          ref={imageUrlInputRef}
           value={image || ""}
           onChange={handleUrlChange}
           placeholder="画像URL"
