@@ -33,11 +33,14 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const [isSaveAnimating, setIsSaveAnimating] = useState(false);
+  const [isAddAnimating, setIsAddAnimating] = useState(false);
   const { slideRefs, scrollToSlide } = useSlideScroll();
   const { toast } = useToast();
 
   const handleAddClick = () => {
+    setIsAddAnimating(true);
     setShowTemplates(true);
+    setTimeout(() => setIsAddAnimating(false), 500);
   };
 
   const handlePresentClick = () => {
@@ -180,7 +183,10 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
               className="w-full"
               onClick={handleAddClick}
             >
-              <Plus className="w-4 h-4 mr-2" />
+              <Plus className={cn(
+                "w-4 h-4 mr-2 transition-transform duration-300",
+                isAddAnimating && "animate-[spin_0.5s_ease-out]"
+              )} />
               Add (Space×2)
             </Button>
             <SaveButton onSave={handleSave} isAnimating={isSaveAnimating} />
