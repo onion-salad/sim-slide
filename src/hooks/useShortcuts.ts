@@ -24,6 +24,14 @@ export const useShortcuts = ({ onAddSlide, onPresent, onSave }: ShortcutHandlers
         timestamp: new Date().getTime()
       });
 
+      // Command + S
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 's') {
+        event.preventDefault();
+        console.log('Command + S detected - calling onSave');
+        onSave();
+        return;
+      }
+
       if (event.code === 'Space' && !event.repeat) {
         const currentTime = new Date().getTime();
         const timeDiff = currentTime - lastSpaceKeyTime;
@@ -60,18 +68,6 @@ export const useShortcuts = ({ onAddSlide, onPresent, onSave }: ShortcutHandlers
         }
         
         setLastAltKeyTime(currentTime);
-      }
-
-      // Command + S shortcut
-      if ((event.metaKey || event.ctrlKey) && event.key === 's') {
-        event.preventDefault();
-        console.log('Command + S detected - calling onSave');
-        try {
-          onSave();
-          console.log('onSave executed successfully');
-        } catch (error) {
-          console.error('Error in onSave:', error);
-        }
       }
     };
 

@@ -52,6 +52,12 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
     }
   };
 
+  useEditorShortcuts({
+    onAddClick: handleAddClick,
+    onPresentClick: handlePresentClick,
+    onSaveClick: handleSave,
+  });
+
   const handleSlideSelect = (slideId: string) => {
     setSelectedSlide(slideId);
     scrollToSlide(slideId);
