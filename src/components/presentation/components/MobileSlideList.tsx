@@ -33,7 +33,7 @@ export const MobileSlideList = ({
             <div className="pl-4" />
             {slides.map((slide, index) => (
               <Draggable key={slide.id} draggableId={slide.id} index={index}>
-                {(provided) => (
+                {(provided, snapshot) => (
                   <div
                     ref={(el) => {
                       provided.innerRef(el);
@@ -45,7 +45,7 @@ export const MobileSlideList = ({
                     {...provided.dragHandleProps}
                     className={`flex-none w-[85%] snap-center transition-all duration-300 ${
                       selectedSlide === slide.id ? "shadow-selected scale-[1.02] bg-white rounded-lg" : ""
-                    }`}
+                    } ${snapshot.isDragging ? "opacity-50" : ""}`}
                     onClick={() => onSlideSelect(slide.id)}
                   >
                     <div className="relative group">
