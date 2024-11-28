@@ -12,11 +12,14 @@ export const useAutoScrollInput = () => {
 
     const handleBlur = () => {
       console.log("Input blur event triggered");
+      console.log("Current scroll position:", window.scrollY);
       setTimeout(() => {
+        console.log("Attempting to scroll to top");
         window.scrollTo({
           top: 0,
           behavior: "smooth",
         });
+        console.log("Scroll command executed");
       }, 100);
     };
 
@@ -39,12 +42,14 @@ export const useAutoScrollTextarea = () => {
 
     const handleBlur = () => {
       console.log("Textarea blur event triggered");
+      console.log("Current scroll position:", window.scrollY);
       setTimeout(() => {
-        console.log("Scrolling to top");
+        console.log("Attempting to scroll to top");
         window.scrollTo({
           top: 0,
           behavior: "smooth",
         });
+        console.log("Scroll command executed");
       }, 100);
     };
 
