@@ -6,7 +6,7 @@ import SlidePreview from "./SlidePreview";
 import SlideEditor from "./SlideEditor";
 import TemplateGallery from "./TemplateGallery";
 import FullscreenPresentation from "./FullscreenPresentation";
-import { Plus, X, Play } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { useSlideScroll } from "@/hooks/useSlideScroll";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { EditorButtons } from "./components/EditorButtons";
@@ -79,13 +79,6 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
             <Plus className="w-4 h-4 mr-2" />
             Add
           </Button>
-          <div className="flex gap-2">
-            <EditorButtons
-              presentation={presentation}
-              onRefresh={handleRefresh}
-              onPresentClick={() => setIsFullscreen(true)}
-            />
-          </div>
         </div>
       </div>
 
@@ -142,13 +135,6 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
             >
               Add Slide
             </Button>
-            <div className="flex gap-2">
-              <EditorButtons
-                presentation={presentation}
-                onRefresh={handleRefresh}
-                onPresentClick={() => setIsFullscreen(true)}
-              />
-            </div>
           </div>
           <ScrollArea className="h-[calc(100vh-10rem)] mt-4">
             <DragDropContext onDragEnd={handleDragEnd}>
@@ -200,11 +186,12 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
           </ScrollArea>
         </div>
 
-        <div className="hidden md:flex fixed bottom-4 right-4 space-x-2">
-          <Button onClick={() => setIsFullscreen(true)}>
-            <Play className="w-4 h-4 mr-2" />
-            Present
-          </Button>
+        <div className="fixed bottom-4 right-4 space-x-2">
+          <EditorButtons
+            presentation={presentation}
+            onRefresh={handleRefresh}
+            onPresentClick={() => setIsFullscreen(true)}
+          />
         </div>
       </div>
 
