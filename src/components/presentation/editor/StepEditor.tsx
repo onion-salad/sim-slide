@@ -62,13 +62,15 @@ const StepEditor = ({ steps, onChange }: StepEditorProps) => {
                 <Trash className="w-4 h-4" />
               </Button>
             </div>
-            <AccordionContent className="space-y-4">
-              <TextEditor
-                subtitle={step.subtitle}
-                text={step.text}
-                onChange={(field, value) => handleStepChange(index, field, value)}
-                showSubtitle={true}
-              />
+            <AccordionContent>
+              <div onClick={(e) => e.stopPropagation()}>
+                <TextEditor
+                  subtitle={step.subtitle}
+                  text={step.text}
+                  onChange={(field, value) => handleStepChange(index, field, value)}
+                  showSubtitle={true}
+                />
+              </div>
             </AccordionContent>
           </AccordionItem>
         ))}
