@@ -21,6 +21,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Slide } from "@/lib/presentation";
 import SlidePreview from "../SlidePreview";
 
@@ -103,33 +104,35 @@ export const MobileHeader = ({
                   スライドの順序を変更するには、上下の矢印を使用してください。
                 </SheetDescription>
               </SheetHeader>
-              <div className="mt-4 space-y-4">
-                {reorderedSlides.map((slide, index) => (
-                  <div key={slide.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                    <div className="w-32 h-20 relative">
-                      <SlidePreview slide={slide} scale={0.5} />
+              <ScrollArea className="h-[calc(100%-6rem)] mt-4">
+                <div className="space-y-4 pr-4">
+                  {reorderedSlides.map((slide, index) => (
+                    <div key={slide.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                      <div className="w-32 h-20 relative">
+                        <SlidePreview slide={slide} scale={0.5} />
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleMoveSlide(index, 'up')}
+                          disabled={index === 0}
+                        >
+                          ↑
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleMoveSlide(index, 'down')}
+                          disabled={index === reorderedSlides.length - 1}
+                        >
+                          ↓
+                        </Button>
+                      </div>
                     </div>
-                    <div className="flex gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleMoveSlide(index, 'up')}
-                        disabled={index === 0}
-                      >
-                        ↑
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleMoveSlide(index, 'down')}
-                        disabled={index === reorderedSlides.length - 1}
-                      >
-                        ↓
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              </ScrollArea>
             </SheetContent>
           </Sheet>
 
