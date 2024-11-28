@@ -5,9 +5,13 @@ export const useAutoScrollInput = () => {
 
   useEffect(() => {
     const element = ref.current;
-    if (!element) return;
+    if (!element) {
+      console.log("Input element not found");
+      return;
+    }
 
     const handleBlur = () => {
+      console.log("Input blur event triggered");
       window.scrollTo({
         top: 0,
         behavior: "smooth",
@@ -26,9 +30,13 @@ export const useAutoScrollTextarea = () => {
 
   useEffect(() => {
     const element = ref.current;
-    if (!element) return;
+    if (!element) {
+      console.log("Textarea element not found");
+      return;
+    }
 
     const handleBlur = () => {
+      console.log("Textarea blur event triggered");
       window.scrollTo({
         top: 0,
         behavior: "smooth",
