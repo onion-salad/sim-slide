@@ -6,9 +6,11 @@ import SlidePreview from "./SlidePreview";
 import SlideEditor from "./SlideEditor";
 import TemplateGallery from "./TemplateGallery";
 import FullscreenPresentation from "./FullscreenPresentation";
-import { Play, Plus, X } from "lucide-react";
+import { Play, Plus, X, Save } from "lucide-react";
 import { useSlideScroll } from "@/hooks/useSlideScroll";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useToast } from "@/components/ui/use-toast";
+import { savePresentation, loadPresentation } from "./utils/presentationStorage";
 
 interface PresentationEditorProps {
   presentation: Presentation;
@@ -20,6 +22,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const { slideRefs, scrollToSlide } = useSlideScroll();
+  const { toast } = useToast();
 
   const handleSlideSelect = (slideId: string) => {
     setSelectedSlide(slideId);
@@ -64,6 +67,14 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
     }
   };
 
+  const handleSave = () => {
+    savePresentation(presentation);
+    toast({
+      title: "保存完了",
+      description: "プレゼンテーションが保存されました",
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 overflow-x-hidden">
       <div className="fixed top-0 left-0 right-0 z-10 bg-white border-b p-4 md:hidden">
@@ -72,9 +83,15 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
             <Plus className="w-4 h-4 mr-2" />
             Add
           </Button>
-          <Button onClick={() => setIsFullscreen(true)} size="sm">
-            <Play className="w-4 h-4" />
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={handleSave} size="sm" variant="outline">
+              <Save className="w-4 h-4 mr-2" />
+              保存
+            </Button>
+            <Button onClick={() => setIsFullscreen(true)} size="sm">
+              <Play className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -124,13 +141,23 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
         </div>
 
         <div className="hidden md:block w-64 bg-white p-4 border-l">
-          <Button
-            className="w-full mb-4"
-            onClick={() => setShowTemplates(true)}
-          >
-            Add Slide
-          </Button>
-          <ScrollArea className="h-[calc(100vh-8rem)]">
+          <div className="space-y-2">
+            <Button
+              className="w-full"
+              onClick={() => setShowTemplates(true)}
+            >
+              Add Slide
+            </Button>
+            <Button
+              className="w-full"
+              onClick={handleSave}
+              variant="outline"
+            >
+              <Save className="w-4 h-4 mr-2" />
+              保存
+            </Button>
+          </div>
+          <ScrollArea className="h-[calc(100vh-10rem)] mt-4">
             <DragDropContext onDragEnd={handleDragEnd}>
               <Droppable droppableId="slides">
                 {(provided) => (
