@@ -16,13 +16,29 @@ interface SlideEditorProps {
 
 const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
   const { toast } = useToast();
+  
+  // タイトルスライド用
   const titleInputRef = useAutoScrollInput();
   const subtitleInputRef = useAutoScrollInput();
   const textInputRef = useAutoScrollTextarea();
+  
+  // コンテンツスライド用
+  const contentTitleInputRef = useAutoScrollInput();
   const contentSubtitleInputRef = useAutoScrollInput();
   const contentTextInputRef = useAutoScrollTextarea();
-  const stepSubtitleInputRef = useAutoScrollInput();
-  const stepTextInputRef = useAutoScrollTextarea();
+  
+  // ステップスライド用
+  const stepTitleInputRef = useAutoScrollInput();
+  const stepSubtitleRefs = [
+    useAutoScrollInput(),
+    useAutoScrollInput(),
+    useAutoScrollInput()
+  ];
+  const stepTextRefs = [
+    useAutoScrollTextarea(),
+    useAutoScrollTextarea(),
+    useAutoScrollTextarea()
+  ];
 
   const handleChange = (field: string, value: any) => {
     console.log("handleChange called", field, value);
@@ -132,7 +148,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
           <Label htmlFor="title">タイトル</Label>
           <Input
             id="title"
-            ref={titleInputRef}
+            ref={contentTitleInputRef}
             value={slide.content.title || ""}
             onChange={(e) => handleChange("title", e.target.value)}
           />
@@ -167,7 +183,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
           <Label htmlFor="title">タイトル</Label>
           <Input
             id="title"
-            ref={titleInputRef}
+            ref={stepTitleInputRef}
             value={slide.content.title || ""}
             onChange={(e) => handleChange("title", e.target.value)}
           />
@@ -191,7 +207,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
                 <div>
                   <Label>サブタイトル</Label>
                   <Input
-                    ref={stepSubtitleInputRef}
+                    ref={stepSubtitleRefs[index]}
                     value={step.subtitle}
                     onChange={(e) =>
                       handleStepChange(index, "subtitle", e.target.value)
@@ -201,7 +217,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
                 <div>
                   <Label>テキスト</Label>
                   <Textarea
-                    ref={stepTextInputRef}
+                    ref={stepTextRefs[index]}
                     value={step.text}
                     onChange={(e) =>
                       handleStepChange(index, "text", e.target.value)
