@@ -14,9 +14,6 @@ export const captureSlides = async (slides: HTMLElement[]) => {
         allowTaint: true,
         onclone: (document, element) => {
           console.log('Cloned element:', element);
-        },
-        onrendered: (canvas) => {
-          console.log('Rendered canvas:', canvas);
         }
       });
       
