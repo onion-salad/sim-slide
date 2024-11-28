@@ -30,9 +30,16 @@ export const EditorButtons = ({ presentation, onRefresh, onPresentClick }: Edito
     setTimeout(() => setIsAnimating(false), 1000);
   };
 
+  const handleOpenChange = (open: boolean) => {
+    if (open) {
+      setIsAnimating(true);
+      setTimeout(() => setIsAnimating(false), 1000);
+    }
+  };
+
   return (
     <>
-      <AlertDialog>
+      <AlertDialog onOpenChange={handleOpenChange}>
         <AlertDialogTrigger asChild>
           <Button size="icon" variant="outline">
             <RefreshCw className={cn(
