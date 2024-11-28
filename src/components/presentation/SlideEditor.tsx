@@ -7,7 +7,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Button } from "@/components/ui/button";
 import { Plus, Trash } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
-import { useAutoScroll } from "@/hooks/useAutoScroll";
+import { useAutoScrollInput, useAutoScrollTextarea } from "@/hooks/useAutoScroll";
 
 interface SlideEditorProps {
   slide: Slide;
@@ -16,9 +16,9 @@ interface SlideEditorProps {
 
 const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
   const { toast } = useToast();
-  const titleInputRef = useAutoScroll();
-  const subtitleInputRef = useAutoScroll();
-  const textInputRef = useAutoScroll();
+  const titleInputRef = useAutoScrollInput();
+  const subtitleInputRef = useAutoScrollInput();
+  const textInputRef = useAutoScrollTextarea();
 
   const handleChange = (field: string, value: any) => {
     console.log("handleChange called", field, value);
