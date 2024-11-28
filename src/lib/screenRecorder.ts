@@ -1,13 +1,7 @@
 interface RecordingOptions {
   preferCurrentTab?: boolean;
   targetElement?: HTMLElement;
-}
-
-declare global {
-  interface MediaTrackConstraints {
-    displaySurface?: string;
-    preferCurrentTab?: boolean;
-  }
+  audio?: boolean;
 }
 
 export class ScreenRecorder {
@@ -20,22 +14,39 @@ export class ScreenRecorder {
         throw new Error("Target element is required");
       }
 
-      const displayMediaOptions: DisplayMediaStreamOptions = {
+      // 画面キャプチャのストリームを取得
+      const displayStream = await navigator.mediaDevices.getDisplayMedia({
         video: {
-          // 現在の画面を直接キャプチャするための設定
           displaySurface: "monitor",
           frameRate: 30,
-        },
-        audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
         }
-      };
+      });
 
-      const stream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);
-      const [videoTrack] = stream.getVideoTracks();
+      let combinedStream = displayStream;
 
-      this.mediaRecorder = new MediaRecorder(stream);
+      // 音声を含める場合
+      if (options.audio) {
+        // マイクからの音声ストリームを取得
+        const audioStream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+          },
+          video: false
+        });
+
+        // 画面キャプチャとマイク音声を結合
+        const tracks = [
+          ...displayStream.getVideoTracks(),
+          ...audioStream.getAudioTracks()
+        ];
+        combinedStream = new MediaStream(tracks);
+      }
+
+      this.mediaRecorder = new MediaRecorder(combinedStream, {
+        mimeType: 'video/webm;codecs=vp8,opus'
+      });
+      
       this.recordedChunks = [];
 
       this.mediaRecorder.ondataavailable = (event) => {
@@ -56,7 +67,8 @@ export class ScreenRecorder {
         window.URL.revokeObjectURL(url);
         document.body.removeChild(a);
 
-        stream.getTracks().forEach(track => track.stop());
+        // すべてのトラックを停止
+        combinedStream.getTracks().forEach(track => track.stop());
       };
 
       this.mediaRecorder.start();

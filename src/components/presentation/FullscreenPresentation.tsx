@@ -68,7 +68,8 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
       try {
         await screenRecorder.current.startRecording(presentationRef.current, { 
           preferCurrentTab: true,
-          targetElement: presentationRef.current 
+          targetElement: presentationRef.current,
+          audio: true // 音声録音を有効化
         });
         setIsRecording(true);
         toast({
