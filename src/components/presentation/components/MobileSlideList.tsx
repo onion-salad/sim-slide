@@ -3,8 +3,7 @@ import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { Slide } from "@/lib/presentation";
 import SlidePreview from "../SlidePreview";
-import { DragOverlay } from "./DragOverlay";
-import { useState } from "react";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface MobileSlideListProps {
   slides: Slide[];
@@ -23,84 +22,60 @@ export const MobileSlideList = ({
   onDragEnd,
   slideRefs,
 }: MobileSlideListProps) => {
-  const [draggedSlideId, setDraggedSlideId] = useState<string | null>(null);
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-
-  const handleDragStart = (start: any) => {
-    setDraggedSlideId(start.draggableId);
-    setCurrentIndex(start.source.index);
-  };
-
-  const handleDragUpdate = (update: any) => {
-    if (!update.destination) return;
-    setCurrentIndex(update.destination.index);
-  };
-
-  const handleDragEnd = (result: any) => {
-    setDraggedSlideId(null);
-    onDragEnd(result);
-  };
-
   return (
-    <DragDropContext 
-      onDragStart={handleDragStart} 
-      onDragUpdate={handleDragUpdate}
-      onDragEnd={handleDragEnd}
-    >
-      <Droppable droppableId="mobile-slides" direction="horizontal">
-        {(provided) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-            className="slides-container w-full overflow-x-auto pb-4 flex gap-4 snap-x snap-mandatory pt-4"
-          >
-            <div className="pl-4" />
-            {slides.map((slide, index) => (
-              <Draggable key={slide.id} draggableId={slide.id} index={index}>
-                {(provided, snapshot) => (
-                  <div
-                    ref={(el) => {
-                      provided.innerRef(el);
-                      if (slideRefs.current) {
-                        slideRefs.current[slide.id] = el;
-                      }
-                    }}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    className={`flex-none w-[85%] snap-center transition-all duration-300 ${
-                      selectedSlide === slide.id ? "shadow-selected scale-[1.02] bg-white rounded-lg" : ""
-                    }`}
-                    onClick={() => onSlideSelect(slide.id)}
-                  >
-                    <div className="relative group">
-                      {selectedSlide === slide.id && (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-red-500 shadow-md z-10 hover:bg-red-600 text-white"
-                          onClick={(e) => onDeleteSlide(slide.id, e)}
-                        >
-                          <X className="h-3 w-3" />
-                        </Button>
-                      )}
-                      <SlidePreview slide={slide} scale={1} />
+    <ScrollArea className="h-[30vh] px-4">
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="mobile-slides">
+          {(provided) => (
+            <div
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              className="space-y-2"
+            >
+              {slides.map((slide, index) => (
+                <Draggable key={slide.id} draggableId={slide.id} index={index}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={(el) => {
+                        provided.innerRef(el);
+                        if (slideRefs.current) {
+                          slideRefs.current[slide.id] = el;
+                        }
+                      }}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      className={`group cursor-pointer transition-all duration-300 relative ${
+                        selectedSlide === slide.id ? "shadow-selected scale-[1.02] bg-white rounded-lg" : ""
+                      } ${snapshot.isDragging ? "opacity-50" : ""}`}
+                      onClick={() => onSlideSelect(slide.id)}
+                    >
+                      <div className="relative">
+                        {selectedSlide === slide.id && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-red-500 shadow-md z-10 hover:bg-red-600 text-white"
+                            onClick={(e) => onDeleteSlide(slide.id, e)}
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        )}
+                        <div className="w-full">
+                          <SlidePreview slide={slide} scale={0.3} />
+                        </div>
+                        {snapshot.isDragging && (
+                          <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/20 to-primary/0 animate-pulse" />
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            <div className="pr-4" />
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-      {draggedSlideId && (
-        <DragOverlay
-          slides={slides}
-          draggedSlideId={draggedSlideId}
-          currentIndex={currentIndex}
-        />
-      )}
-    </DragDropContext>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+    </ScrollArea>
   );
 };
