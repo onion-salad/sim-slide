@@ -7,7 +7,7 @@ interface ShortcutHandlers {
 
 export const useShortcuts = ({ onAddSlide, onPresent }: ShortcutHandlers) => {
   const [lastSpaceKeyTime, setLastSpaceKeyTime] = useState<number>(0);
-  const [lastFnKeyTime, setLastFnKeyTime] = useState<number>(0);
+  const [lastAltKeyTime, setLastAltKeyTime] = useState<number>(0);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -25,21 +25,20 @@ export const useShortcuts = ({ onAddSlide, onPresent }: ShortcutHandlers) => {
         setLastSpaceKeyTime(currentTime);
       }
 
-      // Macのfnキーは'MetaLeft'として検出される可能性があります
-      if ((event.code === 'MetaLeft' || event.code === 'Meta' || event.key === 'Meta') && !event.repeat) {
+      if (event.key === 'Alt' && !event.repeat) {
         const currentTime = new Date().getTime();
-        const timeDiff = currentTime - lastFnKeyTime;
+        const timeDiff = currentTime - lastAltKeyTime;
         
         if (timeDiff < 500) {
           event.preventDefault();
           onPresent();
         }
         
-        setLastFnKeyTime(currentTime);
+        setLastAltKeyTime(currentTime);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [lastSpaceKeyTime, lastFnKeyTime, onAddSlide, onPresent]);
+  }, [lastSpaceKeyTime, lastAltKeyTime, onAddSlide, onPresent]);
 };

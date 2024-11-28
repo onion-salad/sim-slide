@@ -65,7 +65,7 @@ export const EditorButtons = ({ presentation, onRefresh, onPresentClick }: Edito
       </AlertDialog>
       <Button onClick={onPresentClick} size="sm" className="whitespace-nowrap">
         <Play className="w-4 h-4 mr-2" />
-        (fn×2)
+        (Alt×2)
       </Button>
     </>
   );
