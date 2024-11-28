@@ -34,8 +34,8 @@ export const DesktopSlideList = ({
     if (!event.clientY || !scrollAreaRef.current) return;
 
     const { clientY } = event;
-    const { top, height } = scrollAreaRef.current.getBoundingClientRect();
-    const relativeY = (clientY - top) / height * 100;
+    const { top, bottom, height } = scrollAreaRef.current.getBoundingClientRect();
+    const relativeY = ((clientY - top) / height) * 100;
 
     if (relativeY < 40) {
       setScrollDirection('up');
@@ -67,7 +67,7 @@ export const DesktopSlideList = ({
 
     scrollIntervalRef.current = window.setInterval(() => {
       if (scrollAreaRef.current) {
-        const scrollAmount = scrollDirection === 'up' ? -5 : 5;
+        const scrollAmount = scrollDirection === 'up' ? -10 : 10;
         scrollAreaRef.current.scrollTop += scrollAmount;
       }
     }, 16);
@@ -106,7 +106,7 @@ export const DesktopSlideList = ({
                           selectedSlide === slide.id
                             ? "shadow-selected scale-[1.02] bg-white rounded-lg"
                             : ""
-                        }`}
+                        } ${snapshot.isDragging ? "scale-75" : ""}`}
                         onClick={() => onSlideSelect(slide.id)}
                       >
                         {selectedSlide === slide.id && (
