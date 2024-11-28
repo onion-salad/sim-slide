@@ -44,49 +44,54 @@ export const MobileHeader = ({
 
   return (
     <div className="fixed top-0 left-0 right-0 z-10 bg-white border-b p-4 md:hidden">
-      <div className="flex justify-end items-center gap-2">
-        <Button
-          onClick={onSave}
-          variant="ghost"
-          size="icon"
-          className={`${isSaveAnimating ? "animate-[spin_0.5s_ease-out]" : ""}`}
-        >
-          <Save className="h-5 w-5" />
-        </Button>
-        <AlertDialog onOpenChange={handleOpenChange}>
-          <AlertDialogTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-            >
-              <RefreshCw className={cn(
-                "h-5 w-5 transition-transform duration-300",
-                isRefreshAnimating && "animate-[spin_0.5s_ease-out]"
-              )} />
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>プレゼンテーションをリフレッシュ</AlertDialogTitle>
-              <AlertDialogDescription>
-                本当にプレゼンテーション情報を消去してもよろしいですか？
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>キャンセル</AlertDialogCancel>
-              <AlertDialogAction onClick={handleRefresh}>
-                リフレッシュ
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-        <Button
-          onClick={onPresentClick}
-          size="icon"
-          className="bg-primary hover:bg-primary/90"
-        >
-          <Play className="h-5 w-5 text-white" />
-        </Button>
+      <div className="flex justify-between items-center">
+        <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+          Sim-Slide
+        </h1>
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={onSave}
+            variant="ghost"
+            size="icon"
+            className={`${isSaveAnimating ? "animate-[spin_0.5s_ease-out]" : ""}`}
+          >
+            <Save className="h-5 w-5" />
+          </Button>
+          <AlertDialog onOpenChange={handleOpenChange}>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+              >
+                <RefreshCw className={cn(
+                  "h-5 w-5 transition-transform duration-300",
+                  isRefreshAnimating && "animate-[spin_0.5s_ease-out]"
+                )} />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>プレゼンテーションをリフレッシュ</AlertDialogTitle>
+                <AlertDialogDescription>
+                  本当にプレゼンテーション情報を消去してもよろしいですか？
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>キャンセル</AlertDialogCancel>
+                <AlertDialogAction onClick={handleRefresh}>
+                  リフレッシュ
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+          <Button
+            onClick={onPresentClick}
+            size="icon"
+            className="bg-primary hover:bg-primary/90"
+          >
+            <Play className="h-5 w-5 text-white" />
+          </Button>
+        </div>
       </div>
     </div>
   );
