@@ -52,7 +52,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
         toast({
           title: "保存完了",
           description: "プレゼンテーションが保存されました",
-          duration: 700,
+          duration: 500,
         });
       }
     } catch (error) {
@@ -61,7 +61,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
         title: "保存エラー",
         description: "プレゼンテーションの保存に失敗しました",
         variant: "destructive",
-        duration: 700,
+        duration: 500,
       });
     }
     setTimeout(() => setIsSaveAnimating(false), 1000);

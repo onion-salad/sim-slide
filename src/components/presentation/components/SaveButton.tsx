@@ -17,7 +17,7 @@ export const SaveButton = ({ onSave, isAnimating: externalIsAnimating }: SaveBut
     if (externalIsAnimating) {
       const timer = setTimeout(() => {
         setInternalIsAnimating(false);
-      }, 1000);
+      }, 500);
       return () => clearTimeout(timer);
     }
   }, [externalIsAnimating]);
@@ -25,7 +25,7 @@ export const SaveButton = ({ onSave, isAnimating: externalIsAnimating }: SaveBut
   const handleClick = () => {
     setInternalIsAnimating(true);
     onSave();
-    setTimeout(() => setInternalIsAnimating(false), 1000);
+    setTimeout(() => setInternalIsAnimating(false), 500);
   };
 
   return (

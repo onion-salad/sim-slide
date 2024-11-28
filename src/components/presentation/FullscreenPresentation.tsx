@@ -54,7 +54,7 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
     toast({
       title: "スクリーン録画",
       description: "Command (⌘) + Shift + 5 を押して録画を開始してください",
-      duration: 5000,
+      duration: 500,
     });
   };
 
