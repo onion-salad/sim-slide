@@ -48,7 +48,7 @@ const SlidePreview = ({ slide, scale = 1 }: SlidePreviewProps) => {
         '--slide-width': `${slideWidth}px`
       } as React.CSSProperties}
     >
-      <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #F8F9FF 0%, #FFFFFF 100%)' }} />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#F8F9FF] to-white" />
       <div className="relative h-full">
         {renderSlide()}
       </div>
