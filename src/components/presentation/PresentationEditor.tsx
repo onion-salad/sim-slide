@@ -10,6 +10,8 @@ import { Plus, X, Save } from "lucide-react";
 import { useSlideScroll } from "@/hooks/useSlideScroll";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { EditorButtons } from "./components/EditorButtons";
+import { useToast } from "@/components/ui/use-toast";
+import { SaveButton } from "./components/SaveButton";
 
 interface PresentationEditorProps {
   presentation: Presentation;
@@ -21,6 +23,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const { slideRefs, scrollToSlide } = useSlideScroll();
+  const { toast } = useToast();
 
   const handleSlideSelect = (slideId: string) => {
     setSelectedSlide(slideId);
@@ -72,7 +75,11 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
   };
 
   const handleSave = () => {
-    // Save presentation logic here; implementation not shown
+    localStorage.setItem('presentation', JSON.stringify(presentation));
+    toast({
+      title: "保存完了",
+      description: "プレゼンテーション情報が保存されました",
+    });
   };
 
   return (
@@ -83,10 +90,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
             <Plus className="w-4 h-4 mr-2" />
             Add
           </Button>
-          <Button onClick={handleSave} size="sm" variant="outline">
-            <Save className="w-4 h-4 mr-2" />
-            保存
-          </Button>
+          <SaveButton onSave={handleSave} />
         </div>
       </div>
 
@@ -143,14 +147,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
             >
               Add Slide
             </Button>
-            <Button
-              className="w-full"
-              onClick={handleSave}
-              variant="outline"
-            >
-              <Save className="w-4 h-4 mr-2" />
-              保存
-            </Button>
+            <SaveButton onSave={handleSave} />
           </div>
           <ScrollArea className="h-[calc(100vh-10rem)] mt-4">
             <DragDropContext onDragEnd={handleDragEnd}>
