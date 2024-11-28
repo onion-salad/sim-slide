@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { Slide } from "@/lib/presentation";
 import SlidePreview from "../SlidePreview";
-import { DragIndicator } from "./DragIndicator";
+import { DragOverlay } from "./DragOverlay";
+import { useState } from "react";
 
 interface MobileSlideListProps {
   slides: Slide[];
@@ -22,8 +23,21 @@ export const MobileSlideList = ({
   onDragEnd,
   slideRefs,
 }: MobileSlideListProps) => {
+  const [draggedSlideId, setDraggedSlideId] = useState<string | null>(null);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+
+  const handleDragStart = (start: any) => {
+    setDraggedSlideId(start.draggableId);
+    setCurrentIndex(start.source.index);
+  };
+
+  const handleDragEnd = (result: any) => {
+    setDraggedSlideId(null);
+    onDragEnd(result);
+  };
+
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
+    <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <Droppable droppableId="mobile-slides" direction="horizontal">
         {(provided) => (
           <div
@@ -50,25 +64,17 @@ export const MobileSlideList = ({
                     onClick={() => onSlideSelect(slide.id)}
                   >
                     <div className="relative group">
-                      {snapshot.isDragging ? (
-                        <div className="p-4 bg-white/80 backdrop-blur-sm rounded-lg">
-                          <DragIndicator number={index + 1} isDragging={true} />
-                        </div>
-                      ) : (
-                        <>
-                          {selectedSlide === slide.id && (
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-red-500 shadow-md z-10 hover:bg-red-600 text-white"
-                              onClick={(e) => onDeleteSlide(slide.id, e)}
-                            >
-                              <X className="h-3 w-3" />
-                            </Button>
-                          )}
-                          <SlidePreview slide={slide} scale={1} />
-                        </>
+                      {selectedSlide === slide.id && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-red-500 shadow-md z-10 hover:bg-red-600 text-white"
+                          onClick={(e) => onDeleteSlide(slide.id, e)}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
                       )}
+                      <SlidePreview slide={slide} scale={1} />
                     </div>
                   </div>
                 )}
@@ -79,6 +85,13 @@ export const MobileSlideList = ({
           </div>
         )}
       </Droppable>
+      {draggedSlideId && (
+        <DragOverlay
+          slides={slides}
+          draggedSlideId={draggedSlideId}
+          currentIndex={currentIndex}
+        />
+      )}
     </DragDropContext>
   );
 };
