@@ -12,6 +12,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { EditorButtons } from "./components/EditorButtons";
 import { SaveButton } from "./components/SaveButton";
 import { useToast } from "@/components/ui/use-toast";
+import { Tooltip } from "@/components/ui/tooltip";
 
 interface PresentationEditorProps {
   presentation: Presentation;
@@ -105,9 +106,10 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
     <div className="min-h-screen bg-gray-100 overflow-x-hidden">
       <div className="fixed top-0 left-0 right-0 z-10 bg-white border-b p-4 md:hidden">
         <div className="flex flex-col gap-2">
-          <Button onClick={() => setShowTemplates(true)} size="sm">
-            <Plus className="w-4 h-4 mr-2" />
+          <Button onClick={() => setShowTemplates(true)} size="sm" className="flex items-center gap-2">
+            <Plus className="w-4 h-4" />
             Add
+            <span className="text-xs text-muted-foreground ml-2">Space x2</span>
           </Button>
           <SaveButton onSave={handleSave} />
         </div>
@@ -160,12 +162,16 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
 
         <div className="hidden md:block w-64 bg-white p-4 border-l">
           <div className="space-y-2">
-            <Button
-              className="w-full"
-              onClick={() => setShowTemplates(true)}
-            >
-              Add Slide
-            </Button>
+            <Tooltip content="Space x2">
+              <Button
+                className="w-full flex items-center gap-2"
+                onClick={() => setShowTemplates(true)}
+              >
+                <Plus className="w-4 h-4" />
+                Add Slide
+                <span className="text-xs text-muted-foreground ml-2">Space x2</span>
+              </Button>
+            </Tooltip>
             <SaveButton onSave={handleSave} />
           </div>
           <ScrollArea className="h-[calc(100vh-10rem)] mt-4">
