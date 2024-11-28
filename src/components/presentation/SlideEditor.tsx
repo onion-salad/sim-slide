@@ -7,6 +7,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Button } from "@/components/ui/button";
 import { Plus, Trash } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { useAutoScroll } from "@/hooks/useAutoScroll";
 
 interface SlideEditorProps {
   slide: Slide;
@@ -15,6 +16,9 @@ interface SlideEditorProps {
 
 const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
   const { toast } = useToast();
+  const titleInputRef = useAutoScroll();
+  const subtitleInputRef = useAutoScroll();
+  const textInputRef = useAutoScroll();
 
   const handleChange = (field: string, value: any) => {
     console.log("handleChange called", field, value);
@@ -76,6 +80,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
           <Label htmlFor="title">タイトル</Label>
           <Input
             id="title"
+            ref={titleInputRef}
             value={slide.content.title || ""}
             onChange={(e) => handleChange("title", e.target.value)}
           />
@@ -92,6 +97,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
           <Label htmlFor="title">タイトル</Label>
           <Input
             id="title"
+            ref={titleInputRef}
             value={slide.content.title || ""}
             onChange={(e) => handleChange("title", e.target.value)}
           />
@@ -100,6 +106,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
           <Label htmlFor="text">本文</Label>
           <Textarea
             id="text"
+            ref={textInputRef}
             value={slide.content.text || ""}
             onChange={(e) => handleChange("text", e.target.value)}
           />
@@ -121,6 +128,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
           <Label htmlFor="title">タイトル</Label>
           <Input
             id="title"
+            ref={titleInputRef}
             value={slide.content.title || ""}
             onChange={(e) => handleChange("title", e.target.value)}
           />
@@ -129,6 +137,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
           <Label htmlFor="subtitle">サブタイトル</Label>
           <Input
             id="subtitle"
+            ref={subtitleInputRef}
             value={slide.content.subtitle || ""}
             onChange={(e) => handleChange("subtitle", e.target.value)}
           />
@@ -137,6 +146,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
           <Label htmlFor="text">本文</Label>
           <Textarea
             id="text"
+            ref={textInputRef}
             value={slide.content.text || ""}
             onChange={(e) => handleChange("text", e.target.value)}
           />
@@ -153,6 +163,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
           <Label htmlFor="title">タイトル</Label>
           <Input
             id="title"
+            ref={titleInputRef}
             value={slide.content.title || ""}
             onChange={(e) => handleChange("title", e.target.value)}
           />
@@ -176,6 +187,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
                 <div>
                   <Label>サブタイトル</Label>
                   <Input
+                    ref={subtitleInputRef}
                     value={step.subtitle}
                     onChange={(e) =>
                       handleStepChange(index, "subtitle", e.target.value)
@@ -185,6 +197,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
                 <div>
                   <Label>テキスト</Label>
                   <Textarea
+                    ref={textInputRef}
                     value={step.text}
                     onChange={(e) =>
                       handleStepChange(index, "text", e.target.value)
