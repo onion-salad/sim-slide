@@ -7,13 +7,15 @@ import SlidePreview from "./SlidePreview";
 import SlideEditor from "./SlideEditor";
 import TemplateGallery from "./TemplateGallery";
 import FullscreenPresentation from "./FullscreenPresentation";
-import { Plus, X, Play } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { useSlideScroll } from "@/hooks/useSlideScroll";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { EditorButtons } from "./components/EditorButtons";
 import { SaveButton } from "./components/SaveButton";
 import { useEditorShortcuts } from "@/hooks/useEditorShortcuts";
 import { useToast } from "@/components/ui/use-toast";
+import { MobileHeader } from "./components/MobileHeader";
+import { MobileAddButton } from "./components/MobileAddButton";
 
 interface PresentationEditorProps {
   presentation: Presentation;
@@ -112,17 +114,16 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
     onUpdate({ ...presentation, slides: [] });
   };
 
+  const templates = ["title", "content", "steps", "thumbnail"];
+
   return (
     <div className="min-h-screen bg-gray-100 overflow-x-hidden">
-      <div className="fixed top-0 left-0 right-0 z-10 bg-white border-b p-4 md:hidden">
-        <div className="flex flex-col gap-2">
-          <Button onClick={handleAddClick} size="sm">
-            <Plus className="w-4 h-4 mr-2" />
-            Add (Space×2)
-          </Button>
-          <SaveButton onSave={handleSave} isAnimating={isSaveAnimating} />
-        </div>
-      </div>
+      <MobileHeader
+        onSave={handleSave}
+        onRefresh={handleRefresh}
+        onPresentClick={handlePresentClick}
+        isSaveAnimating={isSaveAnimating}
+      />
 
       <div className="flex flex-col md:flex-row h-[calc(100vh-4rem)] md:h-screen pt-[4.5rem] md:pt-0">
         <div className="flex-1 p-4 overflow-hidden flex flex-col">
@@ -132,7 +133,9 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
               <div
                 key={slide.id}
                 ref={(el) => slideRefs.current[slide.id] = el}
-                className={`flex-none w-[85%] md:w-[70%] snap-center transition-all duration-300 ${selectedSlide === slide.id ? "shadow-selected scale-[1.02] bg-white rounded-lg" : ""}`}
+                className={`flex-none w-[85%] md:w-[70%] snap-center transition-all duration-300 ${
+                  selectedSlide === slide.id ? "shadow-selected scale-[1.02] bg-white rounded-lg" : ""
+                }`}
                 onClick={() => handleSlideSelect(slide.id)}
               >
                 <div className="relative">
@@ -167,10 +170,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
 
         <div className="hidden md:block w-64 bg-white p-4 border-l">
           <div className="space-y-2">
-            <Button
-              className="w-full"
-              onClick={handleAddClick}
-            >
+            <Button className="w-full" onClick={handleAddClick}>
               <Plus className="w-4 h-4 mr-2" />
               Add (Space×2)
             </Button>
@@ -180,24 +180,18 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
             <DragDropContext onDragEnd={handleDragEnd}>
               <Droppable droppableId="slides">
                 {(provided) => (
-                  <div
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    className="space-y-2"
-                  >
+                  <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-2">
                     {presentation.slides.map((slide, index) => (
-                      <Draggable
-                        key={slide.id}
-                        draggableId={slide.id}
-                        index={index}
-                      >
+                      <Draggable key={slide.id} draggableId={slide.id} index={index}>
                         {(provided) => (
                           <div
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                             onClick={() => handleSlideSelect(slide.id)}
-                            className={`group cursor-pointer transition-all duration-300 relative ${selectedSlide === slide.id ? "shadow-selected scale-[1.02] bg-white rounded-lg" : ""}`}
+                            className={`group cursor-pointer transition-all duration-300 relative ${
+                              selectedSlide === slide.id ? "shadow-selected scale-[1.02] bg-white rounded-lg" : ""
+                            }`}
                           >
                             <div className="relative">
                               <Button
@@ -221,28 +215,20 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
             </DragDropContext>
           </ScrollArea>
         </div>
-
-        <div className="fixed bottom-4 right-4 space-x-2">
-          <EditorButtons
-            presentation={presentation}
-            onRefresh={handleRefresh}
-            onPresentClick={handlePresentClick}
-          />
-        </div>
       </div>
 
+      <MobileAddButton
+        onAddClick={handleAddClick}
+        templates={templates}
+        onSelect={handleAddSlide}
+      />
+
       {showTemplates && (
-        <TemplateGallery
-          onSelect={handleAddSlide}
-          onClose={() => setShowTemplates(false)}
-        />
+        <TemplateGallery onSelect={handleAddSlide} onClose={() => setShowTemplates(false)} />
       )}
 
       {isFullscreen && (
-        <FullscreenPresentation
-          slides={presentation.slides}
-          onClose={() => setIsFullscreen(false)}
-        />
+        <FullscreenPresentation slides={presentation.slides} onClose={() => setIsFullscreen(false)} />
       )}
     </div>
   );
