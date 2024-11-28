@@ -13,14 +13,18 @@ export const useAutoScrollInput = () => {
     const handleBlur = () => {
       console.log("Input blur event triggered");
       console.log("Current scroll position:", window.scrollY);
-      setTimeout(() => {
-        console.log("Attempting to scroll to top");
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        });
-        console.log("Scroll command executed");
-      }, 100);
+      if (window.scrollY > 0) {
+        setTimeout(() => {
+          console.log("Attempting to scroll to top");
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
+          console.log("Scroll command executed");
+        }, 100);
+      } else {
+        console.log("Skip scrolling - already at top");
+      }
     };
 
     element.addEventListener("blur", handleBlur);
@@ -43,18 +47,26 @@ export const useAutoScrollTextarea = () => {
     const handleBlur = () => {
       console.log("Textarea blur event triggered");
       console.log("Current scroll position:", window.scrollY);
-      setTimeout(() => {
-        console.log("Attempting to scroll to top");
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        });
-        console.log("Scroll command executed");
-      }, 100);
+      if (window.scrollY > 0) {
+        setTimeout(() => {
+          console.log("Attempting to scroll to top");
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
+          console.log("Scroll command executed");
+        }, 100);
+      } else {
+        console.log("Skip scrolling - already at top");
+      }
     };
 
     element.addEventListener("blur", handleBlur);
-    return () => element.removeEventListener("blur", handleBlur);
+    console.log("Textarea blur event listener added");
+    return () => {
+      element.removeEventListener("blur", handleBlur);
+      console.log("Textarea blur event listener removed");
+    };
   }, []);
 
   return ref;
