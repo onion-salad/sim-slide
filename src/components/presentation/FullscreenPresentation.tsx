@@ -58,7 +58,10 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
 
     if (!isRecording) {
       try {
-        await screenRecorder.current.startRecording(presentationRef.current, { preferCurrentTab: true });
+        await screenRecorder.current.startRecording(presentationRef.current, { 
+          preferCurrentTab: true,
+          targetElement: presentationRef.current 
+        });
         setIsRecording(true);
         toast({
           title: "録画開始",

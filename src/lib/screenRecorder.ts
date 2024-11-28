@@ -1,5 +1,6 @@
 interface RecordingOptions {
   preferCurrentTab?: boolean;
+  targetElement?: HTMLElement;
 }
 
 // Chrome の MediaTrackConstraints に preferCurrentTab を追加する型定義
@@ -25,6 +26,19 @@ export class ScreenRecorder {
       };
 
       const stream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);
+      const [videoTrack] = stream.getVideoTracks();
+
+      // 要素キャプチャを使用する場合
+      if (options.targetElement && 'restrictTo' in videoTrack) {
+        try {
+          // @ts-ignore: RestrictionTarget is not yet in TypeScript's lib
+          const restrictionTarget = await RestrictionTarget.fromElement(options.targetElement);
+          // @ts-ignore: restrictTo is not yet in TypeScript's lib
+          await videoTrack.restrictTo(restrictionTarget);
+        } catch (error) {
+          console.warn('Element Capture is not supported in this browser, falling back to full screen capture');
+        }
+      }
 
       this.mediaRecorder = new MediaRecorder(stream);
       this.recordedChunks = [];
