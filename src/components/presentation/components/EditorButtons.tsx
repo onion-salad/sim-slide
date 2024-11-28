@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Play, RefreshCw } from "lucide-react";
 import { Presentation } from "@/lib/presentation";
+import { cn } from "@/lib/utils";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,12 +22,23 @@ interface EditorButtonsProps {
 }
 
 export const EditorButtons = ({ presentation, onRefresh, onPresentClick }: EditorButtonsProps) => {
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const handleRefresh = () => {
+    setIsAnimating(true);
+    onRefresh();
+    setTimeout(() => setIsAnimating(false), 1000);
+  };
+
   return (
     <>
       <AlertDialog>
         <AlertDialogTrigger asChild>
           <Button size="icon" variant="outline">
-            <RefreshCw className="w-4 h-4" />
+            <RefreshCw className={cn(
+              "w-4 h-4 transition-transform duration-300",
+              isAnimating && "animate-[spin_0.5s_ease-out]"
+            )} />
           </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
@@ -37,7 +50,7 @@ export const EditorButtons = ({ presentation, onRefresh, onPresentClick }: Edito
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>キャンセル</AlertDialogCancel>
-            <AlertDialogAction onClick={onRefresh}>
+            <AlertDialogAction onClick={handleRefresh}>
               リフレッシュ
             </AlertDialogAction>
           </AlertDialogFooter>
