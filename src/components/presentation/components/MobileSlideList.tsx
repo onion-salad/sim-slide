@@ -25,10 +25,17 @@ export const MobileSlideList = ({
 }: MobileSlideListProps) => {
   const [draggedSlideId, setDraggedSlideId] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [targetIndex, setTargetIndex] = useState<number>(0);
 
   const handleDragStart = (start: any) => {
     setDraggedSlideId(start.draggableId);
     setCurrentIndex(start.source.index);
+    setTargetIndex(start.source.index);
+  };
+
+  const handleDragUpdate = (update: any) => {
+    if (!update.destination) return;
+    setTargetIndex(update.destination.index);
   };
 
   const handleDragEnd = (result: any) => {
@@ -37,7 +44,11 @@ export const MobileSlideList = ({
   };
 
   return (
-    <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+    <DragDropContext 
+      onDragStart={handleDragStart} 
+      onDragUpdate={handleDragUpdate}
+      onDragEnd={handleDragEnd}
+    >
       <Droppable droppableId="mobile-slides" direction="horizontal">
         {(provided) => (
           <div
@@ -89,7 +100,7 @@ export const MobileSlideList = ({
         <DragOverlay
           slides={slides}
           draggedSlideId={draggedSlideId}
-          currentIndex={currentIndex}
+          currentIndex={targetIndex}
         />
       )}
     </DragDropContext>
