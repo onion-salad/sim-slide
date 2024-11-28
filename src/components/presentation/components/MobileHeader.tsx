@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Save, RefreshCw, Play, List } from "lucide-react";
+import { Save, RefreshCw, List, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   AlertDialog,
@@ -57,21 +57,6 @@ export const MobileHeader = ({
             Sim-Slide
           </h1>
           <div className="flex items-center gap-2">
-            <Button
-              onClick={onSave}
-              variant="ghost"
-              size="icon"
-              className={`${isSaveAnimating ? "animate-[spin_0.5s_ease-out]" : ""}`}
-            >
-              <Save className="h-5 w-5" />
-            </Button>
-            <Button
-              onClick={() => setShowReorderModal(true)}
-              variant="ghost"
-              size="icon"
-            >
-              <List className="h-5 w-5" />
-            </Button>
             <AlertDialog onOpenChange={handleOpenChange}>
               <AlertDialogTrigger asChild>
                 <Button
@@ -100,14 +85,31 @@ export const MobileHeader = ({
               </AlertDialogContent>
             </AlertDialog>
             <Button
-              onClick={onPresentClick}
+              onClick={onSave}
+              variant="ghost"
               size="icon"
-              className="bg-primary hover:bg-primary/90"
+              className={`${isSaveAnimating ? "animate-[spin_0.5s_ease-out]" : ""}`}
             >
-              <Play className="h-5 w-5 text-white" />
+              <Save className="h-5 w-5" />
+            </Button>
+            <Button
+              onClick={() => setShowReorderModal(true)}
+              variant="ghost"
+              size="icon"
+            >
+              <List className="h-5 w-5" />
             </Button>
           </div>
         </div>
+      </div>
+      <div className="fixed bottom-4 left-4 md:hidden">
+        <Button
+          onClick={onPresentClick}
+          size="icon"
+          className="h-14 w-14 rounded-full bg-primary hover:bg-primary/90 shadow-lg"
+        >
+          <Play className="h-6 w-6 text-white" />
+        </Button>
       </div>
       <MobileReorderModal
         isOpen={showReorderModal}
