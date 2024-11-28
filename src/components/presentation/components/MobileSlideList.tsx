@@ -27,11 +27,20 @@ export const MobileSlideList = ({
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   const handleDragStart = (start: any) => {
+    console.log('Drag started:', {
+      draggableId: start.draggableId,
+      sourceIndex: start.source.index
+    });
     setDraggedSlideId(start.draggableId);
     setCurrentIndex(start.source.index);
   };
 
   const handleDragEnd = (result: any) => {
+    console.log('Drag ended:', {
+      destination: result.destination,
+      source: result.source,
+      draggableId: result.draggableId
+    });
     setDraggedSlideId(null);
     onDragEnd(result);
   };
@@ -46,40 +55,47 @@ export const MobileSlideList = ({
             className="slides-container w-full overflow-x-auto pb-4 flex gap-4 snap-x snap-mandatory pt-4"
           >
             <div className="pl-4" />
-            {slides.map((slide, index) => (
-              <Draggable key={slide.id} draggableId={slide.id} index={index}>
-                {(provided, snapshot) => (
-                  <div
-                    ref={(el) => {
-                      provided.innerRef(el);
-                      if (slideRefs.current) {
-                        slideRefs.current[slide.id] = el;
-                      }
-                    }}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    className={`flex-none w-[85%] snap-center transition-all duration-300 ${
-                      selectedSlide === slide.id ? "shadow-selected scale-[1.02] bg-white rounded-lg" : ""
-                    }`}
-                    onClick={() => onSlideSelect(slide.id)}
-                  >
-                    <div className="relative group">
-                      {selectedSlide === slide.id && (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-red-500 shadow-md z-10 hover:bg-red-600 text-white"
-                          onClick={(e) => onDeleteSlide(slide.id, e)}
-                        >
-                          <X className="h-3 w-3" />
-                        </Button>
-                      )}
-                      <SlidePreview slide={slide} scale={1} />
+            {slides.map((slide, index) => {
+              console.log('Rendering slide in list:', {
+                slideId: slide.id,
+                index,
+                isDragged: slide.id === draggedSlideId
+              });
+              return (
+                <Draggable key={slide.id} draggableId={slide.id} index={index}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={(el) => {
+                        provided.innerRef(el);
+                        if (slideRefs.current) {
+                          slideRefs.current[slide.id] = el;
+                        }
+                      }}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      className={`flex-none w-[85%] snap-center transition-all duration-300 ${
+                        selectedSlide === slide.id ? "shadow-selected scale-[1.02] bg-white rounded-lg" : ""
+                      } ${snapshot.isDragging ? "scale-75" : ""}`}
+                      onClick={() => onSlideSelect(slide.id)}
+                    >
+                      <div className="relative group">
+                        {selectedSlide === slide.id && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-red-500 shadow-md z-10 hover:bg-red-600 text-white"
+                            onClick={(e) => onDeleteSlide(slide.id, e)}
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        )}
+                        <SlidePreview slide={slide} scale={1} />
+                      </div>
                     </div>
-                  </div>
-                )}
-              </Draggable>
-            ))}
+                  )}
+                </Draggable>
+              );
+            })}
             <div className="pr-4" />
             {provided.placeholder}
           </div>

@@ -9,6 +9,13 @@ interface DragOverlayProps {
 }
 
 export const DragOverlay = ({ slides, draggedSlideId, currentIndex }: DragOverlayProps) => {
+  console.log('DragOverlay rendered:', {
+    totalSlides: slides.length,
+    draggedSlideId,
+    currentIndex,
+    filteredSlides: slides.filter(slide => slide.id !== draggedSlideId).length
+  });
+
   return (
     <div className="fixed inset-0 bg-white/80 backdrop-blur-md z-50 flex items-center justify-center">
       <div className="space-y-4 py-8">
@@ -16,6 +23,11 @@ export const DragOverlay = ({ slides, draggedSlideId, currentIndex }: DragOverla
           .filter(slide => slide.id !== draggedSlideId)
           .map((slide, index) => {
             const adjustedIndex = index >= currentIndex ? index + 1 : index;
+            console.log('Rendering slide in overlay:', {
+              slideId: slide.id,
+              originalIndex: index,
+              adjustedIndex
+            });
             return (
               <div
                 key={slide.id}
