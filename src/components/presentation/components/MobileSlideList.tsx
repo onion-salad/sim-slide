@@ -21,8 +21,16 @@ export const MobileSlideList = ({
   onDragEnd,
   slideRefs,
 }: MobileSlideListProps) => {
+  const handleDragUpdate = (update: any) => {
+    if (!update.destination || !selectedSlide) return;
+    
+    const dragX = update.clientX;
+    const slideIds = slides.map(slide => slide.id);
+    slideRefs.current.handleDragScroll?.(dragX, selectedSlide, slideIds);
+  };
+
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
+    <DragDropContext onDragEnd={onDragEnd} onDragUpdate={handleDragUpdate}>
       <Droppable droppableId="mobile-slides" direction="horizontal">
         {(provided) => (
           <div
