@@ -1,6 +1,6 @@
 import { useState, useEffect, TouchEvent } from "react";
 import { Slide } from "@/lib/presentation";
-import { X, ArrowLeft, ArrowRight } from "lucide-react";
+import { X, ArrowLeft, ArrowRight, Video } from "lucide-react";
 import SlidePreview from "./SlidePreview";
 
 interface FullscreenPresentationProps {
@@ -35,7 +35,7 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
     const touchEnd = e.changedTouches[0].clientX;
     const diff = touchStart - touchEnd;
 
-    if (Math.abs(diff) > 50) { // minimum swipe distance
+    if (Math.abs(diff) > 50) {
       if (diff > 0) {
         handleNext();
       } else {
@@ -44,6 +44,15 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
     }
 
     setTouchStart(null);
+  };
+
+  const handleVideoClick = () => {
+    const event = new KeyboardEvent('keydown', {
+      key: '5',
+      metaKey: true,
+      shiftKey: true,
+    });
+    document.dispatchEvent(event);
   };
 
   useEffect(() => {
@@ -58,7 +67,7 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
         const currentTime = new Date().getTime();
         const timeDiff = currentTime - lastAltKeyTime;
         
-        if (timeDiff < 500) { // 500ms以内の2回目のAltキー押下
+        if (timeDiff < 500) {
           onClose();
         }
         
@@ -78,12 +87,20 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <button
-        onClick={onClose}
-        className="absolute top-4 right-4 text-white hover:text-gray-300"
-      >
-        <X className="w-6 h-6" />
-      </button>
+      <div className="absolute top-4 right-4 flex items-center gap-4 text-white">
+        <button
+          onClick={handleVideoClick}
+          className="hover:text-gray-300"
+        >
+          <Video className="w-6 h-6" />
+        </button>
+        <button
+          onClick={onClose}
+          className="hover:text-gray-300"
+        >
+          <X className="w-6 h-6" />
+        </button>
+      </div>
       
       <div className="h-full flex items-center justify-center p-4">
         <div className="w-full aspect-video">
