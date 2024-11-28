@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { Slide } from "@/lib/presentation";
 import SlidePreview from "../SlidePreview";
+import { DragIndicator } from "./DragIndicator";
 
 interface MobileSlideListProps {
   slides: Slide[];
@@ -33,7 +34,7 @@ export const MobileSlideList = ({
             <div className="pl-4" />
             {slides.map((slide, index) => (
               <Draggable key={slide.id} draggableId={slide.id} index={index}>
-                {(provided) => (
+                {(provided, snapshot) => (
                   <div
                     ref={(el) => {
                       provided.innerRef(el);
@@ -49,17 +50,25 @@ export const MobileSlideList = ({
                     onClick={() => onSlideSelect(slide.id)}
                   >
                     <div className="relative group">
-                      {selectedSlide === slide.id && (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-red-500 shadow-md z-10 hover:bg-red-600 text-white"
-                          onClick={(e) => onDeleteSlide(slide.id, e)}
-                        >
-                          <X className="h-3 w-3" />
-                        </Button>
+                      {snapshot.isDragging ? (
+                        <div className="p-4 bg-white/80 backdrop-blur-sm rounded-lg">
+                          <DragIndicator number={index + 1} isDragging={true} />
+                        </div>
+                      ) : (
+                        <>
+                          {selectedSlide === slide.id && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-red-500 shadow-md z-10 hover:bg-red-600 text-white"
+                              onClick={(e) => onDeleteSlide(slide.id, e)}
+                            >
+                              <X className="h-3 w-3" />
+                            </Button>
+                          )}
+                          <SlidePreview slide={slide} scale={1} />
+                        </>
                       )}
-                      <SlidePreview slide={slide} scale={1} />
                     </div>
                   </div>
                 )}
