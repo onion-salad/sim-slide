@@ -19,15 +19,14 @@ export const DragOverlay = ({ slides, draggedSlideId, currentIndex }: DragOverla
             return (
               <div
                 key={slide.id}
+                data-index={adjustedIndex + 1}
                 className={cn(
                   "relative transition-all duration-300",
                   "hover:scale-105",
                   "before:absolute before:-left-8 before:top-1/2 before:-translate-y-1/2",
                   "before:text-2xl before:font-bold before:text-primary",
+                  "before:content-[attr(data-index)]"
                 )}
-                style={{
-                  '--before-content': `'${adjustedIndex + 1}'`,
-                }}
               >
                 <div className="w-48">
                   <SlidePreview slide={slide} scale={0.15} />
