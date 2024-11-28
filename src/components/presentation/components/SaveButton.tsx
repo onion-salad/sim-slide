@@ -21,7 +21,7 @@ export const SaveButton = ({ onSave }: SaveButtonProps) => {
       onClick={handleClick}
       variant="outline"
       className={cn(
-        "relative overflow-hidden transition-all duration-300",
+        "w-full relative overflow-hidden transition-all duration-300",
         isAnimating && "animate-[scale-in_0.2s_ease-out]"
       )}
     >

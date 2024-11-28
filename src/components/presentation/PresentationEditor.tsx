@@ -10,7 +10,6 @@ import { Plus, X, Save } from "lucide-react";
 import { useSlideScroll } from "@/hooks/useSlideScroll";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { EditorButtons } from "./components/EditorButtons";
-import { useToast } from "@/components/ui/use-toast";
 import { SaveButton } from "./components/SaveButton";
 
 interface PresentationEditorProps {
@@ -23,7 +22,6 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const { slideRefs, scrollToSlide } = useSlideScroll();
-  const { toast } = useToast();
 
   const handleSlideSelect = (slideId: string) => {
     setSelectedSlide(slideId);
@@ -76,10 +74,6 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
 
   const handleSave = () => {
     localStorage.setItem('presentation', JSON.stringify(presentation));
-    toast({
-      title: "保存完了",
-      description: "プレゼンテーション情報が保存されました",
-    });
   };
 
   return (
