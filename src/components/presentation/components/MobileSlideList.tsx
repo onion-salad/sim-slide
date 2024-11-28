@@ -1,14 +1,12 @@
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { useState } from "react";
 import { Slide } from "@/lib/presentation";
 import SlidePreview from "../SlidePreview";
-import { useState } from "react";
 import {
   Dialog,
   DialogContent,
   DialogOverlay,
 } from "@/components/ui/dialog";
+import { DraggableSlideList } from "./DraggableSlideList";
 
 interface MobileSlideListProps {
   slides: Slide[];
@@ -42,7 +40,7 @@ export const MobileSlideList = ({
     <>
       <div className="slides-container w-full overflow-x-auto pb-4 flex gap-4 snap-x snap-mandatory pt-4">
         <div className="pl-4" />
-        {slides.map((slide, index) => (
+        {slides.map((slide) => (
           <div
             key={slide.id}
             ref={(el) => {
@@ -54,24 +52,10 @@ export const MobileSlideList = ({
               selectedSlide === slide.id ? "shadow-selected scale-[1.02] bg-white rounded-lg" : ""
             }`}
             onClick={() => onSlideSelect(slide.id)}
+            onTouchStart={handleDragStart}
           >
             <div className="relative group">
-              {selectedSlide === slide.id && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-red-500 shadow-md z-10 hover:bg-red-600 text-white"
-                  onClick={(e) => onDeleteSlide(slide.id, e)}
-                >
-                  <X className="h-3 w-3" />
-                </Button>
-              )}
-              <div
-                className="touch-none"
-                onTouchStart={handleDragStart}
-              >
-                <SlidePreview slide={slide} scale={1} />
-              </div>
+              <SlidePreview slide={slide} scale={1} />
             </div>
           </div>
         ))}
@@ -80,38 +64,16 @@ export const MobileSlideList = ({
 
       <Dialog open={isDragging} onOpenChange={() => setIsDragging(false)}>
         <DialogOverlay className="bg-white/30 backdrop-blur-md" />
-        <DialogContent className="max-w-[90%] h-[80vh] p-0 bg-transparent border-none shadow-none">
-          <DragDropContext onDragEnd={handleDragEnd}>
-            <Droppable droppableId="mobile-slides" direction="vertical">
-              {(provided) => (
-                <div
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                  className="p-4 space-y-4 h-full overflow-y-auto"
-                >
-                  {slides.map((slide, index) => (
-                    <Draggable key={slide.id} draggableId={slide.id} index={index}>
-                      {(provided, snapshot) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          className={`bg-white rounded-lg shadow-md transition-all duration-300 ${
-                            snapshot.isDragging ? "scale-[1.02] shadow-lg ring-2 ring-primary" : ""
-                          }`}
-                        >
-                          <div className="relative">
-                            <SlidePreview slide={slide} scale={0.15} />
-                          </div>
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          </DragDropContext>
+        <DialogContent className="max-w-[90%] h-[80vh] p-6 bg-white/95 border shadow-lg">
+          <DraggableSlideList
+            slides={slides}
+            selectedSlide={selectedSlide}
+            onSlideSelect={onSlideSelect}
+            onDeleteSlide={onDeleteSlide}
+            onDragEnd={handleDragEnd}
+            scale={0.15}
+            className="h-full"
+          />
         </DialogContent>
       </Dialog>
     </>
