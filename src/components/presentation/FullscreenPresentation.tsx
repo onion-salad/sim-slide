@@ -11,6 +11,7 @@ interface FullscreenPresentationProps {
 const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [lastAltKeyTime, setLastAltKeyTime] = useState<number>(0);
 
   const handleNext = () => {
     if (currentSlide < slides.length - 1) {
@@ -53,12 +54,21 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
         handlePrev();
       } else if (e.key === "Escape") {
         onClose();
+      } else if (e.key === "Alt" && !e.repeat) {
+        const currentTime = new Date().getTime();
+        const timeDiff = currentTime - lastAltKeyTime;
+        
+        if (timeDiff < 500) { // 500ms以内の2回目のAltキー押下
+          onClose();
+        }
+        
+        setLastAltKeyTime(currentTime);
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [currentSlide, slides.length, onClose]);
+  }, [currentSlide, slides.length, onClose, lastAltKeyTime]);
 
   if (!slides.length) return null;
 
