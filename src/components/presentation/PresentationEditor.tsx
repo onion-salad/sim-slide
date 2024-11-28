@@ -40,6 +40,11 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
   const { slideRefs, scrollToSlide } = useSlideScroll();
   const { toast } = useToast();
 
+  const handleSlideSelect = (slideId: string) => {
+    setSelectedSlide(slideId);
+    scrollToSlide(slideId);
+  };
+
   const handleAddClick = () => {
     setIsAddAnimating(true);
     setShowTemplates(true);
