@@ -1,15 +1,22 @@
+interface RecordingOptions {
+  preferCurrentTab?: boolean;
+}
+
 export class ScreenRecorder {
   private mediaRecorder: MediaRecorder | null = null;
   private recordedChunks: Blob[] = [];
 
-  async startRecording(element: HTMLElement): Promise<void> {
+  async startRecording(element: HTMLElement, options: RecordingOptions = {}): Promise<void> {
     try {
-      const stream = await navigator.mediaDevices.getDisplayMedia({
+      const displayMediaOptions: DisplayMediaStreamOptions = {
         video: {
-          displaySurface: "window",
+          displaySurface: options.preferCurrentTab ? "browser" : "window",
+          preferCurrentTab: options.preferCurrentTab,
         },
         audio: true,
-      });
+      };
+
+      const stream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);
 
       this.mediaRecorder = new MediaRecorder(stream);
       this.recordedChunks = [];
@@ -32,13 +39,13 @@ export class ScreenRecorder {
         window.URL.revokeObjectURL(url);
         document.body.removeChild(a);
 
-        // ストリームを停止
         stream.getTracks().forEach(track => track.stop());
       };
 
       this.mediaRecorder.start();
     } catch (err) {
       console.error("Error starting recording:", err);
+      throw err;
     }
   }
 

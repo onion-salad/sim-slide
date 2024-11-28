@@ -57,13 +57,22 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
     if (!presentationRef.current) return;
 
     if (!isRecording) {
-      await screenRecorder.current.startRecording(presentationRef.current);
-      setIsRecording(true);
-      toast({
-        title: "録画開始",
-        description: "プレゼンテーションの録画を開始しました",
-        duration: 700,
-      });
+      try {
+        await screenRecorder.current.startRecording(presentationRef.current, { preferCurrentTab: true });
+        setIsRecording(true);
+        toast({
+          title: "録画開始",
+          description: "プレゼンテーションの録画を開始しました",
+          duration: 700,
+        });
+      } catch (error) {
+        toast({
+          title: "録画エラー",
+          description: "録画の開始に失敗しました",
+          variant: "destructive",
+          duration: 700,
+        });
+      }
     } else {
       screenRecorder.current.stopRecording();
       setIsRecording(false);
@@ -118,16 +127,19 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
       ref={presentationRef}
     >
       <div className="absolute top-4 right-4 flex items-center gap-2">
-        <button
-          onClick={toggleRecording}
-          className="text-white hover:text-gray-300"
-        >
-          {isRecording ? (
-            <VideoOff className="w-6 h-6" />
-          ) : (
-            <Video className="w-6 h-6" />
-          )}
-        </button>
+        <div className="flex items-center gap-2 text-white">
+          <button
+            onClick={toggleRecording}
+            className="text-white hover:text-gray-300 flex items-center gap-2"
+          >
+            {isRecording ? (
+              <VideoOff className="w-6 h-6" />
+            ) : (
+              <Video className="w-6 h-6" />
+            )}
+            <span className="text-sm">(Shift×2)</span>
+          </button>
+        </div>
         <button
           onClick={onClose}
           className="text-white hover:text-gray-300"
