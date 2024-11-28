@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Save, RefreshCw, Play, SlidersHorizontal } from "lucide-react";
+import { Save, RefreshCw, Play, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   AlertDialog,
@@ -45,12 +45,9 @@ export const MobileHeader = ({
   return (
     <div className="fixed top-0 left-0 right-0 z-10 bg-white border-b p-4 md:hidden">
       <div className="flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-primary/20 to-primary/10 rounded-full" />
-            <SlidersHorizontal className="h-6 w-6 text-primary relative z-10" />
-          </div>
-          <h1 className="text-[1.4rem] font-bold tracking-tight bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+        <div className="relative">
+          <Heart className="absolute h-8 w-8 text-black opacity-20 -left-2 top-1/2 -translate-y-1/2" />
+          <h1 className="text-[1.4rem] font-bold tracking-tight bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent relative z-10" style={{ fontFamily: "'Montserrat', sans-serif" }}>
             Sim-Slide
           </h1>
         </div>
