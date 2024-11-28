@@ -12,12 +12,21 @@ export const useShortcuts = ({ onAddSlide, onPresent, onSave }: ShortcutHandlers
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      console.log('Shortcut detected:', {
+        key: event.key,
+        code: event.code,
+        metaKey: event.metaKey,
+        ctrlKey: event.ctrlKey,
+        altKey: event.altKey
+      });
+
       if (event.code === 'Space' && !event.repeat) {
         const currentTime = new Date().getTime();
         const timeDiff = currentTime - lastSpaceKeyTime;
         
         if (timeDiff < 500) {
           event.preventDefault();
+          console.log('Double Space detected');
           onAddSlide();
         }
         
@@ -30,6 +39,7 @@ export const useShortcuts = ({ onAddSlide, onPresent, onSave }: ShortcutHandlers
         
         if (timeDiff < 500) {
           event.preventDefault();
+          console.log('Double Alt/Option detected');
           onPresent();
         }
         
@@ -39,6 +49,7 @@ export const useShortcuts = ({ onAddSlide, onPresent, onSave }: ShortcutHandlers
       // Command + S shortcut
       if ((event.metaKey || event.ctrlKey) && event.key === 's') {
         event.preventDefault();
+        console.log('Command + S detected');
         onSave();
       }
     };

@@ -25,6 +25,7 @@ export const EditorButtons = ({ presentation, onRefresh, onPresentClick }: Edito
   const [isAnimating, setIsAnimating] = useState(false);
 
   const handleRefresh = () => {
+    console.log("Refresh button clicked");
     setIsAnimating(true);
     onRefresh();
     setTimeout(() => setIsAnimating(false), 1000);
