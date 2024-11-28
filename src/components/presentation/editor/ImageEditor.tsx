@@ -32,7 +32,6 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
       const imageDataUrl = e.target?.result as string;
       onChange(imageDataUrl, imagePosition);
       
-      // Reset file input to allow reselecting the same file
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
@@ -40,11 +39,11 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
     reader.readAsDataURL(file);
   };
 
-  const handleImageDelete = () => {
+  const handleImageDelete = (e: React.MouseEvent) => {
     console.log("handleImageDelete called");
+    e.stopPropagation(); // イベントの伝播を止める
     if (image) {
       onChange("", undefined);
-      // Reset file input after deletion
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
@@ -86,9 +85,15 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
               type="file"
               accept="image/*"
               onChange={handleImageUpload}
-              className="absolute inset-0 opacity-0 cursor-pointer w-10 h-10"
+              className="absolute inset-0 w-10 h-10 opacity-0 cursor-pointer"
+              style={{ zIndex: 1 }}
             />
-            <Button type="button" variant="outline" size="icon">
+            <Button 
+              type="button" 
+              variant="outline" 
+              size="icon"
+              className="pointer-events-none"
+            >
               <Upload className="h-4 w-4" />
             </Button>
           </div>
@@ -98,6 +103,7 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
               variant="outline" 
               size="icon"
               onClick={handleImageDelete}
+              className="relative z-10"
             >
               <Trash2 className="h-4 w-4" />
             </Button>
