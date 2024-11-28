@@ -22,7 +22,7 @@ export const DesktopBottomButtons = ({
   onPresentClick,
 }: DesktopBottomButtonsProps) => {
   return (
-    <div className="fixed bottom-4 right-4 flex gap-2">
+    <div className="fixed bottom-4 right-4 hidden md:flex gap-2">
       <AlertDialog>
         <AlertDialogTrigger asChild>
           <Button
