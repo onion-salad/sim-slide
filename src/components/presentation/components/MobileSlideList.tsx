@@ -5,6 +5,7 @@ import { Slide } from "@/lib/presentation";
 import SlidePreview from "../SlidePreview";
 import { DragOverlay } from "./DragOverlay";
 import { useState } from "react";
+import { isMobile } from "@/lib/utils";
 
 interface MobileSlideListProps {
   slides: Slide[];
@@ -27,8 +28,10 @@ export const MobileSlideList = ({
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   const handleDragStart = (start: any) => {
-    setDraggedSlideId(start.draggableId);
-    setCurrentIndex(start.source.index);
+    if (isMobile()) {
+      setDraggedSlideId(start.draggableId);
+      setCurrentIndex(start.source.index);
+    }
   };
 
   const handleDragEnd = (result: any) => {
@@ -83,7 +86,7 @@ export const MobileSlideList = ({
           </div>
         )}
       </Droppable>
-      {draggedSlideId && (
+      {draggedSlideId && isMobile() && (
         <DragOverlay
           slides={slides}
           draggedSlideId={draggedSlideId}
