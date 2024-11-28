@@ -25,8 +25,15 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
   }
 
   const handleChange = useCallback((field: string, value: any) => {
-    // IME入力中は更新をスキップ
+    console.log('Input event details:', {
+      field,
+      value,
+      type: typeof value,
+      composing: isComposingRef.current
+    });
+
     if (isComposingRef.current) {
+      console.log('Skipping update during IME composition');
       return;
     }
 
@@ -40,46 +47,15 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
   }, [slide, onUpdate]);
 
   const handleCompositionStart = () => {
+    console.log('Composition start');
     isComposingRef.current = true;
   };
 
   const handleCompositionEnd = (field: string, value: string) => {
+    console.log('Composition end:', { field, value });
     isComposingRef.current = false;
     handleChange(field, value);
   };
-
-  const handleImageChange = useCallback((image: string, imagePosition?: { x: number; y: number }) => {
-    onUpdate({
-      ...slide,
-      content: {
-        ...slide.content,
-        image,
-        imagePosition: imagePosition || { x: 50, y: 50 },
-      },
-    });
-  }, [slide, onUpdate]);
-
-  const handleStepChange = useCallback((index: number, field: string, value: string) => {
-    const steps = [...(slide.content.steps || [])];
-    steps[index] = {
-      ...steps[index],
-      [field]: value,
-    };
-    handleChange("steps", steps);
-  }, [slide.content.steps, handleChange]);
-
-  const handleAddStep = useCallback(() => {
-    const steps = [...(slide.content.steps || [])];
-    if (steps.length >= 3) return;
-    steps.push({ subtitle: "", text: "" });
-    handleChange("steps", steps);
-  }, [slide.content.steps, handleChange]);
-
-  const handleRemoveStep = useCallback((index: number) => {
-    const steps = [...(slide.content.steps || [])];
-    steps.splice(index, 1);
-    handleChange("steps", steps);
-  }, [slide.content.steps, handleChange]);
 
   return (
     <div className="space-y-4">
