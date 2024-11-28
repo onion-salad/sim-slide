@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { Slide } from "@/lib/presentation";
 import SlidePreview from "../SlidePreview";
 import {
@@ -26,28 +26,10 @@ export const MobileSlideList = ({
   slideRefs,
 }: MobileSlideListProps) => {
   const [isDragging, setIsDragging] = useState(false);
-  const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
 
-  const handleTouchStart = useCallback((slideId: string) => {
-    const timer = setTimeout(() => {
-      setIsDragging(true);
-    }, 500); // 500ms長押しでドラッグモードを開始
-    setLongPressTimer(timer);
-  }, []);
-
-  const handleTouchEnd = useCallback(() => {
-    if (longPressTimer) {
-      clearTimeout(longPressTimer);
-      setLongPressTimer(null);
-    }
-  }, [longPressTimer]);
-
-  const handleTouchMove = useCallback(() => {
-    if (longPressTimer) {
-      clearTimeout(longPressTimer);
-      setLongPressTimer(null);
-    }
-  }, [longPressTimer]);
+  const handleDragStart = () => {
+    setIsDragging(true);
+  };
 
   const handleDragEnd = (result: any) => {
     setIsDragging(false);
@@ -56,11 +38,7 @@ export const MobileSlideList = ({
 
   return (
     <>
-      <div 
-        className="slides-container w-full overflow-x-auto pb-4 flex gap-4 snap-x snap-mandatory pt-4"
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
+      <div className="slides-container w-full overflow-x-auto pb-4 flex gap-4 snap-x snap-mandatory pt-4">
         <div className="pl-4" />
         {slides.map((slide) => (
           <div
@@ -74,7 +52,7 @@ export const MobileSlideList = ({
               selectedSlide === slide.id ? "shadow-selected scale-[1.02] bg-white rounded-lg" : ""
             }`}
             onClick={() => onSlideSelect(slide.id)}
-            onTouchStart={() => handleTouchStart(slide.id)}
+            onTouchStart={handleDragStart}
           >
             <div className="relative group">
               <SlidePreview slide={slide} scale={1} />
