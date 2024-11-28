@@ -14,8 +14,30 @@ export const ScreenshotButton = ({ onCapture }: ScreenshotButtonProps) => {
     try {
       onCapture();
       const slideElements = Array.from(document.querySelectorAll('.slide-preview'));
+      
+      if (slideElements.length === 0) {
+        toast({
+          title: "エラー",
+          description: "スライドが見つかりませんでした",
+          variant: "destructive",
+          duration: 3000,
+        });
+        return;
+      }
+
       const images = await captureSlides(slideElements as HTMLElement[]);
-      downloadImages(images);
+      
+      if (images.length === 0) {
+        toast({
+          title: "エラー",
+          description: "スクリーンショットの作成に失敗しました",
+          variant: "destructive",
+          duration: 3000,
+        });
+        return;
+      }
+
+      await downloadImages(images);
       
       toast({
         title: "スクリーンショット完了",
@@ -23,10 +45,12 @@ export const ScreenshotButton = ({ onCapture }: ScreenshotButtonProps) => {
         duration: 3000,
       });
     } catch (error) {
+      console.error('Screenshot error:', error);
       toast({
         title: "エラー",
-        description: "スクリーンショットの保存に失敗しました",
+        description: "スクリーンショットの保存に失敗しました。もう一度お試しください。",
         variant: "destructive",
+        duration: 3000,
       });
     }
   };
