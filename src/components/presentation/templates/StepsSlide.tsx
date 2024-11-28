@@ -26,7 +26,7 @@ const StepsSlide = ({ slide }: StepsSlideProps) => {
             <div className="flex-1 flex">
               {step.text ? (
                 <div className="-mt-1">
-                  <h2 className="text-[length:calc(var(--slide-width)*0.036)] leading-[1.15] font-semibold bg-gradient-to-r from-[#7C3AED] to-[#6366F1] bg-clip-text text-transparent mb-1.5">
+                  <h2 className="text-[length:calc(var(--slide-width)*0.036)] leading-[1.15] font-semibold bg-gradient-to-r from-[#7C3AED] to-[#6366F1] bg-clip-text text-transparent mb-0.5">
                     {step.subtitle}
                   </h2>
                   <Body>
