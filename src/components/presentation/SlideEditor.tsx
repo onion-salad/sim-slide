@@ -51,10 +51,11 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
     isComposingRef.current = true;
   };
 
-  const handleCompositionEnd = (field: string, value: string) => {
-    console.log('Composition end:', { field, value });
+  const handleCompositionEnd = (e: React.CompositionEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    console.log('Composition end:', { value: e.currentTarget.value });
     isComposingRef.current = false;
-    handleChange(field, value);
+    const field = e.currentTarget.id;
+    handleChange(field, e.currentTarget.value);
   };
 
   const handleImageChange = useCallback((image: string, imagePosition?: { x: number; y: number }) => {
@@ -99,7 +100,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
           value={slide.content.title || ""}
           onChange={(e) => handleChange("title", e.target.value)}
           onCompositionStart={handleCompositionStart}
-          onCompositionEnd={(e) => handleCompositionEnd("title", e.currentTarget.value)}
+          onCompositionEnd={handleCompositionEnd}
         />
       </div>
       {slide.template === "content" && (
@@ -110,7 +111,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
             value={slide.content.subtitle || ""}
             onChange={(e) => handleChange("subtitle", e.target.value)}
             onCompositionStart={handleCompositionStart}
-            onCompositionEnd={(e) => handleCompositionEnd("subtitle", e.currentTarget.value)}
+            onCompositionEnd={handleCompositionEnd}
           />
         </div>
       )}
@@ -122,7 +123,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
             value={slide.content.text || ""}
             onChange={(e) => handleChange("text", e.target.value)}
             onCompositionStart={handleCompositionStart}
-            onCompositionEnd={(e) => handleCompositionEnd("text", e.currentTarget.value)}
+            onCompositionEnd={handleCompositionEnd}
           />
         </div>
       )}
@@ -142,7 +143,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
               value={slide.content.title || ""}
               onChange={(e) => handleChange("title", e.target.value)}
               onCompositionStart={handleCompositionStart}
-              onCompositionEnd={(e) => handleCompositionEnd("title", e.currentTarget.value)}
+              onCompositionEnd={handleCompositionEnd}
             />
           </div>
           <Accordion type="single" collapsible className="w-full">
@@ -167,7 +168,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
                       value={step.subtitle}
                       onChange={(e) => handleStepChange(index, "subtitle", e.target.value)}
                       onCompositionStart={handleCompositionStart}
-                      onCompositionEnd={(e) => handleCompositionEnd(`steps.${index}.subtitle`, e.currentTarget.value)}
+                      onCompositionEnd={handleCompositionEnd}
                     />
                   </div>
                   <div>
@@ -176,7 +177,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
                       value={step.text}
                       onChange={(e) => handleStepChange(index, "text", e.target.value)}
                       onCompositionStart={handleCompositionStart}
-                      onCompositionEnd={(e) => handleCompositionEnd(`steps.${index}.text`, e.currentTarget.value)}
+                      onCompositionEnd={handleCompositionEnd}
                     />
                   </div>
                 </AccordionContent>
