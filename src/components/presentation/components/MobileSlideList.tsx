@@ -43,7 +43,7 @@ export const MobileSlideList = ({
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="slides-container w-full overflow-x-auto pb-4 flex gap-4 snap-x snap-mandatory pt-4"
+            className="slides-container w-full overflow-x-auto pb-4 flex gap-4 snap-x snap-mandatory"
           >
             <div className="pl-4" />
             {slides.map((slide, index) => (
@@ -58,6 +58,13 @@ export const MobileSlideList = ({
                     }}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
+                    style={{
+                      ...provided.draggableProps.style,
+                      transform: snapshot.isDragging
+                        ? `translate(${provided.draggableProps.style?.transform}) scale(0.8)`
+                        : provided.draggableProps.style?.transform,
+                      zIndex: snapshot.isDragging ? 100 : 1,
+                    }}
                     className={`flex-none w-[85%] snap-center transition-all duration-300 ${
                       selectedSlide === slide.id ? "shadow-selected scale-[1.02] bg-white rounded-lg" : ""
                     }`}
