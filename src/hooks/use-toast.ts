@@ -149,6 +149,7 @@ function toast({ ...props }: Toast) {
       ...props,
       id,
       open: true,
+      duration: TOAST_REMOVE_DELAY,
       onOpenChange: (open) => {
         if (!open) dismiss()
       },
