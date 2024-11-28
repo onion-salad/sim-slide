@@ -122,6 +122,13 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
     onUpdate({ ...presentation, slides: [] });
   };
 
+  const handleReorderSlides = (newOrder: string[]) => {
+    const reorderedSlides = newOrder.map(id => 
+      presentation.slides.find(slide => slide.id === id)!
+    );
+    onUpdate({ ...presentation, slides: reorderedSlides });
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 overflow-x-hidden">
       <MobileHeader
@@ -129,6 +136,8 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
         onRefresh={handleRefresh}
         onPresentClick={handlePresentClick}
         isSaveAnimating={isSaveAnimating}
+        slides={presentation.slides}
+        onReorderSlides={handleReorderSlides}
       />
 
       <div className="flex flex-col md:flex-row h-[calc(100vh-4rem)] md:h-screen pt-[4.5rem] md:pt-0">
@@ -139,26 +148,16 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
               selectedSlide={selectedSlide}
               onSlideSelect={handleSlideSelect}
               onDeleteSlide={handleDeleteSlide}
-              onDragEnd={handleDragEnd}
               slideRefs={slideRefs}
             />
           ) : (
-            <div className="slides-container w-full overflow-x-auto pb-4 flex gap-4 snap-x snap-mandatory pt-4">
-              <div className="pl-4" />
-              {presentation.slides.map((slide, index) => (
-                <div
-                  key={slide.id}
-                  ref={(el) => slideRefs.current[slide.id] = el}
-                  className={`flex-none w-[85%] md:w-[70%] snap-center transition-all duration-300 ${selectedSlide === slide.id ? "shadow-selected scale-[1.02] bg-white rounded-lg" : ""}`}
-                  onClick={() => handleSlideSelect(slide.id)}
-                >
-                  <div className="relative group">
-                    <SlidePreview slide={slide} scale={1} />
-                  </div>
-                </div>
-              ))}
-              <div className="pr-4" />
-            </div>
+            <DesktopSlideList
+              slides={presentation.slides}
+              selectedSlide={selectedSlide}
+              onSlideSelect={handleSlideSelect}
+              onDeleteSlide={handleDeleteSlide}
+              onDragEnd={handleDragEnd}
+            />
           )}
 
           <div className="flex-1 overflow-y-auto mt-4 bg-white p-4 overflow-x-hidden">

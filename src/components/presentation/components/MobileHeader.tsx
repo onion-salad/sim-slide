@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Save, RefreshCw, Play } from "lucide-react";
+import { Save, RefreshCw, Play, List } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   AlertDialog,
@@ -13,21 +13,35 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Slide } from "@/lib/presentation";
 
 interface MobileHeaderProps {
   onSave: () => void;
   onRefresh: () => void;
   onPresentClick: () => void;
   isSaveAnimating: boolean;
+  slides: Slide[];
+  onReorderSlides: (newOrder: string[]) => void;
 }
 
 export const MobileHeader = ({
   onSave,
   onRefresh,
   onPresentClick,
-  isSaveAnimating
+  isSaveAnimating,
+  slides,
+  onReorderSlides,
 }: MobileHeaderProps) => {
   const [isRefreshAnimating, setIsRefreshAnimating] = useState(false);
+  const [reorderedSlides, setReorderedSlides] = useState<Slide[]>([]);
 
   const handleRefresh = () => {
     setIsRefreshAnimating(true);
@@ -40,6 +54,26 @@ export const MobileHeader = ({
       setIsRefreshAnimating(true);
       setTimeout(() => setIsRefreshAnimating(false), 1000);
     }
+  };
+
+  const handleSheetOpen = (open: boolean) => {
+    if (open) {
+      setReorderedSlides([...slides]);
+    }
+  };
+
+  const handleMoveSlide = (index: number, direction: 'up' | 'down') => {
+    const newSlides = [...reorderedSlides];
+    const newIndex = direction === 'up' ? index - 1 : index + 1;
+    
+    if (newIndex >= 0 && newIndex < newSlides.length) {
+      [newSlides[index], newSlides[newIndex]] = [newSlides[newIndex], newSlides[index]];
+      setReorderedSlides(newSlides);
+    }
+  };
+
+  const handleSaveOrder = () => {
+    onReorderSlides(reorderedSlides.map(slide => slide.id));
   };
 
   return (
@@ -57,6 +91,53 @@ export const MobileHeader = ({
           >
             <Save className="h-5 w-5" />
           </Button>
+
+          <Sheet onOpenChange={handleSheetOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <List className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="bottom" className="h-[80vh]">
+              <SheetHeader>
+                <SheetTitle>スライドの並び替え</SheetTitle>
+                <SheetDescription>
+                  スライドの順序を変更するには、上下の矢印を使用してください。
+                </SheetDescription>
+              </SheetHeader>
+              <div className="mt-4 space-y-2">
+                {reorderedSlides.map((slide, index) => (
+                  <div key={slide.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                    <span>スライド {index + 1}</span>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleMoveSlide(index, 'up')}
+                        disabled={index === 0}
+                      >
+                        ↑
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleMoveSlide(index, 'down')}
+                        disabled={index === reorderedSlides.length - 1}
+                      >
+                        ↓
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t">
+                <Button onClick={handleSaveOrder} className="w-full">
+                  並び順を保存
+                </Button>
+              </div>
+            </SheetContent>
+          </Sheet>
+
           <AlertDialog onOpenChange={handleOpenChange}>
             <AlertDialogTrigger asChild>
               <Button
