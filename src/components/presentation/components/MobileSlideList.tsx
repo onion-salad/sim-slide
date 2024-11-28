@@ -60,8 +60,12 @@ export const MobileSlideList = ({
                     {...provided.dragHandleProps}
                     className={`flex-none w-[85%] snap-center transition-all duration-300 ${
                       selectedSlide === slide.id ? "shadow-selected scale-[1.02] bg-white rounded-lg" : ""
-                    } ${snapshot.isDragging ? "opacity-50" : ""}`}
+                    }`}
                     onClick={() => onSlideSelect(slide.id)}
+                    style={{
+                      ...provided.draggableProps.style,
+                      opacity: snapshot.isDragging ? 0.5 : 1,
+                    }}
                   >
                     <div className="relative group">
                       {selectedSlide === slide.id && (
@@ -80,8 +84,8 @@ export const MobileSlideList = ({
                 )}
               </Draggable>
             ))}
-            <div className="pr-4" />
             {provided.placeholder}
+            <div className="pr-4" />
           </div>
         )}
       </Droppable>
