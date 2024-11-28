@@ -3,7 +3,6 @@ interface RecordingOptions {
   targetElement?: HTMLElement;
 }
 
-// Chrome の MediaTrackConstraints に preferCurrentTab を追加する型定義
 declare global {
   interface MediaTrackConstraints {
     displaySurface?: string;
@@ -23,26 +22,20 @@ export class ScreenRecorder {
 
       const displayMediaOptions: DisplayMediaStreamOptions = {
         video: {
-          displaySurface: options.preferCurrentTab ? "browser" : "window",
-          preferCurrentTab: options.preferCurrentTab,
+          // 現在の画面を直接キャプチャするための設定
+          displaySurface: "monitor",
+          frameRate: 30,
         },
-        audio: true,
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+        },
+        selfBrowserSurface: "include", // 現在のブラウザウィンドウを含める
+        systemAudio: "include", // システム音声を含める
       };
 
       const stream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);
       const [videoTrack] = stream.getVideoTracks();
-
-      // 要素キャプチャを使用する場合
-      if (options.targetElement && 'restrictTo' in videoTrack) {
-        try {
-          // @ts-ignore: RestrictionTarget is not yet in TypeScript's lib
-          const restrictionTarget = await RestrictionTarget.fromElement(options.targetElement);
-          // @ts-ignore: restrictTo is not yet in TypeScript's lib
-          await videoTrack.restrictTo(restrictionTarget);
-        } catch (error) {
-          console.warn('Element Capture is not supported in this browser, falling back to full screen capture');
-        }
-      }
 
       this.mediaRecorder = new MediaRecorder(stream);
       this.recordedChunks = [];
