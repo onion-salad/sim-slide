@@ -4,8 +4,17 @@ import { X } from "lucide-react";
 import { Slide } from "@/lib/presentation";
 import SlidePreview from "../SlidePreview";
 import { DragOverlay } from "./DragOverlay";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+
+// モバイルサポートを有効にする
+if (typeof window !== 'undefined') {
+  window.addEventListener('touchmove', function(e) {
+    if (e.target && (e.target as HTMLElement).closest('.draggable-slide')) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+}
 
 interface MobileSlideListProps {
   slides: Slide[];
@@ -70,7 +79,12 @@ export const MobileSlideList = ({
                   <X className="h-3 w-3" />
                 </Button>
               )}
-              <SlidePreview slide={slide} scale={1} />
+              <div 
+                className="draggable-slide touch-none"
+                style={{ touchAction: 'none' }}
+              >
+                <SlidePreview slide={slide} scale={1} />
+              </div>
             </div>
           </div>
         ))}
@@ -100,9 +114,13 @@ export const MobileSlideList = ({
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
-                              className={`relative transition-all duration-300 ${
+                              className={`relative transition-all duration-300 touch-none ${
                                 snapshot.isDragging ? "scale-95" : ""
                               }`}
+                              style={{ 
+                                ...provided.draggableProps.style,
+                                touchAction: 'none'
+                              }}
                             >
                               <div className="w-full bg-white rounded-lg shadow-sm">
                                 <SlidePreview slide={slide} scale={0.5} />
