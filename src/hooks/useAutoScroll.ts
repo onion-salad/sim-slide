@@ -40,6 +40,7 @@ export const useAutoScrollTextarea = () => {
     const handleBlur = () => {
       console.log("Textarea blur event triggered");
       setTimeout(() => {
+        console.log("Scrolling to top");
         window.scrollTo({
           top: 0,
           behavior: "smooth",

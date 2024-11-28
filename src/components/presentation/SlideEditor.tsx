@@ -25,7 +25,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
   // コンテンツスライド用
   const contentTitleInputRef = useAutoScrollInput();
   const contentSubtitleInputRef = useAutoScrollInput();
-  const contentTextInputRef = useAutoScrollTextarea();  // ここを修正: useAutoScrollInput から useAutoScrollTextarea に変更
+  const contentTextInputRef = useAutoScrollTextarea();
   
   // ステップスライド用
   const stepTitleInputRef = useAutoScrollInput();
@@ -41,7 +41,6 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
   ];
 
   const handleChange = (field: string, value: any) => {
-    console.log("handleChange called", field, value);
     onUpdate({
       ...slide,
       content: {
@@ -111,6 +110,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
 
   // タイトルテンプレート
   if (slide.template === "title") {
+    console.log("Rendering title template");
     return (
       <div className="space-y-4">
         <div>
@@ -142,6 +142,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
 
   // コンテンツテンプレート
   if (slide.template === "content") {
+    console.log("Rendering content template");
     return (
       <div className="space-y-4">
         <div>
