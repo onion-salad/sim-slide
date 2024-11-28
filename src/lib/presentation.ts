@@ -26,17 +26,17 @@ export interface Presentation {
 export const templates = [
   {
     id: "title",
-    name: "タイトル",
+    name: "タイトルスライド",
     preview: "/placeholder.svg",
   },
   {
     id: "content",
-    name: "コンテンツ",
+    name: "コンテンツスライド",
     preview: "/placeholder.svg",
   },
   {
     id: "steps",
-    name: "ステップ",
+    name: "ステップスライド",
     preview: "/placeholder.svg",
   },
   {

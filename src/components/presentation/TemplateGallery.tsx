@@ -9,11 +9,11 @@ interface TemplateGalleryProps {
 const TemplateGallery = ({ onSelect, onClose }: TemplateGalleryProps) => {
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[800px] bg-white/95 backdrop-blur-sm">
+      <DialogContent className="sm:max-w-[800px]">
         <DialogHeader>
-          <DialogTitle>テンプレートを選択</DialogTitle>
+          <DialogTitle>Choose a template</DialogTitle>
         </DialogHeader>
-        <div className="grid grid-cols-2 gap-4 p-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
           {templates.map((template) => (
             <button
               key={template.id}

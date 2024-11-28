@@ -6,17 +6,16 @@ import SlidePreview from "./SlidePreview";
 import SlideEditor from "./SlideEditor";
 import TemplateGallery from "./TemplateGallery";
 import FullscreenPresentation from "./FullscreenPresentation";
-import { Play, Plus, X, RotateCcw } from "lucide-react";
+import { Play, Plus, X } from "lucide-react";
 import { useSlideScroll } from "@/hooks/useSlideScroll";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface PresentationEditorProps {
   presentation: Presentation;
   onUpdate: (presentation: Presentation) => void;
-  onRefresh: () => void;
 }
 
-const PresentationEditor = ({ presentation, onUpdate, onRefresh }: PresentationEditorProps) => {
+const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps) => {
   const [selectedSlide, setSelectedSlide] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
@@ -67,18 +66,15 @@ const PresentationEditor = ({ presentation, onUpdate, onRefresh }: PresentationE
 
   return (
     <div className="min-h-screen bg-gray-100 overflow-x-hidden">
-      {/* モバイルヘッダー */}
       <div className="fixed top-0 left-0 right-0 z-10 bg-white border-b p-4 md:hidden">
         <div className="flex justify-between items-center gap-2">
-          <div className="flex-1" />
-          <div className="flex gap-2">
-            <Button onClick={onRefresh} size="sm" variant="outline">
-              <RotateCcw className="w-4 h-4" />
-            </Button>
-            <Button onClick={() => setIsFullscreen(true)} size="sm">
-              <Play className="w-4 h-4" />
-            </Button>
-          </div>
+          <Button onClick={() => setShowTemplates(true)} size="sm">
+            <Plus className="w-4 h-4 mr-2" />
+            Add
+          </Button>
+          <Button onClick={() => setIsFullscreen(true)} size="sm">
+            <Play className="w-4 h-4" />
+          </Button>
         </div>
       </div>
 
@@ -128,20 +124,12 @@ const PresentationEditor = ({ presentation, onUpdate, onRefresh }: PresentationE
         </div>
 
         <div className="hidden md:block w-64 bg-white p-4 border-l">
-          <div className="flex gap-2 mb-4">
-            <Button
-              className="flex-1"
-              onClick={() => setShowTemplates(true)}
-            >
-              Add Slide
-            </Button>
-            <Button onClick={onRefresh} size="sm" variant="outline">
-              <RotateCcw className="w-4 h-4" />
-            </Button>
-            <Button onClick={() => setIsFullscreen(true)} size="sm">
-              <Play className="w-4 h-4" />
-            </Button>
-          </div>
+          <Button
+            className="w-full mb-4"
+            onClick={() => setShowTemplates(true)}
+          >
+            Add Slide
+          </Button>
           <ScrollArea className="h-[calc(100vh-8rem)]">
             <DragDropContext onDragEnd={handleDragEnd}>
               <Droppable droppableId="slides">
@@ -191,16 +179,14 @@ const PresentationEditor = ({ presentation, onUpdate, onRefresh }: PresentationE
             </DragDropContext>
           </ScrollArea>
         </div>
-      </div>
 
-      {/* Mobile Add Button */}
-      <Button
-        onClick={() => setShowTemplates(true)}
-        className="md:hidden fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-lg bg-primary hover:bg-primary/90 transition-colors"
-        size="icon"
-      >
-        <Plus className="w-6 h-6" />
-      </Button>
+        <div className="hidden md:flex fixed bottom-4 right-4 space-x-2">
+          <Button onClick={() => setIsFullscreen(true)}>
+            <Play className="w-4 h-4 mr-2" />
+            Present
+          </Button>
+        </div>
+      </div>
 
       {showTemplates && (
         <TemplateGallery
