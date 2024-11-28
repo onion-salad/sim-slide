@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Save, RefreshCw, Play } from "lucide-react";
+import { cn } from "@/lib/utils";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,6 +27,21 @@ export const MobileHeader = ({
   onPresentClick,
   isSaveAnimating
 }: MobileHeaderProps) => {
+  const [isRefreshAnimating, setIsRefreshAnimating] = useState(false);
+
+  const handleRefresh = () => {
+    setIsRefreshAnimating(true);
+    onRefresh();
+    setTimeout(() => setIsRefreshAnimating(false), 1000);
+  };
+
+  const handleOpenChange = (open: boolean) => {
+    if (open) {
+      setIsRefreshAnimating(true);
+      setTimeout(() => setIsRefreshAnimating(false), 1000);
+    }
+  };
+
   return (
     <div className="fixed top-0 left-0 right-0 z-10 bg-white border-b p-4 md:hidden">
       <div className="flex justify-end items-center gap-2">
@@ -36,13 +53,16 @@ export const MobileHeader = ({
         >
           <Save className="h-5 w-5" />
         </Button>
-        <AlertDialog>
+        <AlertDialog onOpenChange={handleOpenChange}>
           <AlertDialogTrigger asChild>
             <Button
               variant="ghost"
               size="icon"
             >
-              <RefreshCw className="h-5 w-5" />
+              <RefreshCw className={cn(
+                "h-5 w-5 transition-transform duration-300",
+                isRefreshAnimating && "animate-[spin_0.5s_ease-out]"
+              )} />
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
@@ -54,7 +74,7 @@ export const MobileHeader = ({
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>キャンセル</AlertDialogCancel>
-              <AlertDialogAction onClick={onRefresh}>
+              <AlertDialogAction onClick={handleRefresh}>
                 リフレッシュ
               </AlertDialogAction>
             </AlertDialogFooter>

@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, Play } from "lucide-react";
+import { cn } from "@/lib/utils";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,16 +23,34 @@ export const DesktopBottomButtons = ({
   onRefresh,
   onPresentClick,
 }: DesktopBottomButtonsProps) => {
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const handleRefresh = () => {
+    setIsAnimating(true);
+    onRefresh();
+    setTimeout(() => setIsAnimating(false), 1000);
+  };
+
+  const handleOpenChange = (open: boolean) => {
+    if (open) {
+      setIsAnimating(true);
+      setTimeout(() => setIsAnimating(false), 1000);
+    }
+  };
+
   return (
     <div className="fixed bottom-4 right-4 hidden md:flex gap-2">
-      <AlertDialog>
+      <AlertDialog onOpenChange={handleOpenChange}>
         <AlertDialogTrigger asChild>
           <Button
             variant="outline"
             size="icon"
             className="bg-white"
           >
-            <RefreshCw className="h-5 w-5" />
+            <RefreshCw className={cn(
+              "h-5 w-5 transition-transform duration-300",
+              isAnimating && "animate-[spin_0.5s_ease-out]"
+            )} />
           </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
@@ -42,7 +62,7 @@ export const DesktopBottomButtons = ({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>キャンセル</AlertDialogCancel>
-            <AlertDialogAction onClick={onRefresh}>
+            <AlertDialogAction onClick={handleRefresh}>
               リフレッシュ
             </AlertDialogAction>
           </AlertDialogFooter>
