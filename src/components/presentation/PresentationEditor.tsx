@@ -1,3 +1,8 @@
+import { Toaster } from "@/components/ui/toaster";
+import { Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Button } from "@/components/ui/button";
@@ -16,6 +21,7 @@ import { useEditorShortcuts } from "@/hooks/useEditorShortcuts";
 import { useToast } from "@/components/ui/use-toast";
 import { MobileHeader } from "./components/MobileHeader";
 import { MobileAddButton } from "./components/MobileAddButton";
+import { isMobile } from "@/lib/utils";
 
 interface PresentationEditorProps {
   presentation: Presentation;
@@ -42,11 +48,13 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
     setIsSaveAnimating(true);
     try {
       savePresentation(presentation);
-      toast({
-        title: "保存完了",
-        description: "プレゼンテーションが保存されました",
-        duration: 700,
-      });
+      if (!isMobile()) {
+        toast({
+          title: "保存完了",
+          description: "プレゼンテーションが保存されました",
+          duration: 700,
+        });
+      }
     } catch (error) {
       console.error("Failed to save presentation:", error);
       toast({

@@ -1,5 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { Save, RefreshCw, Play } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface MobileHeaderProps {
   onSave: () => void;
@@ -25,13 +36,30 @@ export const MobileHeader = ({
         >
           <Save className="h-5 w-5" />
         </Button>
-        <Button
-          onClick={onRefresh}
-          variant="ghost"
-          size="icon"
-        >
-          <RefreshCw className="h-5 w-5" />
-        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+            >
+              <RefreshCw className="h-5 w-5" />
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>プレゼンテーションをリフレッシュ</AlertDialogTitle>
+              <AlertDialogDescription>
+                本当にプレゼンテーション情報を消去してもよろしいですか？
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>キャンセル</AlertDialogCancel>
+              <AlertDialogAction onClick={onRefresh}>
+                リフレッシュ
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
         <Button
           onClick={onPresentClick}
           size="icon"
