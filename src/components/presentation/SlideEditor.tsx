@@ -30,11 +30,16 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
     });
   };
 
+  if (!slide.content) {
+    console.error("Slide content is missing:", slide);
+    return null;
+  }
+
   // サムネイルテンプレート: タイトルのみ
   if (slide.template === "thumbnail") {
     return (
       <TextEditor
-        title={slide.content.title}
+        title={slide.content.title || ""}
         onChange={handleChange}
       />
     );
@@ -45,8 +50,8 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
     return (
       <div className="space-y-4">
         <TextEditor
-          title={slide.content.title}
-          text={slide.content.text}
+          title={slide.content.title || ""}
+          text={slide.content.text || ""}
           onChange={handleChange}
         />
         <ImageEditor
@@ -62,9 +67,9 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
   if (slide.template === "content") {
     return (
       <TextEditor
-        title={slide.content.title}
-        subtitle={slide.content.subtitle}
-        text={slide.content.text}
+        title={slide.content.title || ""}
+        subtitle={slide.content.subtitle || ""}
+        text={slide.content.text || ""}
         onChange={handleChange}
         showSubtitle={true}
       />
@@ -76,7 +81,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
     return (
       <div className="space-y-4">
         <TextEditor
-          title={slide.content.title}
+          title={slide.content.title || ""}
           onChange={handleChange}
         />
         <StepEditor
@@ -87,6 +92,7 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
     );
   }
 
+  console.error("Unknown template:", slide.template);
   return null;
 };
 
