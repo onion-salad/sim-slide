@@ -3,16 +3,15 @@ import { useEffect, useState } from "react";
 interface ShortcutHandlers {
   onAddSlide: () => void;
   onPresent: () => void;
+  onSave: () => void;
 }
 
-export const useShortcuts = ({ onAddSlide, onPresent }: ShortcutHandlers) => {
+export const useShortcuts = ({ onAddSlide, onPresent, onSave }: ShortcutHandlers) => {
   const [lastSpaceKeyTime, setLastSpaceKeyTime] = useState<number>(0);
   const [lastAltKeyTime, setLastAltKeyTime] = useState<number>(0);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      console.log('Key pressed:', event.key, 'Code:', event.code, 'Event:', event);
-      
       if (event.code === 'Space' && !event.repeat) {
         const currentTime = new Date().getTime();
         const timeDiff = currentTime - lastSpaceKeyTime;
@@ -36,9 +35,15 @@ export const useShortcuts = ({ onAddSlide, onPresent }: ShortcutHandlers) => {
         
         setLastAltKeyTime(currentTime);
       }
+
+      // Command + S shortcut
+      if ((event.metaKey || event.ctrlKey) && event.key === 's') {
+        event.preventDefault();
+        onSave();
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [lastSpaceKeyTime, lastAltKeyTime, onAddSlide, onPresent]);
+  }, [lastSpaceKeyTime, lastAltKeyTime, onAddSlide, onPresent, onSave]);
 };

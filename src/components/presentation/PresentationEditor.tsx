@@ -32,9 +32,14 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
     setIsFullscreen(true);
   };
 
+  const handleSave = () => {
+    localStorage.setItem('presentation', JSON.stringify(presentation));
+  };
+
   useEditorShortcuts({
     onAddClick: handleAddClick,
     onPresentClick: handlePresentClick,
+    onSaveClick: handleSave,
   });
 
   const handleSlideSelect = (slideId: string) => {
@@ -84,10 +89,6 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
     setSelectedSlide(null);
     localStorage.clear();
     onUpdate({ ...presentation, slides: [] });
-  };
-
-  const handleSave = () => {
-    localStorage.setItem('presentation', JSON.stringify(presentation));
   };
 
   return (
