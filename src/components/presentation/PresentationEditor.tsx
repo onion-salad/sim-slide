@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Button } from "@/components/ui/button";
 import { Presentation, Slide, createSlide } from "@/lib/presentation";
@@ -6,12 +6,12 @@ import SlidePreview from "./SlidePreview";
 import SlideEditor from "./SlideEditor";
 import TemplateGallery from "./TemplateGallery";
 import FullscreenPresentation from "./FullscreenPresentation";
-import { Plus, X, Save } from "lucide-react";
+import { Plus, X, Play } from "lucide-react";
 import { useSlideScroll } from "@/hooks/useSlideScroll";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { EditorButtons } from "./components/EditorButtons";
 import { SaveButton } from "./components/SaveButton";
-import { useToast } from "@/components/ui/use-toast";
+import { useEditorShortcuts } from "@/hooks/useEditorShortcuts";
 
 interface PresentationEditorProps {
   presentation: Presentation;
@@ -23,30 +23,19 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const { slideRefs, scrollToSlide } = useSlideScroll();
-  const { toast } = useToast();
-  const [lastSpaceKeyTime, setLastSpaceKeyTime] = useState<number>(0);
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.code === 'Space' && !event.repeat) {
-        const currentTime = new Date().getTime();
-        const timeDiff = currentTime - lastSpaceKeyTime;
-        
-        if (timeDiff < 500) { // 500ms以内に2回目のスペースキーが押された場合
-          event.preventDefault();
-          setShowTemplates(true);
-          toast({
-            description: "スライド追加モードを開きました",
-          });
-        }
-        
-        setLastSpaceKeyTime(currentTime);
-      }
-    };
+  const handleAddClick = () => {
+    setShowTemplates(true);
+  };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [lastSpaceKeyTime, toast]);
+  const handlePresentClick = () => {
+    setIsFullscreen(true);
+  };
+
+  useEditorShortcuts({
+    onAddClick: handleAddClick,
+    onPresentClick: handlePresentClick,
+  });
 
   const handleSlideSelect = (slideId: string) => {
     setSelectedSlide(slideId);
@@ -105,9 +94,9 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
     <div className="min-h-screen bg-gray-100 overflow-x-hidden">
       <div className="fixed top-0 left-0 right-0 z-10 bg-white border-b p-4 md:hidden">
         <div className="flex flex-col gap-2">
-          <Button onClick={() => setShowTemplates(true)} size="sm">
+          <Button onClick={handleAddClick} size="sm">
             <Plus className="w-4 h-4 mr-2" />
-            Add
+            +Add (Space×2)
           </Button>
           <SaveButton onSave={handleSave} />
         </div>
@@ -121,11 +110,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
               <div
                 key={slide.id}
                 ref={(el) => slideRefs.current[slide.id] = el}
-                className={`flex-none w-[85%] md:w-[70%] snap-center transition-all duration-300 ${
-                  selectedSlide === slide.id 
-                    ? "shadow-selected scale-[1.02] bg-white rounded-lg" 
-                    : ""
-                }`}
+                className={`flex-none w-[85%] md:w-[70%] snap-center transition-all duration-300 ${selectedSlide === slide.id ? "shadow-selected scale-[1.02] bg-white rounded-lg" : ""}`}
                 onClick={() => handleSlideSelect(slide.id)}
               >
                 <div className="relative">
@@ -162,9 +147,10 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
           <div className="space-y-2">
             <Button
               className="w-full"
-              onClick={() => setShowTemplates(true)}
+              onClick={handleAddClick}
             >
-              Add Slide
+              <Plus className="w-4 h-4 mr-2" />
+              +Add (Space×2)
             </Button>
             <SaveButton onSave={handleSave} />
           </div>
@@ -189,11 +175,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                             onClick={() => handleSlideSelect(slide.id)}
-                            className={`group cursor-pointer transition-all duration-300 relative ${
-                              selectedSlide === slide.id 
-                                ? "shadow-selected scale-[1.02] bg-white rounded-lg" 
-                                : ""
-                            }`}
+                            className={`group cursor-pointer transition-all duration-300 relative ${selectedSlide === slide.id ? "shadow-selected scale-[1.02] bg-white rounded-lg" : ""}`}
                           >
                             <div className="relative">
                               <Button
@@ -222,7 +204,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
           <EditorButtons
             presentation={presentation}
             onRefresh={handleRefresh}
-            onPresentClick={() => setIsFullscreen(true)}
+            onPresentClick={handlePresentClick}
           />
         </div>
       </div>
