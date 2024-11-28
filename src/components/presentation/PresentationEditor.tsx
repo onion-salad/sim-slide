@@ -146,7 +146,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="absolute right-2 top-2 h-6 w-6 rounded-full bg-red-500 shadow-md z-10 hover:bg-red-600 text-white"
+                      className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-red-500 shadow-md z-10 hover:bg-red-600 text-white"
                       onClick={(e) => handleDeleteSlide(slide.id, e)}
                     >
                       <X className="h-3 w-3" />
