@@ -1,7 +1,9 @@
-import { useState, useEffect, TouchEvent } from "react";
+import { useState, useEffect, TouchEvent, useRef } from "react";
 import { Slide } from "@/lib/presentation";
-import { X, ArrowLeft, ArrowRight } from "lucide-react";
+import { X, ArrowLeft, ArrowRight, Video, VideoOff } from "lucide-react";
 import SlidePreview from "./SlidePreview";
+import { ScreenRecorder } from "@/lib/screenRecorder";
+import { useToast } from "@/components/ui/use-toast";
 
 interface FullscreenPresentationProps {
   slides: Slide[];
@@ -12,6 +14,11 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
   const [currentSlide, setCurrentSlide] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [lastAltKeyTime, setLastAltKeyTime] = useState<number>(0);
+  const [lastShiftKeyTime, setLastShiftKeyTime] = useState<number>(0);
+  const [isRecording, setIsRecording] = useState(false);
+  const screenRecorder = useRef(new ScreenRecorder());
+  const presentationRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
 
   const handleNext = () => {
     if (currentSlide < slides.length - 1) {
@@ -35,7 +42,7 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
     const touchEnd = e.changedTouches[0].clientX;
     const diff = touchStart - touchEnd;
 
-    if (Math.abs(diff) > 50) { // minimum swipe distance
+    if (Math.abs(diff) > 50) {
       if (diff > 0) {
         handleNext();
       } else {
@@ -44,6 +51,28 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
     }
 
     setTouchStart(null);
+  };
+
+  const toggleRecording = async () => {
+    if (!presentationRef.current) return;
+
+    if (!isRecording) {
+      await screenRecorder.current.startRecording(presentationRef.current);
+      setIsRecording(true);
+      toast({
+        title: "録画開始",
+        description: "プレゼンテーションの録画を開始しました",
+        duration: 700,
+      });
+    } else {
+      screenRecorder.current.stopRecording();
+      setIsRecording(false);
+      toast({
+        title: "録画終了",
+        description: "録画を保存しました",
+        duration: 700,
+      });
+    }
   };
 
   useEffect(() => {
@@ -58,17 +87,26 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
         const currentTime = new Date().getTime();
         const timeDiff = currentTime - lastAltKeyTime;
         
-        if (timeDiff < 500) { // 500ms以内の2回目のAltキー押下
+        if (timeDiff < 500) {
           onClose();
         }
         
         setLastAltKeyTime(currentTime);
+      } else if (e.key === "Shift" && !e.repeat) {
+        const currentTime = new Date().getTime();
+        const timeDiff = currentTime - lastShiftKeyTime;
+        
+        if (timeDiff < 500) {
+          toggleRecording();
+        }
+        
+        setLastShiftKeyTime(currentTime);
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [currentSlide, slides.length, onClose, lastAltKeyTime]);
+  }, [currentSlide, slides.length, onClose, lastAltKeyTime, lastShiftKeyTime, isRecording]);
 
   if (!slides.length) return null;
 
@@ -77,13 +115,26 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
       className="fixed inset-0 bg-black z-50"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
+      ref={presentationRef}
     >
-      <button
-        onClick={onClose}
-        className="absolute top-4 right-4 text-white hover:text-gray-300"
-      >
-        <X className="w-6 h-6" />
-      </button>
+      <div className="absolute top-4 right-4 flex items-center gap-2">
+        <button
+          onClick={toggleRecording}
+          className="text-white hover:text-gray-300"
+        >
+          {isRecording ? (
+            <VideoOff className="w-6 h-6" />
+          ) : (
+            <Video className="w-6 h-6" />
+          )}
+        </button>
+        <button
+          onClick={onClose}
+          className="text-white hover:text-gray-300"
+        >
+          <X className="w-6 h-6" />
+        </button>
+      </div>
       
       <div className="h-full flex items-center justify-center p-4">
         <div className="w-full aspect-video">
