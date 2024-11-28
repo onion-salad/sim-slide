@@ -3,8 +3,11 @@ import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { Slide } from "@/lib/presentation";
 import SlidePreview from "../SlidePreview";
-import { DragOverlay } from "./DragOverlay";
 import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+} from "@/components/ui/dialog";
 
 interface MobileSlideListProps {
   slides: Slide[];
@@ -23,75 +26,87 @@ export const MobileSlideList = ({
   onDragEnd,
   slideRefs,
 }: MobileSlideListProps) => {
-  const [draggedSlideId, setDraggedSlideId] = useState<string | null>(null);
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [isDragging, setIsDragging] = useState(false);
 
-  const handleDragStart = (start: any) => {
-    setDraggedSlideId(start.draggableId);
-    setCurrentIndex(start.source.index);
+  const handleDragStart = () => {
+    setIsDragging(true);
   };
 
   const handleDragEnd = (result: any) => {
-    setDraggedSlideId(null);
+    setIsDragging(false);
     onDragEnd(result);
   };
 
   return (
-    <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-      <Droppable droppableId="mobile-slides" direction="horizontal">
-        {(provided) => (
+    <>
+      <div className="slides-container w-full overflow-x-auto pb-4 flex gap-4 snap-x snap-mandatory pt-4">
+        <div className="pl-4" />
+        {slides.map((slide) => (
           <div
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-            className="slides-container w-full overflow-x-auto pb-4 flex gap-4 snap-x snap-mandatory pt-4"
+            key={slide.id}
+            ref={(el) => {
+              if (slideRefs.current) {
+                slideRefs.current[slide.id] = el;
+              }
+            }}
+            className={`flex-none w-[85%] snap-center transition-all duration-300 ${
+              selectedSlide === slide.id ? "shadow-selected scale-[1.02] bg-white rounded-lg" : ""
+            }`}
+            onClick={() => onSlideSelect(slide.id)}
           >
-            <div className="pl-4" />
-            {slides.map((slide, index) => (
-              <Draggable key={slide.id} draggableId={slide.id} index={index}>
-                {(provided, snapshot) => (
-                  <div
-                    ref={(el) => {
-                      provided.innerRef(el);
-                      if (slideRefs.current) {
-                        slideRefs.current[slide.id] = el;
-                      }
-                    }}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    className={`flex-none w-[85%] snap-center transition-all duration-300 ${
-                      selectedSlide === slide.id ? "shadow-selected scale-[1.02] bg-white rounded-lg" : ""
-                    }`}
-                    onClick={() => onSlideSelect(slide.id)}
-                  >
-                    <div className="relative group">
-                      {selectedSlide === slide.id && (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-red-500 shadow-md z-10 hover:bg-red-600 text-white"
-                          onClick={(e) => onDeleteSlide(slide.id, e)}
-                        >
-                          <X className="h-3 w-3" />
-                        </Button>
-                      )}
-                      <SlidePreview slide={slide} scale={1} />
-                    </div>
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            <div className="pr-4" />
-            {provided.placeholder}
+            <div className="relative group">
+              {selectedSlide === slide.id && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-red-500 shadow-md z-10 hover:bg-red-600 text-white"
+                  onClick={(e) => onDeleteSlide(slide.id, e)}
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              )}
+              <SlidePreview slide={slide} scale={1} />
+            </div>
           </div>
-        )}
-      </Droppable>
-      {draggedSlideId && (
-        <DragOverlay
-          slides={slides}
-          draggedSlideId={draggedSlideId}
-          currentIndex={currentIndex}
-        />
-      )}
-    </DragDropContext>
+        ))}
+        <div className="pr-4" />
+      </div>
+
+      <Dialog open={isDragging} onOpenChange={() => setIsDragging(false)}>
+        <DialogContent className="max-w-[90%] h-[80vh] p-0 bg-white/80 backdrop-blur-md">
+          <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+            <Droppable droppableId="mobile-slides" direction="vertical">
+              {(provided) => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  className="p-4 space-y-2 h-full overflow-y-auto"
+                >
+                  {slides.map((slide, index) => (
+                    <Draggable key={slide.id} draggableId={slide.id} index={index}>
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className={`bg-white rounded-lg shadow-md transition-all duration-300 ${
+                            snapshot.isDragging ? "scale-[1.02] shadow-lg" : ""
+                          }`}
+                        >
+                          <div className="relative">
+                            <SlidePreview slide={slide} scale={0.15} />
+                          </div>
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
