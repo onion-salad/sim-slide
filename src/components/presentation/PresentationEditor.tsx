@@ -128,6 +128,8 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
         onSave={handleSave}
         onRefresh={handleRefresh}
         onPresentClick={handlePresentClick}
+        onReorder={handleDragEnd}
+        slides={presentation.slides}
         isSaveAnimating={isSaveAnimating}
       />
 
