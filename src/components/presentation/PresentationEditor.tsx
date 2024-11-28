@@ -7,13 +7,15 @@ import SlidePreview from "./SlidePreview";
 import SlideEditor from "./SlideEditor";
 import TemplateGallery from "./TemplateGallery";
 import FullscreenPresentation from "./FullscreenPresentation";
-import { Plus, X, Play } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { useSlideScroll } from "@/hooks/useSlideScroll";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { EditorButtons } from "./components/EditorButtons";
 import { SaveButton } from "./components/SaveButton";
 import { useEditorShortcuts } from "@/hooks/useEditorShortcuts";
 import { useToast } from "@/components/ui/use-toast";
+import { MobileHeader } from "./components/MobileHeader";
+import { MobileAddButton } from "./components/MobileAddButton";
 
 interface PresentationEditorProps {
   presentation: Presentation;
@@ -114,15 +116,12 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
 
   return (
     <div className="min-h-screen bg-gray-100 overflow-x-hidden">
-      <div className="fixed top-0 left-0 right-0 z-10 bg-white border-b p-4 md:hidden">
-        <div className="flex flex-col gap-2">
-          <Button onClick={handleAddClick} size="sm">
-            <Plus className="w-4 h-4 mr-2" />
-            Add (Space×2)
-          </Button>
-          <SaveButton onSave={handleSave} isAnimating={isSaveAnimating} />
-        </div>
-      </div>
+      <MobileHeader
+        onSave={handleSave}
+        onRefresh={handleRefresh}
+        onPresentClick={handlePresentClick}
+        isSaveAnimating={isSaveAnimating}
+      />
 
       <div className="flex flex-col md:flex-row h-[calc(100vh-4rem)] md:h-screen pt-[4.5rem] md:pt-0">
         <div className="flex-1 p-4 overflow-hidden flex flex-col">
@@ -222,7 +221,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
           </ScrollArea>
         </div>
 
-        <div className="fixed bottom-4 right-4 space-x-2">
+        <div className="fixed bottom-4 right-4 space-x-2 hidden md:block">
           <EditorButtons
             presentation={presentation}
             onRefresh={handleRefresh}
@@ -230,6 +229,8 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
           />
         </div>
       </div>
+
+      <MobileAddButton onAddClick={handleAddClick} />
 
       {showTemplates && (
         <TemplateGallery
