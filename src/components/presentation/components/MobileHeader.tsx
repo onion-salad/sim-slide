@@ -44,8 +44,8 @@ export const MobileHeader = ({
 
   return (
     <div className="fixed top-0 left-0 right-0 z-10 bg-white border-b p-4 md:hidden">
-      <div className="flex items-end justify-between">
-        <h1 className="text-[1.4rem] font-bold tracking-tight bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent h-10 flex items-end pb-1.5" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+      <div className="flex justify-between items-center">
+        <h1 className="text-[1.4rem] font-bold tracking-tight bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent" style={{ fontFamily: "'Montserrat', sans-serif" }}>
           Sim-Slide
         </h1>
         <div className="flex items-center gap-2">
