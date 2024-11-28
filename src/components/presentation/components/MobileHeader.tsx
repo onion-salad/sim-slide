@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Save, RefreshCw, Play, List } from "lucide-react";
+import { Save, RefreshCw, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   AlertDialog,
@@ -13,37 +13,21 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Slide } from "@/lib/presentation";
-import SlidePreview from "../SlidePreview";
 
 interface MobileHeaderProps {
   onSave: () => void;
   onRefresh: () => void;
   onPresentClick: () => void;
   isSaveAnimating: boolean;
-  slides: Slide[];
-  onReorderSlides: (newOrder: string[]) => void;
 }
 
 export const MobileHeader = ({
   onSave,
   onRefresh,
   onPresentClick,
-  isSaveAnimating,
-  slides,
-  onReorderSlides,
+  isSaveAnimating
 }: MobileHeaderProps) => {
   const [isRefreshAnimating, setIsRefreshAnimating] = useState(false);
-  const [reorderedSlides, setReorderedSlides] = useState<Slide[]>([]);
 
   const handleRefresh = () => {
     setIsRefreshAnimating(true);
@@ -55,23 +39,6 @@ export const MobileHeader = ({
     if (open) {
       setIsRefreshAnimating(true);
       setTimeout(() => setIsRefreshAnimating(false), 1000);
-    }
-  };
-
-  const handleSheetOpen = (open: boolean) => {
-    if (open) {
-      setReorderedSlides([...slides]);
-    }
-  };
-
-  const handleMoveSlide = (index: number, direction: 'up' | 'down') => {
-    const newSlides = [...reorderedSlides];
-    const newIndex = direction === 'up' ? index - 1 : index + 1;
-    
-    if (newIndex >= 0 && newIndex < newSlides.length) {
-      [newSlides[index], newSlides[newIndex]] = [newSlides[newIndex], newSlides[index]];
-      setReorderedSlides(newSlides);
-      onReorderSlides(newSlides.map(slide => slide.id));
     }
   };
 
@@ -90,52 +57,6 @@ export const MobileHeader = ({
           >
             <Save className="h-5 w-5" />
           </Button>
-
-          <Sheet onOpenChange={handleSheetOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <List className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="bottom" className="h-[80vh]">
-              <SheetHeader>
-                <SheetTitle>スライドの並び替え</SheetTitle>
-                <SheetDescription>
-                  スライドの順序を変更するには、上下の矢印を使用してください。
-                </SheetDescription>
-              </SheetHeader>
-              <ScrollArea className="h-[calc(100%-6rem)] mt-4">
-                <div className="space-y-4 pr-4">
-                  {reorderedSlides.map((slide, index) => (
-                    <div key={slide.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                      <div className="w-32 h-20 relative">
-                        <SlidePreview slide={slide} scale={0.5} />
-                      </div>
-                      <div className="flex gap-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleMoveSlide(index, 'up')}
-                          disabled={index === 0}
-                        >
-                          ↑
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleMoveSlide(index, 'down')}
-                          disabled={index === reorderedSlides.length - 1}
-                        >
-                          ↓
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </ScrollArea>
-            </SheetContent>
-          </Sheet>
-
           <AlertDialog onOpenChange={handleOpenChange}>
             <AlertDialogTrigger asChild>
               <Button
