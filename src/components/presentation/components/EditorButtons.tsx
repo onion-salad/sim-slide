@@ -22,13 +22,11 @@ export const EditorButtons = ({ presentation, onRefresh, onPresentClick }: Edito
 
   return (
     <>
-      <Button onClick={handleRefresh} size="sm" variant="outline">
-        <RefreshCw className="w-4 h-4 mr-2" />
-        リフレッシュ
+      <Button onClick={handleRefresh} size="icon" variant="outline">
+        <RefreshCw className="w-4 h-4" />
       </Button>
-      <Button onClick={onPresentClick} size="sm">
-        <Play className="w-4 h-4 mr-2" />
-        Present
+      <Button onClick={onPresentClick} size="icon">
+        <Play className="w-4 h-4" />
       </Button>
     </>
   );
