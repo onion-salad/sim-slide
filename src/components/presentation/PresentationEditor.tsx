@@ -11,7 +11,7 @@ import SlidePreview from "./SlidePreview";
 import SlideEditor from "./SlideEditor";
 import TemplateGallery from "./TemplateGallery";
 import FullscreenPresentation from "./FullscreenPresentation";
-import { Plus, X } from "lucide-react";
+import { Plus, X, RefreshCw, Play } from "lucide-react";
 import { useSlideScroll } from "@/hooks/useSlideScroll";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { EditorButtons } from "./components/EditorButtons";
@@ -21,6 +21,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { MobileHeader } from "./components/MobileHeader";
 import { MobileAddButton } from "./components/MobileAddButton";
 import { isMobile } from "@/lib/utils";
+import { DesktopBottomButtons } from "./components/DesktopBottomButtons";
 
 interface PresentationEditorProps {
   presentation: Presentation;
@@ -229,10 +230,16 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
             </DragDropContext>
           </ScrollArea>
         </div>
-
       </div>
 
       <MobileAddButton onSelectTemplate={handleAddSlide} />
+
+      {!isMobile() && (
+        <DesktopBottomButtons
+          onRefresh={handleRefresh}
+          onPresentClick={handlePresentClick}
+        />
+      )}
 
       {showTemplates && (
         <TemplateGallery
