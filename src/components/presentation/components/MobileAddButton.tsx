@@ -8,10 +8,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 interface MobileAddButtonProps {
-  onAddClick: () => void;
+  onSelectTemplate: (template: string) => void;
 }
 
-export const MobileAddButton = ({ onAddClick }: MobileAddButtonProps) => {
+export const MobileAddButton = ({ onSelectTemplate }: MobileAddButtonProps) => {
+  const templates = ["title", "content", "steps", "thumbnail"];
+
   return (
     <div className="fixed bottom-4 right-4 md:hidden">
       <DropdownMenu>
@@ -24,9 +26,15 @@ export const MobileAddButton = ({ onAddClick }: MobileAddButtonProps) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="mb-2">
-          <DropdownMenuItem onClick={onAddClick}>
-            新しいスライドを追加
-          </DropdownMenuItem>
+          {templates.map((template) => (
+            <DropdownMenuItem
+              key={template}
+              onClick={() => onSelectTemplate(template)}
+              className="capitalize"
+            >
+              {template}スライド
+            </DropdownMenuItem>
+          ))}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

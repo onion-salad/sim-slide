@@ -228,16 +228,9 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
           </ScrollArea>
         </div>
 
-        <div className="fixed bottom-4 right-4 space-x-2 hidden md:block">
-          <EditorButtons
-            presentation={presentation}
-            onRefresh={handleRefresh}
-            onPresentClick={handlePresentClick}
-          />
-        </div>
       </div>
 
-      <MobileAddButton onAddClick={handleAddClick} />
+      <MobileAddButton onSelectTemplate={handleAddSlide} />
 
       {showTemplates && (
         <TemplateGallery
