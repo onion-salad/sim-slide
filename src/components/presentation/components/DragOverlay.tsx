@@ -9,14 +9,31 @@ interface DragOverlayProps {
 }
 
 export const DragOverlay = ({ slides, draggedSlideId, currentIndex }: DragOverlayProps) => {
-  const draggedSlide = slides.find(slide => slide.id === draggedSlideId);
-  
-  if (!draggedSlide) return null;
-
   return (
-    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center">
-      <div className="w-[80%] max-w-2xl transform scale-90 transition-transform">
-        <SlidePreview slide={draggedSlide} scale={1} />
+    <div className="fixed inset-0 bg-white/80 backdrop-blur-md z-50 flex items-center justify-center">
+      <div className="space-y-4 py-8">
+        {slides
+          .filter(slide => slide.id !== draggedSlideId)
+          .map((slide, index) => {
+            const adjustedIndex = index >= currentIndex ? index + 1 : index;
+            return (
+              <div
+                key={slide.id}
+                data-index={adjustedIndex + 1}
+                className={cn(
+                  "relative transition-all duration-300",
+                  "hover:scale-105",
+                  "before:absolute before:-left-8 before:top-1/2 before:-translate-y-1/2",
+                  "before:text-2xl before:font-bold before:text-primary",
+                  "before:content-[attr(data-index)]"
+                )}
+              >
+                <div className="w-48">
+                  <SlidePreview slide={slide} scale={0.15} />
+                </div>
+              </div>
+            );
+          })}
       </div>
     </div>
   );

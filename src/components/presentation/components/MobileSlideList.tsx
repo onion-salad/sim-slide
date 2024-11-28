@@ -38,17 +38,16 @@ export const MobileSlideList = ({
 
   return (
     <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-      <Droppable droppableId="mobile-slides" direction="horizontal">
+      <Droppable droppableId="mobile-slides" direction="vertical">
         {(provided) => (
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="slides-container w-full overflow-x-auto pb-4 flex gap-4 snap-x snap-mandatory"
+            className="space-y-4 px-4"
           >
-            <div className="pl-4" />
             {slides.map((slide, index) => (
               <Draggable key={slide.id} draggableId={slide.id} index={index}>
-                {(provided, snapshot) => (
+                {(provided) => (
                   <div
                     ref={(el) => {
                       provided.innerRef(el);
@@ -58,14 +57,7 @@ export const MobileSlideList = ({
                     }}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
-                    style={{
-                      ...provided.draggableProps.style,
-                      transform: snapshot.isDragging
-                        ? `translate(${provided.draggableProps.style?.transform}) scale(0.8)`
-                        : provided.draggableProps.style?.transform,
-                      zIndex: snapshot.isDragging ? 100 : 1,
-                    }}
-                    className={`flex-none w-[85%] snap-center transition-all duration-300 ${
+                    className={`relative transition-all duration-300 ${
                       selectedSlide === slide.id ? "shadow-selected scale-[1.02] bg-white rounded-lg" : ""
                     }`}
                     onClick={() => onSlideSelect(slide.id)}
@@ -81,13 +73,12 @@ export const MobileSlideList = ({
                           <X className="h-3 w-3" />
                         </Button>
                       )}
-                      <SlidePreview slide={slide} scale={1} />
+                      <SlidePreview slide={slide} scale={0.5} />
                     </div>
                   </div>
                 )}
               </Draggable>
             ))}
-            <div className="pr-4" />
             {provided.placeholder}
           </div>
         )}
