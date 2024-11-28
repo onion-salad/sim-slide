@@ -7,15 +7,6 @@ import { DragOverlay } from "./DragOverlay";
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 
-// モバイルサポートを有効にする
-if (typeof window !== 'undefined') {
-  window.addEventListener('touchmove', function(e) {
-    if (e.target && (e.target as HTMLElement).closest('.draggable-slide')) {
-      e.preventDefault();
-    }
-  }, { passive: false });
-}
-
 interface MobileSlideListProps {
   slides: Slide[];
   selectedSlide: string | null;
@@ -38,14 +29,12 @@ export const MobileSlideList = ({
   const [showDragDialog, setShowDragDialog] = useState(false);
 
   const handleDragStart = (start: any) => {
-    console.log('Drag started:', start);
     setDraggedSlideId(start.draggableId);
     setCurrentIndex(start.source.index);
     setShowDragDialog(true);
   };
 
   const handleDragEnd = (result: any) => {
-    console.log('Drag ended:', result);
     setDraggedSlideId(null);
     setShowDragDialog(false);
     onDragEnd(result);
@@ -79,12 +68,7 @@ export const MobileSlideList = ({
                   <X className="h-3 w-3" />
                 </Button>
               )}
-              <div 
-                className="draggable-slide touch-none"
-                style={{ touchAction: 'none' }}
-              >
-                <SlidePreview slide={slide} scale={1} />
-              </div>
+              <SlidePreview slide={slide} scale={1} />
             </div>
           </div>
         ))}
@@ -95,45 +79,34 @@ export const MobileSlideList = ({
         <DialogContent className="max-w-md">
           <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
             <Droppable droppableId="vertical-slides" direction="vertical">
-              {(provided, snapshot) => {
-                console.log('Droppable provided:', provided);
-                console.log('Droppable snapshot:', snapshot);
-                return (
-                  <div
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    className="space-y-2 p-2"
-                  >
-                    {slides.map((slide, index) => (
-                      <Draggable key={slide.id} draggableId={slide.id} index={index}>
-                        {(provided, snapshot) => {
-                          console.log('Draggable provided for slide:', slide.id, provided);
-                          console.log('Draggable snapshot for slide:', slide.id, snapshot);
-                          return (
-                            <div
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              className={`relative transition-all duration-300 touch-none ${
-                                snapshot.isDragging ? "scale-95" : ""
-                              }`}
-                              style={{ 
-                                ...provided.draggableProps.style,
-                                touchAction: 'none'
-                              }}
-                            >
-                              <div className="w-full bg-white rounded-lg shadow-sm">
-                                <SlidePreview slide={slide} scale={0.5} />
-                              </div>
-                            </div>
-                          );
-                        }}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                );
-              }}
+              {(provided) => (
+                <div
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  className="space-y-2 p-2"
+                >
+                  {slides.map((slide, index) => (
+                    <Draggable key={slide.id} draggableId={slide.id} index={index}>
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className={`relative transition-all duration-300 ${
+                            snapshot.isDragging ? "scale-95" : ""
+                          }`}
+                          style={provided.draggableProps.style}
+                        >
+                          <div className="w-full bg-white rounded-lg shadow-sm">
+                            <SlidePreview slide={slide} scale={0.5} />
+                          </div>
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
             </Droppable>
           </DragDropContext>
         </DialogContent>
