@@ -10,7 +10,7 @@ interface MobileSlideListProps {
   onSlideSelect: (slideId: string) => void;
   onDeleteSlide: (slideId: string, event: React.MouseEvent) => void;
   onDragEnd: (result: any) => void;
-  slideRefs: React.MutableRefObject<{ [key: string]: HTMLDivElement | null }>;
+  slideRefs: React.MutableRefObject<{ [key: string]: HTMLDivElement | null; handleDragScroll?: (dragX: number, currentSlideId: string, slides: string[]) => void }>;
 }
 
 export const MobileSlideList = ({
@@ -26,7 +26,7 @@ export const MobileSlideList = ({
     
     const dragX = update.clientX;
     const slideIds = slides.map(slide => slide.id);
-    if (slideRefs.current.handleDragScroll && typeof slideRefs.current.handleDragScroll === 'function') {
+    if (slideRefs.current.handleDragScroll) {
       slideRefs.current.handleDragScroll(dragX, selectedSlide, slideIds);
     }
   };

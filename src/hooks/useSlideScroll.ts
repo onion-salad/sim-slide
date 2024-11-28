@@ -5,8 +5,13 @@ interface ScrollState {
   isScrolling: boolean;
 }
 
+interface SlideRefs {
+  [key: string]: HTMLDivElement | null;
+  handleDragScroll?: (dragX: number, currentSlideId: string, slides: string[]) => void;
+}
+
 export const useSlideScroll = () => {
-  const slideRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  const slideRefs = useRef<SlideRefs>({});
   const scrollState = useRef<ScrollState>({
     lastScrollTime: 0,
     isScrolling: false,
@@ -64,7 +69,6 @@ export const useSlideScroll = () => {
     const containerRect = container.getBoundingClientRect();
     const currentTime = Date.now();
 
-    // 前回のスクロールから1秒以上経過していない場合は何もしない
     if (currentTime - scrollState.current.lastScrollTime < 1000) {
       return;
     }
@@ -88,6 +92,8 @@ export const useSlideScroll = () => {
       }
     }
   };
+
+  slideRefs.current.handleDragScroll = handleDragScroll;
 
   return {
     slideRefs,
