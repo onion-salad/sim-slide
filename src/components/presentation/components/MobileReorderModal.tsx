@@ -40,21 +40,12 @@ export const MobileReorderModal = ({
                 >
                   {slides.map((slide, index) => (
                     <Draggable key={slide.id} draggableId={slide.id} index={index}>
-                      {(provided, snapshot) => (
+                      {(provided) => (
                         <div
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                          className="bg-white rounded-lg shadow-md transition-transform duration-200"
-                          style={{
-                            ...provided.draggableProps.style,
-                            transform: snapshot.isDragging
-                              ? provided.draggableProps.style?.transform
-                              : "none",
-                            transition: snapshot.isDragging
-                              ? provided.draggableProps.style?.transition
-                              : "transform 0.2s ease-out"
-                          }}
+                          className="bg-white rounded-lg shadow-md"
                         >
                           <div className="w-full aspect-video">
                             <SlidePreview slide={slide} scale={0.5} />
