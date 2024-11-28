@@ -172,11 +172,11 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
           </div>
         </div>
 
-      <div className="hidden md:block w-64 bg-white p-4 border-l">
-        <div className="space-y-2">
-          <AddSlideButton onClick={() => setShowTemplates(true)} />
-          <SaveButton onSave={handleSave} />
-        </div>
+        <div className="hidden md:block w-64 bg-white p-4 border-l">
+          <div className="space-y-2">
+            <AddSlideButton onClick={() => setShowTemplates(true)} />
+            <SaveButton onSave={handleSave} />
+          </div>
           <ScrollArea className="h-[calc(100vh-10rem)] mt-4">
             <DragDropContext onDragEnd={handleDragEnd}>
               <Droppable droppableId="slides">
@@ -225,29 +225,30 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
               </Droppable>
             </DragDropContext>
           </ScrollArea>
+        </div>
+
+        <div className="fixed bottom-4 right-4 space-x-2">
+          <EditorButtons
+            presentation={presentation}
+            onRefresh={handleRefresh}
+            onPresentClick={() => setIsFullscreen(true)}
+          />
+        </div>
+
+        {showTemplates && (
+          <TemplateGallery
+            onSelect={handleAddSlide}
+            onClose={() => setShowTemplates(false)}
+          />
+        )}
+
+        {isFullscreen && (
+          <FullscreenPresentation
+            slides={presentation.slides}
+            onClose={() => setIsFullscreen(false)}
+          />
+        )}
       </div>
-
-      <div className="fixed bottom-4 right-4 space-x-2">
-        <EditorButtons
-          presentation={presentation}
-          onRefresh={handleRefresh}
-          onPresentClick={() => setIsFullscreen(true)}
-        />
-      </div>
-
-      {showTemplates && (
-        <TemplateGallery
-          onSelect={handleAddSlide}
-          onClose={() => setShowTemplates(false)}
-        />
-      )}
-
-      {isFullscreen && (
-        <FullscreenPresentation
-          slides={presentation.slides}
-          onClose={() => setIsFullscreen(false)}
-        />
-      )}
     </div>
   );
 };
