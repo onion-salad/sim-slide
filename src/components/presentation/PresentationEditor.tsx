@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Button } from "@/components/ui/button";
 import { Presentation, Slide, createSlide } from "@/lib/presentation";
@@ -22,12 +22,12 @@ const PresentationEditor = ({ presentation, onUpdate, onRefresh }: PresentationE
   const [showTemplates, setShowTemplates] = useState(false);
   const { slideRefs, scrollToSlide } = useSlideScroll();
 
-  const handleSlideSelect = useCallback((slideId: string) => {
+  const handleSlideSelect = (slideId: string) => {
     setSelectedSlide(slideId);
     scrollToSlide(slideId);
-  }, [scrollToSlide]);
+  };
 
-  const handleDragEnd = useCallback((result: any) => {
+  const handleDragEnd = (result: any) => {
     if (!result.destination) return;
 
     const slides = Array.from(presentation.slides);
@@ -35,41 +35,27 @@ const PresentationEditor = ({ presentation, onUpdate, onRefresh }: PresentationE
     slides.splice(result.destination.index, 0, reorderedSlide);
 
     onUpdate({ ...presentation, slides });
-  }, [presentation, onUpdate]);
+  };
 
-  const handleAddSlide = useCallback((template: string) => {
+  const handleAddSlide = (template: string) => {
     const newSlide = createSlide(template);
     onUpdate({
       ...presentation,
       slides: [...presentation.slides, newSlide],
     });
     setShowTemplates(false);
-  }, [presentation, onUpdate]);
+  };
 
-  const handleUpdateSlide = useCallback((updatedSlide: Slide) => {
+  const handleUpdateSlide = (updatedSlide: Slide) => {
     const slideIndex = presentation.slides.findIndex((s) => s.id === updatedSlide.id);
     if (slideIndex === -1) return;
 
-    // 現在のスライドと更新されたスライドの内容を比較（プリミティブな値のみを比較）
-    const currentSlide = presentation.slides[slideIndex];
-    const hasContentChanged = Object.entries(updatedSlide.content).some(([key, value]) => {
-      if (key === 'steps') {
-        return JSON.stringify(currentSlide.content.steps) !== JSON.stringify(value);
-      }
-      return currentSlide.content[key] !== value;
-    });
-    
-    // 内容が変更されていない場合は更新をスキップ
-    if (!hasContentChanged) {
-      return;
-    }
-    
     const updatedSlides = [...presentation.slides];
     updatedSlides[slideIndex] = updatedSlide;
     onUpdate({ ...presentation, slides: updatedSlides });
-  }, [presentation, onUpdate]);
+  };
 
-  const handleDeleteSlide = useCallback((slideId: string, event: React.MouseEvent) => {
+  const handleDeleteSlide = (slideId: string, event: React.MouseEvent) => {
     event.stopPropagation();
     const updatedSlides = presentation.slides.filter((s) => s.id !== slideId);
     onUpdate({ ...presentation, slides: updatedSlides });
@@ -77,9 +63,7 @@ const PresentationEditor = ({ presentation, onUpdate, onRefresh }: PresentationE
     if (selectedSlide === slideId) {
       setSelectedSlide(updatedSlides[0]?.id || null);
     }
-  }, [presentation, onUpdate, selectedSlide]);
-
-  // ... keep existing code (render JSX)
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 overflow-x-hidden">
