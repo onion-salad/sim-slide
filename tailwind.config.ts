@@ -67,8 +67,9 @@ export default {
           "100%": { transform: "translateX(-100%)" },
         },
         "save-flash": {
-          "0%, 100%": { backgroundColor: "transparent" },
-          "50%": { backgroundColor: "rgb(139 92 246)" },
+          "0%": { backgroundColor: "transparent", opacity: "1" },
+          "50%": { backgroundColor: "rgb(139 92 246)", opacity: "0.3" },
+          "100%": { backgroundColor: "transparent", opacity: "1" },
         }
       },
       animation: {

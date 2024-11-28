@@ -31,7 +31,7 @@ export const SaveButton = ({ onSave, isAnimating: externalIsAnimating }: SaveBut
   return (
     <Button
       onClick={handleClick}
-      variant="outline"
+      variant="ghost"
       className={cn(
         "w-full relative overflow-hidden transition-all duration-300",
         isAnimating && "animate-[scale-in_0.2s_ease-out]",
