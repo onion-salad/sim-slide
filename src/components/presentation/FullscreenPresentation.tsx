@@ -1,6 +1,7 @@
 import { useState, useEffect, TouchEvent } from "react";
 import { Slide } from "@/lib/presentation";
 import { X, ArrowLeft, ArrowRight, Video } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 import SlidePreview from "./SlidePreview";
 
 interface FullscreenPresentationProps {
@@ -12,8 +13,7 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
   const [currentSlide, setCurrentSlide] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [lastAltKeyTime, setLastAltKeyTime] = useState<number>(0);
-  const [commandPressed, setCommandPressed] = useState(false);
-  const [shiftPressed, setShiftPressed] = useState(false);
+  const { toast } = useToast();
 
   const handleNext = () => {
     if (currentSlide < slides.length - 1) {
@@ -49,45 +49,12 @@ const FullscreenPresentation = ({ slides, onClose }: FullscreenPresentationProps
   };
 
   const handleVideoClick = () => {
-    console.log('ビデオボタンがクリックされました - シーケンシャルキー開始');
-    
-    // Command キーを押す
-    const commandEvent = new KeyboardEvent('keydown', {
-      key: 'Meta',
-      code: 'MetaLeft',
-      metaKey: true
+    console.log('ビデオボタンがクリックされました');
+    toast({
+      title: "スクリーン録画",
+      description: "Command (⌘) + Shift + 5 を押して録画を開始してください",
+      duration: 5000,
     });
-    document.dispatchEvent(commandEvent);
-    setCommandPressed(true);
-    
-    // 少し待ってから Shift キーを押す
-    setTimeout(() => {
-      const shiftEvent = new KeyboardEvent('keydown', {
-        key: 'Shift',
-        code: 'ShiftLeft',
-        metaKey: true,
-        shiftKey: true
-      });
-      document.dispatchEvent(shiftEvent);
-      setShiftPressed(true);
-      
-      // さらに少し待ってから 5 キーを押す
-      setTimeout(() => {
-        const digitEvent = new KeyboardEvent('keydown', {
-          key: '5',
-          code: 'Digit5',
-          metaKey: true,
-          shiftKey: true
-        });
-        document.dispatchEvent(digitEvent);
-        
-        // キーを離す処理
-        setTimeout(() => {
-          setCommandPressed(false);
-          setShiftPressed(false);
-        }, 500);
-      }, 200);
-    }, 200);
   };
 
   useEffect(() => {
