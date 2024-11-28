@@ -48,18 +48,20 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
   // タイトルテンプレート: タイトル + 本文 + 画像
   if (slide.template === "title") {
     return (
-      <div className="space-y-4">
+      <>
         <TextEditor
           title={slide.content.title || ""}
           text={slide.content.text || ""}
           onChange={handleChange}
         />
-        <ImageEditor
-          image={slide.content.image}
-          imagePosition={slide.content.imagePosition}
-          onChange={handleImageChange}
-        />
-      </div>
+        <div className="mt-4">
+          <ImageEditor
+            image={slide.content.image}
+            imagePosition={slide.content.imagePosition}
+            onChange={handleImageChange}
+          />
+        </div>
+      </>
     );
   }
 
