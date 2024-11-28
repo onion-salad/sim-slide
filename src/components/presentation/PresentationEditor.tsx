@@ -23,6 +23,7 @@ import { MobileHeader } from "./components/MobileHeader";
 import { MobileAddButton } from "./components/MobileAddButton";
 import { isMobile } from "@/lib/utils";
 import { DesktopBottomButtons } from "./components/DesktopBottomButtons";
+import { ScreenshotButton } from "./components/ScreenshotButton";
 
 interface PresentationEditorProps {
   presentation: Presentation;
@@ -191,6 +192,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
               Add (Space×2)
             </Button>
             <SaveButton onSave={handleSave} isAnimating={isSaveAnimating} />
+            <ScreenshotButton onCapture={() => {}} />
           </div>
           <ScrollArea className="h-[calc(100vh-10rem)] mt-4">
             <DragDropContext onDragEnd={handleDragEnd}>
