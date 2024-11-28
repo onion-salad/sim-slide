@@ -127,7 +127,6 @@ const SlideEditor = ({ slide, onUpdate }: SlideEditorProps) => {
               <AccordionContent className="space-y-4">
                 <TextEditor
                   subtitle={step.subtitle}
-                  text={step.text}
                   onChange={(field, value) => handleStepChange(index, field, value)}
                   showSubtitle={true}
                 />
