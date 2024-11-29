@@ -1,11 +1,12 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Copy, Download, Upload } from "lucide-react";
+import { Download, Upload, Copy } from "lucide-react";
 import { useState, useRef } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Presentation } from "@/lib/presentation";
 import { cn } from "@/lib/utils";
+import { useAutoScrollTextarea } from "@/hooks/useAutoScroll";
 
 interface MobileImportExportDialogProps {
   open: boolean;
@@ -27,6 +28,7 @@ export const MobileImportExportDialog = ({
   const [isDownloadAnimating, setIsDownloadAnimating] = useState(false);
   const [isFileSelectAnimating, setIsFileSelectAnimating] = useState(false);
   const [isImportAnimating, setIsImportAnimating] = useState(false);
+  const textareaRef = useAutoScrollTextarea();
 
   const handleExportToClipboard = () => {
     setIsCopyAnimating(true);
@@ -38,6 +40,30 @@ export const MobileImportExportDialog = ({
       duration: 2000,
     });
     setTimeout(() => setIsCopyAnimating(false), 500);
+  };
+
+  const handleImport = () => {
+    setIsImportAnimating(true);
+    try {
+      const importedPresentation = JSON.parse(jsonInput);
+      onImport(importedPresentation);
+      setJsonInput("");
+      onOpenChange(false);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      toast({
+        title: "インポート完了",
+        description: "プレゼンテーションが正常にインポートされました",
+        duration: 2000,
+      });
+    } catch (error) {
+      toast({
+        title: "インポートエラー",
+        description: "JSONの形式が正しくありません",
+        variant: "destructive",
+        duration: 2000,
+      });
+    }
+    setTimeout(() => setIsImportAnimating(false), 500);
   };
 
   const handleExportFile = () => {
@@ -78,6 +104,7 @@ export const MobileImportExportDialog = ({
         const importedPresentation = JSON.parse(content);
         onImport(importedPresentation);
         onOpenChange(false);
+        window.scrollTo({ top: 0, behavior: "smooth" });
         toast({
           title: "インポート完了",
           description: "ファイルからプレゼンテーションをインポートしました",
@@ -93,29 +120,6 @@ export const MobileImportExportDialog = ({
       }
     };
     reader.readAsText(file);
-  };
-
-  const handleImport = () => {
-    setIsImportAnimating(true);
-    try {
-      const importedPresentation = JSON.parse(jsonInput);
-      onImport(importedPresentation);
-      setJsonInput("");
-      onOpenChange(false);
-      toast({
-        title: "インポート完了",
-        description: "プレゼンテーションが正常にインポートされました",
-        duration: 2000,
-      });
-    } catch (error) {
-      toast({
-        title: "インポートエラー",
-        description: "JSONの形式が正しくありません",
-        variant: "destructive",
-        duration: 2000,
-      });
-    }
-    setTimeout(() => setIsImportAnimating(false), 500);
   };
 
   return (
@@ -143,24 +147,27 @@ export const MobileImportExportDialog = ({
             </div>
             <div className="space-y-2">
               <div className="flex flex-col gap-2">
-                <input
-                  type="file"
-                  accept=".json"
-                  onChange={handleFileChange}
-                  ref={fileInputRef}
-                  className="hidden"
-                />
-                <Button 
-                  onClick={handleFileSelect} 
-                  variant="outline"
-                  className="w-full"
-                >
-                  <Upload className={cn(
-                    "w-4 h-4 mr-2 transition-transform duration-300",
-                    isFileSelectAnimating && "animate-[spin_0.5s_ease-out]"
-                  )} />
-                  JSONファイルを選択
-                </Button>
+                <label className="text-sm font-medium">JSONファイルをインポート:</label>
+                <div className="flex gap-2">
+                  <input
+                    type="file"
+                    accept=".json"
+                    onChange={handleFileChange}
+                    ref={fileInputRef}
+                    className="hidden"
+                  />
+                  <Button 
+                    onClick={handleFileSelect} 
+                    variant="outline"
+                    className="w-full"
+                  >
+                    <Upload className={cn(
+                      "w-4 h-4 mr-2 transition-transform duration-300",
+                      isFileSelectAnimating && "animate-[spin_0.5s_ease-out]"
+                    )} />
+                    JSONファイルを選択
+                  </Button>
+                </div>
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-medium">JSONを貼り付けてインポート:</label>
@@ -169,6 +176,8 @@ export const MobileImportExportDialog = ({
                   onChange={(e) => setJsonInput(e.target.value)}
                   placeholder="ここにJSONを貼り付けてください"
                   className="min-h-[100px]"
+                  ref={textareaRef}
+                  style={{ fontSize: '16px' }}
                 />
                 <Button 
                   onClick={handleImport} 
