@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Slide, Presentation } from "@/lib/presentation";
 import { MobileReorderModal } from "./MobileReorderModal";
-import { SharedImportExportDialog } from "./SharedImportExportDialog";
+import { MobileImportExportDialog } from "./dialog/MobileImportExportDialog";
 
 interface MobileHeaderProps {
   onSave: () => void;
@@ -141,12 +141,11 @@ export const MobileHeader = ({
         onReorder={onReorder}
       />
       {showImportExportDialog && (
-        <SharedImportExportDialog
+        <MobileImportExportDialog
           open={showImportExportDialog}
           onOpenChange={setShowImportExportDialog}
           presentation={presentation}
           onImport={onImport}
-          isMobile={true}
         />
       )}
     </>
