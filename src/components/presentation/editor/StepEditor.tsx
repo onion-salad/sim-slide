@@ -47,7 +47,7 @@ const StepEditor = ({ steps, onChange }: StepEditorProps) => {
 
   return (
     <div className="space-y-4">
-      <Accordion type="single" collapsible className="w-full">
+      <Accordion type="multiple" collapsible className="w-full">
         {steps.map((step, index) => (
           <AccordionItem key={index} value={`step-${index}`}>
             <div className="flex items-center">
