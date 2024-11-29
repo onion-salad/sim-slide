@@ -13,7 +13,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Slide } from "@/lib/presentation";
+import { Slide, Presentation } from "@/lib/presentation";
 import { MobileReorderModal } from "./MobileReorderModal";
 import { MobileImportExportDialog } from "./MobileImportExportDialog";
 
@@ -141,7 +141,24 @@ export const MobileHeader = ({
           open={showImportExportDialog}
           onOpenChange={setShowImportExportDialog}
           presentation={{ id: crypto.randomUUID(), title: "", slides }}
-          onImport={() => {}}
+          onImport={(importedPresentation: Presentation) => {
+            // 既存のスライドを新しいスライドで置き換える
+            onReorder({
+              source: { index: 0 },
+              destination: { index: 0 },
+              draggableId: "import",
+              type: "slide",
+              reason: "DROP",
+              mode: "FLUID",
+              combine: null,
+              direction: null,
+              movement: { x: 0, y: 0 },
+              path: [],
+              scrollJumpRequest: null,
+              viewport: { x: 0, y: 0, width: 0, height: 0 },
+              items: importedPresentation.slides,
+            });
+          }}
         />
       )}
     </>
