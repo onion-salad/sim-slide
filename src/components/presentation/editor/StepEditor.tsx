@@ -41,13 +41,13 @@ const StepEditor = ({ steps, onChange }: StepEditorProps) => {
   const handleRemoveStep = (index: number, e: React.MouseEvent) => {
     e.stopPropagation();
     const updatedSteps = [...steps];
-    updatedSteps.splice(index, 1);
+    updatedSlides.splice(index, 1);
     onChange(updatedSteps);
   };
 
   return (
     <div className="space-y-4">
-      <Accordion type="multiple" collapsible className="w-full">
+      <Accordion type="multiple" className="w-full">
         {steps.map((step, index) => (
           <AccordionItem key={index} value={`step-${index}`}>
             <div className="flex items-center">
