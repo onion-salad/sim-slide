@@ -98,13 +98,13 @@ export const DesktopBottomButtons = ({
           </AlertDialogContent>
         </AlertDialog>
         <Button
-          variant="outline"
-          size="icon"
           onClick={onPresentClick}
           disabled={slides.length === 0}
           title="プレゼンテーションを開始"
+          className="bg-gradient-to-r from-primary to-primary-dark hover:from-primary/90 hover:to-primary-dark/90 text-white"
         >
-          <Play className="h-4 w-4" />
+          <Play className="h-4 w-4 mr-2" />
+          (Option×2)
         </Button>
       </div>
       <SharedImportExportDialog

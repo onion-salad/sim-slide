@@ -1,9 +1,8 @@
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragDropContext } from "react-beautiful-dnd";
 import { Button } from "@/components/ui/button";
 import { Presentation, Slide, createSlide } from "@/lib/presentation";
 import { savePresentation } from "@/components/presentation/utils/presentationStorage";
@@ -12,16 +11,13 @@ import SlidePreview from "./SlidePreview";
 import SlideEditor from "./SlideEditor";
 import TemplateGallery from "./TemplateGallery";
 import FullscreenPresentation from "./FullscreenPresentation";
-import { Plus, X, RefreshCw, Play } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useSlideScroll } from "@/hooks/useSlideScroll";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { EditorButtons } from "./components/EditorButtons";
-import { SaveButton } from "./components/SaveButton";
 import { useEditorShortcuts } from "@/hooks/useEditorShortcuts";
 import { useToast } from "@/components/ui/use-toast";
+import { isMobile } from "@/lib/utils";
 import { MobileHeader } from "./components/MobileHeader";
 import { MobileAddButton } from "./components/MobileAddButton";
-import { isMobile } from "@/lib/utils";
 import { DesktopBottomButtons } from "./components/DesktopBottomButtons";
 import { MobileSlideList } from "./components/MobileSlideList";
 import { DesktopSlideList } from "./components/DesktopSlideList";
@@ -38,7 +34,6 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
   const [isSaveAnimating, setIsSaveAnimating] = useState(false);
   const [isAddAnimating, setIsAddAnimating] = useState(false);
   const { slideRefs, scrollToSlide } = useSlideScroll();
-  const { toast } = useToast();
 
   const handleSlideSelect = (slideId: string) => {
     setSelectedSlide(slideId);
@@ -122,7 +117,6 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
     onUpdate({ ...presentation, slides: [] });
   };
 
-  // ショートカットの設定を追加
   useEditorShortcuts({
     onAddClick: handleAddClick,
     onPresentClick: handlePresentClick,
@@ -156,7 +150,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
           ) : (
             <div className="slides-container w-full overflow-x-auto pb-4 flex gap-4 snap-x snap-mandatory pt-4">
               <div className="pl-4" />
-              {presentation.slides.map((slide, index) => (
+              {presentation.slides.map((slide) => (
                 <div
                   key={slide.id}
                   ref={(el) => slideRefs.current[slide.id] = el}
@@ -189,14 +183,16 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
         {!isMobile() && (
           <div className="hidden md:block w-64 bg-white p-4 border-l">
             <div className="space-y-2">
-              <Button className="w-full" onClick={handleAddClick}>
+              <Button 
+                className="w-full bg-gradient-to-r from-primary to-primary-dark text-white hover:from-primary/90 hover:to-primary-dark/90" 
+                onClick={handleAddClick}
+              >
                 <Plus className={cn(
-                  "w-4 h-4 mr-2 transition-transform duration-300",
+                  "w-4 h-4 mr-2 transition-transform duration-300 text-white",
                   isAddAnimating && "animate-[spin_0.5s_ease-out]"
                 )} />
                 Add (Space×2)
               </Button>
-              <SaveButton onSave={handleSave} isAnimating={isSaveAnimating} />
             </div>
             <DesktopSlideList
               slides={presentation.slides}
