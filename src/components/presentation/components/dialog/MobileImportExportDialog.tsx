@@ -1,9 +1,10 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Copy, Download, Upload } from "lucide-react";
 import { useState, useRef } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Presentation } from "@/lib/presentation";
-import { ImportExportButtons } from "./ImportExportButtons";
 import { cn } from "@/lib/utils";
 
 interface MobileImportExportDialogProps {
@@ -125,33 +126,62 @@ export const MobileImportExportDialog = ({
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="flex flex-col gap-4">
-            <ImportExportButtons
-              onExportToClipboard={handleExportToClipboard}
-              onExportFile={handleExportFile}
-              onFileSelect={handleFileSelect}
-              onImport={handleImport}
-              jsonInput={jsonInput}
-              isCopyAnimating={isCopyAnimating}
-              isDownloadAnimating={isDownloadAnimating}
-              isFileSelectAnimating={isFileSelectAnimating}
-              isImportAnimating={isImportAnimating}
-              isMobile={true}
-            />
-            <input
-              type="file"
-              accept=".json"
-              onChange={handleFileChange}
-              ref={fileInputRef}
-              className="hidden"
-            />
-            <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium">JSONを貼り付けてインポート:</label>
-              <Textarea
-                value={jsonInput}
-                onChange={(e) => setJsonInput(e.target.value)}
-                placeholder="ここにJSONを貼り付けてください"
-                className="min-h-[100px]"
-              />
+            <div className="flex gap-2">
+              <Button onClick={handleExportToClipboard} className="flex-1">
+                <Copy className={cn(
+                  "w-4 h-4 mr-2 transition-transform duration-300",
+                  isCopyAnimating && "animate-[spin_0.5s_ease-out]"
+                )} />
+                JSONをコピー
+              </Button>
+              <Button onClick={handleExportFile} variant="outline" size="icon" className="w-10">
+                <Download className={cn(
+                  "w-4 h-4 transition-transform duration-300",
+                  isDownloadAnimating && "animate-[spin_0.5s_ease-out]"
+                )} />
+              </Button>
+            </div>
+            <div className="space-y-2">
+              <div className="flex flex-col gap-2">
+                <input
+                  type="file"
+                  accept=".json"
+                  onChange={handleFileChange}
+                  ref={fileInputRef}
+                  className="hidden"
+                />
+                <Button 
+                  onClick={handleFileSelect} 
+                  variant="outline"
+                  className="w-full"
+                >
+                  <Upload className={cn(
+                    "w-4 h-4 mr-2 transition-transform duration-300",
+                    isFileSelectAnimating && "animate-[spin_0.5s_ease-out]"
+                  )} />
+                  JSONファイルを選択
+                </Button>
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-medium">JSONを貼り付けてインポート:</label>
+                <Textarea
+                  value={jsonInput}
+                  onChange={(e) => setJsonInput(e.target.value)}
+                  placeholder="ここにJSONを貼り付けてください"
+                  className="min-h-[100px]"
+                />
+                <Button 
+                  onClick={handleImport} 
+                  className="w-full"
+                  disabled={!jsonInput}
+                >
+                  <Upload className={cn(
+                    "w-4 h-4 mr-2 transition-transform duration-300",
+                    isImportAnimating && "animate-[spin_0.5s_ease-out]"
+                  )} />
+                  インポート
+                </Button>
+              </div>
             </div>
           </div>
         </div>
