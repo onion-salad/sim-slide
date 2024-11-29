@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Slide, Presentation } from "@/lib/presentation";
 import { MobileReorderModal } from "./MobileReorderModal";
-import { MobileImportExportDialog } from "./MobileImportExportDialog";
+import { SharedImportExportDialog } from "./SharedImportExportDialog";
 
 interface MobileHeaderProps {
   onSave: () => void;
@@ -24,6 +24,8 @@ interface MobileHeaderProps {
   onReorder: (result: any) => void;
   slides: Slide[];
   isSaveAnimating: boolean;
+  presentation: Presentation;
+  onImport: (presentation: Presentation) => void;
 }
 
 export const MobileHeader = ({
@@ -32,7 +34,9 @@ export const MobileHeader = ({
   onPresentClick,
   onReorder,
   slides,
-  isSaveAnimating
+  isSaveAnimating,
+  presentation,
+  onImport
 }: MobileHeaderProps) => {
   const [isRefreshAnimating, setIsRefreshAnimating] = useState(false);
   const [showReorderModal, setShowReorderModal] = useState(false);
@@ -137,28 +141,12 @@ export const MobileHeader = ({
         onReorder={onReorder}
       />
       {showImportExportDialog && (
-        <MobileImportExportDialog
+        <SharedImportExportDialog
           open={showImportExportDialog}
           onOpenChange={setShowImportExportDialog}
-          presentation={{ id: crypto.randomUUID(), title: "", slides }}
-          onImport={(importedPresentation: Presentation) => {
-            // 既存のスライドを新しいスライドで置き換える
-            onReorder({
-              source: { index: 0 },
-              destination: { index: 0 },
-              draggableId: "import",
-              type: "slide",
-              reason: "DROP",
-              mode: "FLUID",
-              combine: null,
-              direction: null,
-              movement: { x: 0, y: 0 },
-              path: [],
-              scrollJumpRequest: null,
-              viewport: { x: 0, y: 0, width: 0, height: 0 },
-              items: importedPresentation.slides,
-            });
-          }}
+          presentation={presentation}
+          onImport={onImport}
+          isMobile={true}
         />
       )}
     </>

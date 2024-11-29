@@ -1,25 +1,27 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Download, Upload, Copy, Link2 } from "lucide-react";
+import { Download, Upload, Copy } from "lucide-react";
 import { useState, useRef } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Presentation } from "@/lib/presentation";
 import { cn } from "@/lib/utils";
 
-interface ImportExportDialogProps {
+interface SharedImportExportDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   presentation: Presentation;
   onImport: (presentation: Presentation) => void;
+  isMobile?: boolean;
 }
 
-export const ImportExportDialog = ({
+export const SharedImportExportDialog = ({
   open,
   onOpenChange,
   presentation,
   onImport,
-}: ImportExportDialogProps) => {
+  isMobile = false,
+}: SharedImportExportDialogProps) => {
   const [jsonInput, setJsonInput] = useState("");
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -120,7 +122,10 @@ export const ImportExportDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className={cn(
+        "sm:max-w-[600px]",
+        isMobile && "w-[90vw] max-w-[400px] p-4"
+      )}>
         <DialogHeader>
           <DialogTitle>プレゼンテーションの連携</DialogTitle>
         </DialogHeader>
@@ -132,14 +137,14 @@ export const ImportExportDialog = ({
                   "w-4 h-4 mr-2 transition-transform duration-300",
                   isCopyAnimating && "animate-[spin_0.5s_ease-out]"
                 )} />
-                JSONをクリップボードにコピー
+                {isMobile ? "JSONをコピー" : "JSONをクリップボードにコピー"}
               </Button>
               <Button onClick={handleExportFile} variant="outline" className="flex-1">
                 <Download className={cn(
                   "w-4 h-4 mr-2 transition-transform duration-300",
                   isDownloadAnimating && "animate-[spin_0.5s_ease-out]"
                 )} />
-                JSONファイルをダウンロード
+                {isMobile ? "JSONをダウンロード" : "JSONファイルをダウンロード"}
               </Button>
             </div>
             <div className="space-y-2">
@@ -172,7 +177,7 @@ export const ImportExportDialog = ({
                   value={jsonInput}
                   onChange={(e) => setJsonInput(e.target.value)}
                   placeholder="ここにJSONを貼り付けてください"
-                  className="min-h-[200px]"
+                  className={cn("min-h-[200px]", isMobile && "min-h-[100px]")}
                 />
                 <Button 
                   onClick={handleImport} 

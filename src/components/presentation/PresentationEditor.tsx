@@ -138,6 +138,8 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
         onReorder={handleDragEnd}
         slides={presentation.slides}
         isSaveAnimating={isSaveAnimating}
+        presentation={presentation}
+        onImport={onUpdate}
       />
 
       <div className="flex flex-col md:flex-row h-[calc(100vh-4rem)] md:h-screen pt-[4.5rem] md:pt-0">
