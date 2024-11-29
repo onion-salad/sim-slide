@@ -60,6 +60,11 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        custom: {
+          gray: {
+            sidebar: "#F8F9FA",  // より良い暗さのグレー
+          }
+        }
       },
       keyframes: {
         "slide-in": {
