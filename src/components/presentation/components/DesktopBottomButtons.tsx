@@ -89,9 +89,9 @@ export const DesktopBottomButtons = ({
                 本当にプレゼンテーション情報を消去してもよろしいですか？
               </AlertDialogDescription>
             </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>キャンセル</AlertDialogCancel>
-              <AlertDialogAction onClick={handleRefreshClick}>
+            <AlertDialogFooter className="gap-2">
+              <AlertDialogCancel className="mt-0">キャンセル</AlertDialogCancel>
+              <AlertDialogAction onClick={handleRefreshClick} className="bg-destructive hover:bg-destructive/90">
                 リフレッシュ
               </AlertDialogAction>
             </AlertDialogFooter>
