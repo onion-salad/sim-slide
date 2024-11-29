@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Upload, Trash2 } from "lucide-react";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import { useAutoScrollInput } from "@/hooks/useAutoScroll";
 
 interface ImageEditorProps {
@@ -15,22 +15,9 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const imageUrlInputRef = useAutoScrollInput();
-  const [isValidImage, setIsValidImage] = useState<boolean>(false);
-
-  // 画像の有効性をチェック
-  useEffect(() => {
-    if (!image) {
-      setIsValidImage(false);
-      return;
-    }
-
-    const img = new Image();
-    img.onload = () => setIsValidImage(true);
-    img.onerror = () => setIsValidImage(false);
-    img.src = image;
-  }, [image]);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("handleImageUpload called");
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -44,6 +31,7 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
 
     const reader = new FileReader();
     reader.onload = (e) => {
+      console.log("FileReader onload called");
       const imageDataUrl = e.target?.result as string;
       onChange(imageDataUrl, imagePosition);
       
@@ -51,6 +39,7 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
         fileInputRef.current.value = '';
       }
 
+      // 画像選択後に上までスクロール
       window.scrollTo({
         top: 0,
         behavior: 'smooth'
@@ -60,12 +49,14 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
   };
 
   const handleImageDelete = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (isValidImage) {
+    console.log("handleImageDelete called");
+    e.stopPropagation(); // イベントの伝播を止める
+    if (image) {
       onChange("", undefined);
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
+      // 画像削除後に上までスクロール
       window.scrollTo({
         top: 0,
         behavior: 'smooth'
@@ -74,8 +65,7 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
   };
 
   const handleImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isValidImage) return;
-    
+    console.log("handleImageClick called");
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
@@ -87,7 +77,9 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
   };
 
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("handleUrlChange called", e.target.value);
     onChange(e.target.value, imagePosition);
+    // URL入力後に上までスクロール
     window.scrollTo({
       top: 0,
       behavior: 'smooth'
@@ -125,7 +117,7 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
               <Upload className="h-4 w-4" />
             </Button>
           </div>
-          {isValidImage && (
+          {image && (
             <Button 
               type="button" 
               variant="outline" 
@@ -138,7 +130,7 @@ const ImageEditor = ({ image, imagePosition, onChange }: ImageEditorProps) => {
           )}
         </div>
       </div>
-      {isValidImage && (
+      {image && (
         <div 
           className="mt-2 relative aspect-video bg-gray-100 rounded-lg overflow-hidden cursor-crosshair"
           onClick={handleImageClick}
