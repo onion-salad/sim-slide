@@ -41,7 +41,7 @@ const StepEditor = ({ steps, onChange }: StepEditorProps) => {
   const handleRemoveStep = (index: number, e: React.MouseEvent) => {
     e.stopPropagation();
     const updatedSteps = [...steps];
-    updatedSlides.splice(index, 1);
+    updatedSteps.splice(index, 1);
     onChange(updatedSteps);
   };
 
