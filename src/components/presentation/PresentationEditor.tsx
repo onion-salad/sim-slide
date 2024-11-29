@@ -213,6 +213,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
         <DesktopBottomButtons
           onRefresh={handleRefresh}
           onPresentClick={handlePresentClick}
+          slides={presentation.slides}
         />
       )}
 
