@@ -21,6 +21,7 @@ import { MobileAddButton } from "./components/MobileAddButton";
 import { DesktopBottomButtons } from "./components/DesktopBottomButtons";
 import { MobileSlideList } from "./components/MobileSlideList";
 import { DesktopSlideList } from "./components/DesktopSlideList";
+import { SaveButton } from "./components/SaveButton";
 
 interface PresentationEditorProps {
   presentation: Presentation;
@@ -34,6 +35,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
   const [isSaveAnimating, setIsSaveAnimating] = useState(false);
   const [isAddAnimating, setIsAddAnimating] = useState(false);
   const { slideRefs, scrollToSlide } = useSlideScroll();
+  const { toast } = useToast();
 
   const handleSlideSelect = (slideId: string) => {
     setSelectedSlide(slideId);
@@ -193,6 +195,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
                 )} />
                 Add (Space×2)
               </Button>
+              <SaveButton onSave={handleSave} isAnimating={isSaveAnimating} />
             </div>
             <DesktopSlideList
               slides={presentation.slides}
