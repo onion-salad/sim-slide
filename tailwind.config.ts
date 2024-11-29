@@ -20,6 +20,7 @@ export default {
     extend: {
       spacing: {
         '13': '3.25rem',
+        '13.5': '3.375rem',
       },
       boxShadow: {
         'selected': '0 8px 30px -2px rgba(139,92,246,0.3)',
