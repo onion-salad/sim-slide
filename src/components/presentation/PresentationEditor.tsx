@@ -183,7 +183,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
         </div>
 
         {!isMobile() && (
-          <div className="hidden md:block w-64 bg-secondary p-4 border-l border-secondary">
+          <div className="hidden md:block w-64 bg-gray-100 p-4 border-l border-gray-200">
             <div className="space-y-2">
               <Button 
                 className="w-full bg-gradient-to-r from-primary to-primary-dark text-white hover:from-primary/90 hover:to-primary-dark/90" 
