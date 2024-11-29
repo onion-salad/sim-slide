@@ -214,6 +214,8 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
           onRefresh={handleRefresh}
           onPresentClick={handlePresentClick}
           slides={presentation.slides}
+          presentation={presentation}
+          onImport={onUpdate}
         />
       )}
 
