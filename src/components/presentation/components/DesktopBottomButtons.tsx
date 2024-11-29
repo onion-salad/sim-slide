@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { RefreshCw, Play, Link2 } from "lucide-react";
 import { Slide } from "@/lib/presentation";
 import { Presentation } from "@/lib/presentation";
-import { ImportExportDialog } from "./ImportExportDialog";
+import { SharedImportExportDialog } from "./SharedImportExportDialog";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import {
@@ -107,7 +107,7 @@ export const DesktopBottomButtons = ({
           <Play className="h-4 w-4" />
         </Button>
       </div>
-      <ImportExportDialog
+      <SharedImportExportDialog
         open={showImportExport}
         onOpenChange={setShowImportExport}
         presentation={presentation}
