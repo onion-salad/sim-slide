@@ -4,6 +4,18 @@ import { Slide } from "@/lib/presentation";
 import { Presentation } from "@/lib/presentation";
 import { ImportExportDialog } from "./ImportExportDialog";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface DesktopBottomButtonsProps {
   onRefresh: () => void;
@@ -21,26 +33,63 @@ export const DesktopBottomButtons = ({
   onImport,
 }: DesktopBottomButtonsProps) => {
   const [showImportExport, setShowImportExport] = useState(false);
+  const [isLinkAnimating, setIsLinkAnimating] = useState(false);
+  const [isRefreshAnimating, setIsRefreshAnimating] = useState(false);
+
+  const handleLinkClick = () => {
+    setIsLinkAnimating(true);
+    setShowImportExport(true);
+    setTimeout(() => setIsLinkAnimating(false), 500);
+  };
+
+  const handleRefreshClick = () => {
+    setIsRefreshAnimating(true);
+    onRefresh();
+    setTimeout(() => setIsRefreshAnimating(false), 500);
+  };
 
   return (
     <>
-      <div className="fixed bottom-4 left-4 flex items-center gap-2">
+      <div className="fixed bottom-4 left-4 hidden md:flex items-center gap-2">
         <Button
           variant="outline"
           size="icon"
-          onClick={() => setShowImportExport(true)}
+          onClick={handleLinkClick}
           title="プレゼンテーションの連携"
         >
-          <Link2 className="h-4 w-4" />
+          <Link2 className={cn(
+            "h-4 w-4 transition-transform duration-300",
+            isLinkAnimating && "animate-[spin_0.5s_ease-out]"
+          )} />
         </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={onRefresh}
-          title="リセット"
-        >
-          <RefreshCw className="h-4 w-4" />
-        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              title="リセット"
+            >
+              <RefreshCw className={cn(
+                "h-4 w-4 transition-transform duration-300",
+                isRefreshAnimating && "animate-[spin_0.5s_ease-out]"
+              )} />
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>プレゼンテーションをリフレッシュ</AlertDialogTitle>
+              <AlertDialogDescription>
+                本当にプレゼンテーション情報を消去してもよろしいですか？
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>キャンセル</AlertDialogCancel>
+              <AlertDialogAction onClick={handleRefreshClick}>
+                リフレッシュ
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
         <Button
           variant="outline"
           size="icon"
