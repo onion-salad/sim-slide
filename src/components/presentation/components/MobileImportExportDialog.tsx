@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Download, Upload, Copy } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Presentation } from "@/lib/presentation";
 import { cn } from "@/lib/utils";
@@ -22,7 +22,10 @@ export const MobileImportExportDialog = ({
 }: MobileImportExportDialogProps) => {
   const [jsonInput, setJsonInput] = useState("");
   const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isCopyAnimating, setIsCopyAnimating] = useState(false);
+  const [isDownloadAnimating, setIsDownloadAnimating] = useState(false);
+  const [isFileSelectAnimating, setIsFileSelectAnimating] = useState(false);
   const [isImportAnimating, setIsImportAnimating] = useState(false);
 
   const handleExportToClipboard = () => {
@@ -60,29 +63,113 @@ export const MobileImportExportDialog = ({
     setTimeout(() => setIsImportAnimating(false), 500);
   };
 
+  const handleExportFile = () => {
+    setIsDownloadAnimating(true);
+    const jsonString = JSON.stringify(presentation, null, 2);
+    const blob = new Blob([jsonString], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "presentation.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    toast({
+      title: "エクスポート完了",
+      description: "プレゼンテーションがJSONファイルとしてダウンロードされました",
+      duration: 2000,
+    });
+    setTimeout(() => setIsDownloadAnimating(false), 500);
+  };
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const content = e.target?.result as string;
+        const importedPresentation = JSON.parse(content);
+        onImport(importedPresentation);
+        onOpenChange(false);
+        toast({
+          title: "インポート完了",
+          description: "ファイルからプレゼンテーションをインポートしました",
+          duration: 2000,
+        });
+      } catch (error) {
+        toast({
+          title: "インポートエラー",
+          description: "JSONファイルの形式が正しくありません",
+          variant: "destructive",
+          duration: 2000,
+        });
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const handleFileButtonClick = () => {
+    setIsFileSelectAnimating(true);
+    fileInputRef.current?.click();
+    setTimeout(() => setIsFileSelectAnimating(false), 500);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="w-[90vw] max-w-[400px] p-4">
         <DialogHeader>
           <DialogTitle>プレゼンテーションの連携</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="flex flex-col gap-4">
-            <Button onClick={handleExportToClipboard}>
-              <Copy className={cn(
-                "w-4 h-4 mr-2 transition-transform duration-300",
-                isCopyAnimating && "animate-[spin_0.5s_ease-out]"
-              )} />
-              JSONをクリップボードにコピー
-            </Button>
+        <div className="grid gap-3 py-3">
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
+              <Button onClick={handleExportToClipboard} className="w-full">
+                <Copy className={cn(
+                  "w-4 h-4 mr-2 transition-transform duration-300",
+                  isCopyAnimating && "animate-[spin_0.5s_ease-out]"
+                )} />
+                JSONをコピー
+              </Button>
+              <Button onClick={handleExportFile} variant="outline" className="w-full">
+                <Download className={cn(
+                  "w-4 h-4 mr-2 transition-transform duration-300",
+                  isDownloadAnimating && "animate-[spin_0.5s_ease-out]"
+                )} />
+                JSONをダウンロード
+              </Button>
+            </div>
             <div className="space-y-2">
+              <div className="flex flex-col gap-2">
+                <input
+                  type="file"
+                  accept=".json"
+                  onChange={handleFileSelect}
+                  ref={fileInputRef}
+                  className="hidden"
+                />
+                <Button 
+                  onClick={handleFileButtonClick} 
+                  variant="outline"
+                  className="w-full"
+                >
+                  <Upload className={cn(
+                    "w-4 h-4 mr-2 transition-transform duration-300",
+                    isFileSelectAnimating && "animate-[spin_0.5s_ease-out]"
+                  )} />
+                  JSONファイルを選択
+                </Button>
+              </div>
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-medium">JSONを貼り付けてインポート:</label>
                 <Textarea
                   value={jsonInput}
                   onChange={(e) => setJsonInput(e.target.value)}
                   placeholder="ここにJSONを貼り付けてください"
-                  className="min-h-[150px]"
+                  className="min-h-[100px]"
                 />
                 <Button 
                   onClick={handleImport} 
