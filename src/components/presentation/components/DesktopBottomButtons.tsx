@@ -48,6 +48,13 @@ export const DesktopBottomButtons = ({
     setTimeout(() => setIsRefreshAnimating(false), 500);
   };
 
+  const handleOpenChange = (open: boolean) => {
+    if (open) {
+      setIsRefreshAnimating(true);
+      setTimeout(() => setIsRefreshAnimating(false), 500);
+    }
+  };
+
   return (
     <>
       <div className="fixed bottom-4 left-4 hidden md:flex items-center gap-2">
@@ -62,7 +69,7 @@ export const DesktopBottomButtons = ({
             isLinkAnimating && "animate-[spin_0.5s_ease-out]"
           )} />
         </Button>
-        <AlertDialog>
+        <AlertDialog onOpenChange={handleOpenChange}>
           <AlertDialogTrigger asChild>
             <Button
               variant="outline"
