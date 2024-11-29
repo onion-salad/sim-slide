@@ -9,7 +9,17 @@ export const useAutoScrollInput = () => {
       return;
     }
 
-    const handleBlur = () => {
+    const handleBlur = (e: FocusEvent) => {
+      // 次のフォーカス先が入力要素やアコーディオンの場合はスクロールしない
+      const nextTarget = e.relatedTarget as HTMLElement;
+      if (nextTarget && (
+        nextTarget.tagName === 'INPUT' || 
+        nextTarget.tagName === 'TEXTAREA' ||
+        nextTarget.getAttribute('data-state') === 'closed' // アコーディオンの閉じた状態
+      )) {
+        return;
+      }
+
       if (window.scrollY > 0) {
         setTimeout(() => {
           window.scrollTo({
@@ -36,7 +46,17 @@ export const useAutoScrollTextarea = () => {
       return;
     }
 
-    const handleBlur = () => {
+    const handleBlur = (e: FocusEvent) => {
+      // 次のフォーカス先が入力要素やアコーディオンの場合はスクロールしない
+      const nextTarget = e.relatedTarget as HTMLElement;
+      if (nextTarget && (
+        nextTarget.tagName === 'INPUT' || 
+        nextTarget.tagName === 'TEXTAREA' ||
+        nextTarget.getAttribute('data-state') === 'closed' // アコーディオンの閉じた状態
+      )) {
+        return;
+      }
+
       if (window.scrollY > 0) {
         setTimeout(() => {
           window.scrollTo({
