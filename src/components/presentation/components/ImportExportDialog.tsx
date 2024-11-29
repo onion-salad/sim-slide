@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Download, Upload, Copy, Link2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Presentation } from "@/lib/presentation";
 
@@ -21,6 +21,7 @@ export const ImportExportDialog = ({
 }: ImportExportDialogProps) => {
   const [jsonInput, setJsonInput] = useState("");
   const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleExportToClipboard = () => {
     const jsonString = JSON.stringify(presentation, null, 2);
@@ -72,6 +73,34 @@ export const ImportExportDialog = ({
     });
   };
 
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const content = e.target?.result as string;
+        const importedPresentation = JSON.parse(content);
+        onImport(importedPresentation);
+        onOpenChange(false);
+        toast({
+          title: "インポート完了",
+          description: "ファイルからプレゼンテーションをインポートしました",
+          duration: 2000,
+        });
+      } catch (error) {
+        toast({
+          title: "インポートエラー",
+          description: "JSONファイルの形式が正しくありません",
+          variant: "destructive",
+          duration: 2000,
+        });
+      }
+    };
+    reader.readAsText(file);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
@@ -91,21 +120,43 @@ export const ImportExportDialog = ({
               </Button>
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium">JSONを貼り付けてインポート:</label>
-              <Textarea
-                value={jsonInput}
-                onChange={(e) => setJsonInput(e.target.value)}
-                placeholder="ここにJSONを貼り付けてください"
-                className="min-h-[200px]"
-              />
-              <Button 
-                onClick={handleImport} 
-                className="w-full"
-                disabled={!jsonInput}
-              >
-                <Upload className="w-4 h-4 mr-2" />
-                インポート
-              </Button>
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-medium">JSONファイルをインポート:</label>
+                <div className="flex gap-2">
+                  <input
+                    type="file"
+                    accept=".json"
+                    onChange={handleFileSelect}
+                    ref={fileInputRef}
+                    className="hidden"
+                  />
+                  <Button 
+                    onClick={() => fileInputRef.current?.click()} 
+                    variant="outline"
+                    className="w-full"
+                  >
+                    <Upload className="w-4 h-4 mr-2" />
+                    JSONファイルを選択
+                  </Button>
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-medium">JSONを貼り付けてインポート:</label>
+                <Textarea
+                  value={jsonInput}
+                  onChange={(e) => setJsonInput(e.target.value)}
+                  placeholder="ここにJSONを貼り付けてください"
+                  className="min-h-[200px]"
+                />
+                <Button 
+                  onClick={handleImport} 
+                  className="w-full"
+                  disabled={!jsonInput}
+                >
+                  <Upload className="w-4 h-4 mr-2" />
+                  インポート
+                </Button>
+              </div>
             </div>
           </div>
         </div>
