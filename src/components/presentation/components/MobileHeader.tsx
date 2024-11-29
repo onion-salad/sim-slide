@@ -42,6 +42,7 @@ export const MobileHeader = ({
   const [showReorderModal, setShowReorderModal] = useState(false);
   const [showImportExportDialog, setShowImportExportDialog] = useState(false);
   const [isCollabAnimating, setIsCollabAnimating] = useState(false);
+  const [isReorderAnimating, setIsReorderAnimating] = useState(false);
 
   const handleRefresh = () => {
     setIsRefreshAnimating(true);
@@ -60,6 +61,12 @@ export const MobileHeader = ({
     setIsCollabAnimating(true);
     setShowImportExportDialog(true);
     setTimeout(() => setIsCollabAnimating(false), 500);
+  };
+
+  const handleReorderClick = () => {
+    setIsReorderAnimating(true);
+    setShowReorderModal(true);
+    setTimeout(() => setIsReorderAnimating(false), 500);
   };
 
   return (
@@ -116,11 +123,14 @@ export const MobileHeader = ({
               <Save className="h-5 w-5" />
             </Button>
             <Button
-              onClick={() => setShowReorderModal(true)}
+              onClick={handleReorderClick}
               variant="ghost"
               size="icon"
             >
-              <List className="h-5 w-5" />
+              <List className={cn(
+                "h-5 w-5 transition-transform duration-300",
+                isReorderAnimating && "animate-[spin_0.5s_ease-out]"
+              )} />
             </Button>
           </div>
         </div>
