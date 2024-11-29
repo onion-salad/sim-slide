@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Save, RefreshCw, List, Play, Users } from "lucide-react";
+import { Save, RefreshCw, List, Play, Link2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   AlertDialog,
@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Slide } from "@/lib/presentation";
 import { MobileReorderModal } from "./MobileReorderModal";
-import { ImportExportDialog } from "./ImportExportDialog";
+import { MobileImportExportDialog } from "./MobileImportExportDialog";
 
 interface MobileHeaderProps {
   onSave: () => void;
@@ -71,7 +71,7 @@ export const MobileHeader = ({
               variant="ghost"
               size="icon"
             >
-              <Users className={cn(
+              <Link2 className={cn(
                 "h-5 w-5 transition-transform duration-300",
                 isCollabAnimating && "animate-[spin_0.5s_ease-out]"
               )} />
@@ -137,7 +137,7 @@ export const MobileHeader = ({
         onReorder={onReorder}
       />
       {showImportExportDialog && (
-        <ImportExportDialog
+        <MobileImportExportDialog
           open={showImportExportDialog}
           onOpenChange={setShowImportExportDialog}
           presentation={{ id: crypto.randomUUID(), title: "", slides }}
