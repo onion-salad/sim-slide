@@ -127,18 +127,18 @@ export const MobileImportExportDialog = ({
         <div className="grid gap-4 py-4">
           <div className="flex flex-col gap-4">
             <div className="flex gap-2">
+              <Button onClick={handleExportFile} variant="outline" size="icon" className="w-10">
+                <Download className={cn(
+                  "w-4 h-4 transition-transform duration-300",
+                  isDownloadAnimating && "animate-[spin_0.5s_ease-out]"
+                )} />
+              </Button>
               <Button onClick={handleExportToClipboard} className="flex-1">
                 <Copy className={cn(
                   "w-4 h-4 mr-2 transition-transform duration-300",
                   isCopyAnimating && "animate-[spin_0.5s_ease-out]"
                 )} />
                 JSONをコピー
-              </Button>
-              <Button onClick={handleExportFile} variant="outline" size="icon" className="w-10">
-                <Download className={cn(
-                  "w-4 h-4 transition-transform duration-300",
-                  isDownloadAnimating && "animate-[spin_0.5s_ease-out]"
-                )} />
               </Button>
             </div>
             <div className="space-y-2">
