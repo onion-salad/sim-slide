@@ -140,7 +140,7 @@ export const MobileHeader = ({
         <ImportExportDialog
           open={showImportExportDialog}
           onOpenChange={setShowImportExportDialog}
-          presentation={{ title: "", slides }}
+          presentation={{ id: crypto.randomUUID(), title: "", slides }}
           onImport={() => {}}
         />
       )}
