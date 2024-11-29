@@ -104,7 +104,7 @@ export const DesktopBottomButtons = ({
           className="bg-gradient-to-r from-primary to-primary-dark hover:from-primary/90 hover:to-primary-dark/90 text-white"
         >
           <Play className="h-4 w-4 mr-2" />
-          (Option×2)
+          (Option × 2)
         </Button>
       </div>
       <SharedImportExportDialog

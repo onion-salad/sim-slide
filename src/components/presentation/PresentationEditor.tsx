@@ -193,7 +193,7 @@ const PresentationEditor = ({ presentation, onUpdate }: PresentationEditorProps)
                   "w-4 h-4 mr-2 transition-transform duration-300 text-white",
                   isAddAnimating && "animate-[spin_0.5s_ease-out]"
                 )} />
-                Add (Space×2)
+                Add (Space × 2)
               </Button>
               <SaveButton onSave={handleSave} isAnimating={isSaveAnimating} />
             </div>
