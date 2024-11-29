@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Save, RefreshCw, List, Play } from "lucide-react";
+import { Save, RefreshCw, List, Play, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   AlertDialog,
@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Slide } from "@/lib/presentation";
 import { MobileReorderModal } from "./MobileReorderModal";
+import { ImportExportDialog } from "./ImportExportDialog";
 
 interface MobileHeaderProps {
   onSave: () => void;
@@ -35,6 +36,8 @@ export const MobileHeader = ({
 }: MobileHeaderProps) => {
   const [isRefreshAnimating, setIsRefreshAnimating] = useState(false);
   const [showReorderModal, setShowReorderModal] = useState(false);
+  const [showImportExportDialog, setShowImportExportDialog] = useState(false);
+  const [isCollabAnimating, setIsCollabAnimating] = useState(false);
 
   const handleRefresh = () => {
     setIsRefreshAnimating(true);
@@ -49,6 +52,12 @@ export const MobileHeader = ({
     }
   };
 
+  const handleCollabClick = () => {
+    setIsCollabAnimating(true);
+    setShowImportExportDialog(true);
+    setTimeout(() => setIsCollabAnimating(false), 500);
+  };
+
   return (
     <>
       <div className="fixed top-0 left-0 right-0 z-10 bg-white border-b p-4 md:hidden">
@@ -57,6 +66,16 @@ export const MobileHeader = ({
             Sim-Slide
           </h1>
           <div className="flex items-center gap-2">
+            <Button
+              onClick={handleCollabClick}
+              variant="ghost"
+              size="icon"
+            >
+              <Users className={cn(
+                "h-5 w-5 transition-transform duration-300",
+                isCollabAnimating && "animate-[spin_0.5s_ease-out]"
+              )} />
+            </Button>
             <AlertDialog onOpenChange={handleOpenChange}>
               <AlertDialogTrigger asChild>
                 <Button
@@ -117,6 +136,14 @@ export const MobileHeader = ({
         slides={slides}
         onReorder={onReorder}
       />
+      {showImportExportDialog && (
+        <ImportExportDialog
+          open={showImportExportDialog}
+          onOpenChange={setShowImportExportDialog}
+          presentation={{ title: "", slides }}
+          onImport={() => {}}
+        />
+      )}
     </>
   );
 };
