@@ -38,10 +38,10 @@ export const DesktopSlideList = ({
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                       onClick={() => onSlideSelect(slide.id)}
-                      className={`group cursor-pointer transition-all duration-300 relative border border-gray-100 rounded-lg ${
+                      className={`group cursor-pointer transition-all duration-300 relative border border-gray-200 rounded-lg ${
                         selectedSlide === slide.id 
                           ? "shadow-selected scale-[1.02] bg-white" 
-                          : "hover:border-gray-200"
+                          : ""
                       }`}
                     >
                       <div className="relative">
