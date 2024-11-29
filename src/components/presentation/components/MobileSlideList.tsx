@@ -26,7 +26,7 @@ export const MobileSlideList = ({
         <div
           key={slide.id}
           ref={(el) => {
-            if (slideRefs.current) {
+            if (slideRefs?.current) {
               slideRefs.current[slide.id] = el;
             }
           }}
